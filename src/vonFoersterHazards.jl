@@ -2,8 +2,6 @@ module vonFoersterHazards
 
 export randomtruncate, conservesum!
 
-greet() = print("Hello World!")
-
 """
     randomtruncate(x)
 
