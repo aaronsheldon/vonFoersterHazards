@@ -5,80 +5,63 @@ export randomtruncate,
        conservesum!,
        covariance!,
        evolve,
-       hazardrate,
-       probability,
-       transition!,
-       birth!
+       hazardrate
 
 """
     evolve(boundary, population, ages, count, size)
 
-Iterable container for the population model.
+Iterable container for the population model. Conceptually the boundary
+labels the columns and the ages labels the rows of the population matrix.
 """
 struct evolve
     boundary::AbstractVector{Int64}
-    population::AbstractVector{AbstractVector{Int64}}
     ages::AbstractVector{Float64}
+    population::AbstractVector{AbstractVector{Int64}}
     count::Int64
     size::Float64
 end
-Base.iterate(E::evolve) = ((E.population, E.ages), 0)
+Base.iterate(E::evolve) = ((E.ages, E.population), 0)
 function Base.iterate(E::evolve, step::Int64)
     if step > E.count
         nothing
     else
-        ((a, n) -> transition!(a, n, E)).(E.ages, E.population)
-        birth!(E)
-        ((E.population, E.ages), step + 1)
-    end
-end
+        
+        # One time computation of the extensive hazard rate
+        H = hazardrate(E.ages, E.population)
+        
+        # Compute the transitions across the cohorts from the intensive hazard rate
+        for i in eachindex(E.ages)
+            E.population[i] = conservesum!(randomtruncate.(exp(-t * hazardrate(E.ages[i], H)) * E.population[i]), sum(E.population[i]))
+        end
 
-"""
-    transition!(a, n, E)
-
-Single cohort transition update from the hazard rate matrix. Meant to be
-called through a vectorized broadcast across the whole population.
-"""
-function transition!(a::Float64, n::AbstractVector{Int64}), E::evolve)
-    conservesum!(randomtruncate.(hazardrate(a, E) * n), sum(n))
-end
-
-"""
-    birth!(E)
-
-If the youngest cohort is less than 1 year old, add births to youngest cohort.
-Otherwise youngest cohort is more than 1 year old, generate a new youngest cohort.
-"""
-function birth!(E::evolve)
+        # Youngest cohort is less than 1 year old, add births to youngest cohort
         if E.ages[end] < 1 then
             E.population[end] = E.population[end] + E.boundary
+            
+        # Youngest cohort is more than 1 year old, generate a new youngest cohort
         else
             push!(E.ages, 0)
             push!(E.population, E.boundary)
         end
-        E
+        ((E.ages, E.population), step + 1)
+    end
 end
+
+"""
+    hazardrate(a, H)
+
+Stub function to be overloaded in implementation. Compute the intensive
+hazard rate matrix from the extensive hazard rate matrix and a given age a.
+"""
+function hazardrate(a::Float64, H::AbstractMatrix{Float64}) end
 
 """
     hazardrate(a, n)
 
-Stub function to be overloaded in implementation. Compute the hazard rate
-matrix for a given cohort state occupancy n and age a.
+Stub function to be overloaded in implementation. Compute the extensive
+hazard rate matrix from ages a and population occupancies n.
 """
-function hazardrate(a, n) end
-
-"""
-    probability(H, t)
-
-Compute the transition probabilities from the hazard rate matrix H, given a small
-time step t, assuming the diagonal is non-negative exit rates, off diagonal are
-non-positive entrance rates, and the columns represent the exit rates from a
-single state and thus should add to 0. Note this assumes the inputs are well formed,
-there are no bounds or sanity checks.
-"""
-function probability(H::AbstractMatrix{Float64}, t::Float64)
-    exp(-t * H)
-end
+function hazardrate(a::AbstractVector{Float64}, n::AbstractVector{Float64}) end
 
 """
     randomtruncate(x)
@@ -103,15 +86,6 @@ function conservesum!(A::AbstractVector{Int64}, a::Int64)
     d = a - sum(A)
     I = sortperm(A, rev=(d<0))
     A[I] .= A[I] .+ [sign(d) .* ones(Int64, abs(d)) ; zeros(Int64, length(A)-abs(d))]
-    A
-end
-function conservesum!(A::AbstractMatrix{Int64}, a::AbstractVector{Int64})
-    l = length(a)
-    d = a .- sum(A, dims=1)
-    for i in eachindex(a)
-        I = sortperm(A[:, i], rev=(d[i]<0))
-        A[I, i] .= A[I, i] .+ [sign(d[i]) .* ones(Int64, abs(d[i])) ; zeros(Int64, length(l)-abs(d[i]))]
-    end
     A
 end
 
