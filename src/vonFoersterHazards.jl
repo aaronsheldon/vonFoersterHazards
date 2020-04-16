@@ -1,6 +1,6 @@
 module vonFoersterHazards
 
-export randomtruncate, conservesum!
+export randomtruncate, conservesum!, updatecovariance!
 
 """
     randomtruncate(x)
@@ -35,6 +35,16 @@ function conservesum!(A::Matrix{Int64}, a::Vector{Int64})
         A[I, i] .= A[I, i] .+ [sign(d[i]) .* ones(Int64, abs(d[i])) ; zeros(Int64, length(l)-abs(d[i]))]
     end
     A
+end
+
+"""
+    updatecovariance!(C, H, n)
+
+In place update of the covariances from the hazard rates and the previous state.
+Note this assumes the inputs are well formed, there are no bounds or sanity checks.
+"""
+function updatecovariance!(C, H, n)
+    0
 end
 
 end # module
