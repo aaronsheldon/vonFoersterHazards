@@ -43,7 +43,7 @@ function Base.iterate(E::evolve)
     H = hazardrate(E.ages, E.population)
     (size(H) == (l, u)) ||
         throw(DimensionMismatch("unequal number of states in the extensize hazard rate and the cohorts of population"))
-    (size(hazardrate(1.0, H)) == (l, u)) ||
+    (size(hazardrate(E.ages[1], H)) == (l, u)) ||
         throw(DimensionMismatch("unequal number of states in the intensize hazard rate and the cohorts of population"))
     ((E.ages, E.population), 0)
 end
