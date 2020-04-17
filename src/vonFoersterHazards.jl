@@ -33,7 +33,7 @@ function Base.iterate(E::evolve)
         throw(DomainError(size, "time increment size must be positive"))
     (issorted(E.ages, rev=true)) ||
         throw(DomainError(E.ages, "ages must be sorted in descending order"))
-    (0 <= E.ages[end]) ||
+    (0.0 <= E.ages[end]) ||
         throw(DomainError(E.ages, "ages must be non-negative"))
     (0 <= minimum(minimum.(E.population))) ||
         throw(DomainError(E.population, "state occupancies in population must be non-negative"))
@@ -69,12 +69,12 @@ function Base.iterate(E::evolve, step::Int64)
         end
         
         # Youngest cohort is less than 1 year old, add births to youngest cohort
-        if E.ages[end] < 1 then
-            @inbounds E.ages[end] = E.ages[end] + b
+        if E.ages[end] < 1.0 then
+            @inbounds E.population[end] = E.population[end] + b
             
         # Youngest cohort is more than 1 year old, generate a new youngest cohort
         else
-            push!(E.ages, 0)
+            push!(E.ages, 0.0)
             push!(E.population, b)
         end
         ((E.ages, E.population), step + 1)
@@ -87,7 +87,7 @@ end
 Stub function to be overloaded in implementation. Compute the extensive
 birth rate vector from the ages a and occupancy n of the population.
 """
-function birthrate(a::AbstractVector{Float64}, n::AbstractVector{T} where T<:AbstractVector{Int64}) end
+function birthrate(a::AbstractVector{Float64}, n::AbstractVector{T})::T where T<:AbstractVector{Int64} end
 
 """
     hazardrate(a, n)
@@ -95,7 +95,7 @@ function birthrate(a::AbstractVector{Float64}, n::AbstractVector{T} where T<:Abs
 Stub function to be overloaded in implementation. Compute the extensive
 hazard rate matrix from the ages a and occupancy n of the population.
 """
-function hazardrate(a::AbstractVector{Float64}, n::AbstractVector{T} where T<:AbstractVector{Int64}) end
+function hazardrate(a::AbstractVector{Float64}, n::AbstractVector{T} where T<:AbstractVector{Int64})::AbstractMatrix{Float64} end
 
 """
     hazardrate(a, H)
@@ -103,7 +103,7 @@ function hazardrate(a::AbstractVector{Float64}, n::AbstractVector{T} where T<:Ab
 Stub function to be overloaded in implementation. Compute the intensive
 hazard rate matrix from the extensive hazard rate matrix and a given age a.
 """
-function hazardrate(a::Float64, H::AbstractMatrix{Float64}) end
+function hazardrate(a::Float64, H::T)::T where T<:AbstractMatrix{Float64} end
 
 """
     randomtruncate(x)
@@ -112,7 +112,7 @@ Randomly return the floor or the ceiling by comparing the fractional part of the
 number to a sample from the uniform distribution on [0,1). If the fraction is
 greater than the random sample return the ceiling otherwise return the floor.
 """
-function randomtruncate(x::Float64)
+function randomtruncate(x::Float64)::Float64
     y = convert(Int64, trunc(x))
     y + convert(Int64, rand() < (x-y))
 end
@@ -120,11 +120,10 @@ end
 """
     conservesum!(A, a)
 
-In place enforcement that the sum of the columns of A equals the corresponding
-element of a. Note this assumes the inputs are well formed, there are no bounds
-or sanity checks.
+In place enforcement that the sum of the columns of A equals the a. Note this 
+assumes the inputs are well formed, there are no bounds or sanity checks.
 """
-function conservesum!(A::AbstractVector{Int64}, a::Int64)
+function conservesum!(A::T, a::Int64)::T where T<:AbstractVector{Int64}
     d = a - sum(A)
     I = sortperm(A, rev=(d<0))
     A[I] .= A[I] .+ [sign(d) .* ones(Int64, abs(d)) ; zeros(Int64, length(A)-abs(d))]
@@ -140,7 +139,7 @@ probabilities from a single state and thus should add to 1 with all entries
 non-negative. Note this assumes the inputs are well formed, there are no bounds
 or sanity checks.
 """
-function covariance!(C::AbstractMatrix{Float64}, P::AbstractMatrix{Float64}, n::AbstractVector{Int64})
+function covariance!(C::T, P::T, n::AbstractVector{Int64})::T where T<:AbstractMatrix{Float64}
     C
 end
 
