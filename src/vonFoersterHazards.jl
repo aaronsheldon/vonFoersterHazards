@@ -31,7 +31,7 @@ end
 function Base.iterate(E::evolve)
     (E.size > 0) ||
         throw(DomainError(size, "time increment size must be positive"))
-    (E.ages == sort(E.ages, rev=true)) ||
+    (issorted(E.ages, rev=true)) ||
         throw(DomainError(size, "ages are not sorted in descending order"))
     (length(E.ages) == length(E.population)) ||
         throw(DimensionMismatch("unequal number of cohorts in ages and population"))
