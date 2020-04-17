@@ -32,19 +32,23 @@ function Base.iterate(E::evolve)
     (E.size > 0) ||
         throw(DomainError(size, "time increment size must be positive"))
     (issorted(E.ages, rev=true)) ||
-        throw(DomainError(size, "ages are not sorted in descending order"))
+        throw(DomainError(E.ages, "ages must be sorted in descending order"))
+    (0 <= E.ages[end]) ||
+        throw(DomainError(E.ages, "ages must be non-negative"))
+    (0 <= minimum(minimum.(E.population))) ||
+        throw(DomainError(E.population, "state occupancies in population must be non-negative"))
     (length(E.ages) == length(E.population)) ||
-        throw(DimensionMismatch("unequal number of cohorts in ages and population"))
+        throw(DimensionMismatch("cohorts in ages must equal cohorts in population"))
     (l, u) = extrema(length.(E.population))
     (l == u) ||
-        throw(DimensionMismatch("unequal number of states in the cohorts of population"))
+        throw(DimensionMismatch("states in the cohorts of population must be equal"))
     (length(birthrate(E.ages, E.population)) == u) ||
-        throw(DimensionMismatch("unequal number of states in the birth rate and the cohorts of population"))
+        throw(DimensionMismatch("states in the birth rate must equal the states in the cohorts of population"))
     H = hazardrate(E.ages, E.population)
     (size(H) == (l, u)) ||
-        throw(DimensionMismatch("unequal number of states in the extensize hazard rate and the cohorts of population"))
+        throw(DimensionMismatch("states in the extensize hazard rate must equal the states in the cohorts of population"))
     (size(hazardrate(E.ages[1], H)) == (l, u)) ||
-        throw(DimensionMismatch("unequal number of states in the intensize hazard rate and the cohorts of population"))
+        throw(DimensionMismatch("states in the intensize hazard rate must equal the states in the cohorts of population"))
     ((E.ages, E.population), 0)
 end
 function Base.iterate(E::evolve, step::Int64)
