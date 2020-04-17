@@ -1,3 +1,9 @@
+"""
+    vonFoersterHazards
+
+Engine and utilities to forward propagate the von Foerster evolution
+from the hazard rate, birth rate, and initial demographics.
+"""
 module vonFoersterHazards
 
 import Base.iterate
@@ -5,21 +11,23 @@ export randomtruncate,
        conservesum!,
        covariance!,
        evolve,
-       hazardrate
+       hazardrate,
+       birthrate
 
 """
-    evolve(boundary, population, ages, count, size)
+    evolve(ages, population, count, size)
 
-Iterable container for the population model. Conceptually the boundary
-labels the columns and the ages labels the rows of the population matrix.
+Iterable container for the population model. Conceptually the ages labels
+the rows of the population matrix, and the columns are the states. Cohorts
+are stored in reverse order, so that births can be pushed to the vector.
 """
 struct evolve
-    boundary::AbstractVector{Int64}
     ages::AbstractVector{Float64}
     population::AbstractVector{AbstractVector{Int64}}
     count::Int64
     size::Float64
 end
+
 Base.iterate(E::evolve) = ((E.ages, E.population), 0)
 function Base.iterate(E::evolve, step::Int64)
     if step > E.count
@@ -34,18 +42,29 @@ function Base.iterate(E::evolve, step::Int64)
             E.population[i] = conservesum!(randomtruncate.(exp(-t * hazardrate(E.ages[i], H)) * E.population[i]), sum(E.population[i]))
         end
 
+        # One time computation of the extensize birth rate
+        b = birthrate(E.ages, E.population)
+        
         # Youngest cohort is less than 1 year old, add births to youngest cohort
         if E.ages[end] < 1 then
-            E.population[end] = E.population[end] + E.boundary
+            E.population[end] = E.population[end] + b
             
         # Youngest cohort is more than 1 year old, generate a new youngest cohort
         else
             push!(E.ages, 0)
-            push!(E.population, E.boundary)
+            push!(E.population, b)
         end
         ((E.ages, E.population), step + 1)
     end
 end
+
+"""
+    hazardrate(a, n)
+
+Stub function to be overloaded in implementation. Compute the extensive
+hazard rate matrix from ages a and population occupancies n.
+"""
+function hazardrate(a::AbstractVector{Float64}, n::AbstractVector{Float64}) end
 
 """
     hazardrate(a, H)
@@ -56,12 +75,12 @@ hazard rate matrix from the extensive hazard rate matrix and a given age a.
 function hazardrate(a::Float64, H::AbstractMatrix{Float64}) end
 
 """
-    hazardrate(a, n)
+    birthrate(a, n)
 
 Stub function to be overloaded in implementation. Compute the extensive
-hazard rate matrix from ages a and population occupancies n.
+birth rate vector from ages a and population occupancies n.
 """
-function hazardrate(a::AbstractVector{Float64}, n::AbstractVector{Float64}) end
+function birthrate(a::AbstractVector{Float64}, n::AbstractVector{Float64}) end
 
 """
     randomtruncate(x)
@@ -102,4 +121,4 @@ function covariance!(C::AbstractMatrix{Float64}, P::AbstractMatrix{Float64}, n::
     C
 end
 
-end # module
+end
