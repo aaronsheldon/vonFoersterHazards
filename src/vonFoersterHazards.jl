@@ -65,7 +65,7 @@ function Base.iterate(E::evolve, step::Int64)
         # Curried transition function
         t(a, n) = conservesum!(randomtruncate.(exp(-E.size * hazardrate(a, H)) * n), sum(n))
         
-        # Compute the transitions across the cohorts from the intensive hazard rate
+        # Compute the transitions within each cohort from the intensive hazard rate
         E.population .= t.(E.ages, E.population)
         E.ages .= E.ages .+ E.size
         
