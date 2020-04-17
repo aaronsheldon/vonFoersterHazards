@@ -21,9 +21,9 @@ Iterable container for the population model. Conceptually the ages labels
 the rows of the population matrix, and the columns are the states. Cohorts
 are stored in reverse order, so that births can be pushed to the vector.
 """
-struct evolve
-    ages::AbstractVector{Float64}
-    population::AbstractVector{AbstractVector{Int64}}
+struct evolve{S<:AbstractVector{Float64}, T<:AbstractVector{U} where U<:AbstractVector{Int64}}
+    ages::S
+    population::T
     count::Int64
     size::Float64
 end
@@ -34,20 +34,21 @@ function Base.iterate(E::evolve, step::Int64)
         nothing
     else
         
+        # One time computation of the extensize birth rate
+        b = birthrate(E.ages, E.population)
+        
         # One time computation of the extensive hazard rate
         H = hazardrate(E.ages, E.population)
         
         # Compute the transitions across the cohorts from the intensive hazard rate
         for i in eachindex(E.ages)
-            E.population[i] = conservesum!(randomtruncate.(exp(-t * hazardrate(E.ages[i], H)) * E.population[i]), sum(E.population[i]))
+            E.population[i] = conservesum!(randomtruncate.(exp(-E.size * hazardrate(E.ages[i], H)) * E.population[i]), sum(E.population[i]))
+            E.age[i] = E.age[i] + E.size
         end
-
-        # One time computation of the extensize birth rate
-        b = birthrate(E.ages, E.population)
         
         # Youngest cohort is less than 1 year old, add births to youngest cohort
         if E.ages[end] < 1 then
-            E.population[end] = E.population[end] + b
+            E.ages[end] = E.ages[end] + b
             
         # Youngest cohort is more than 1 year old, generate a new youngest cohort
         else
@@ -59,12 +60,20 @@ function Base.iterate(E::evolve, step::Int64)
 end
 
 """
+    birthrate(a, n)
+
+Stub function to be overloaded in implementation. Compute the extensive
+birth rate vector from the ages a and occupancy n of the population.
+"""
+function birthrate(a::AbstractVector{Float64}, n::AbstractVector{T} where T<:AbstractVector{Int64}) end
+
+"""
     hazardrate(a, n)
 
 Stub function to be overloaded in implementation. Compute the extensive
-hazard rate matrix from ages a and population occupancies n.
+hazard rate matrix from the ages a and occupancy n of the population.
 """
-function hazardrate(a::AbstractVector{Float64}, n::AbstractVector{Float64}) end
+function hazardrate(a::AbstractVector{Float64}, n::AbstractVector{T} where T<:AbstractVector{Int64}) end
 
 """
     hazardrate(a, H)
@@ -73,14 +82,6 @@ Stub function to be overloaded in implementation. Compute the intensive
 hazard rate matrix from the extensive hazard rate matrix and a given age a.
 """
 function hazardrate(a::Float64, H::AbstractMatrix{Float64}) end
-
-"""
-    birthrate(a, n)
-
-Stub function to be overloaded in implementation. Compute the extensive
-birth rate vector from ages a and population occupancies n.
-"""
-function birthrate(a::AbstractVector{Float64}, n::AbstractVector{Float64}) end
 
 """
     randomtruncate(x)
