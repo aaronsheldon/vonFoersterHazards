@@ -62,11 +62,12 @@ function Base.iterate(E::evolve, step::Int64)
         # One time computation of the extensive hazard rate
         H = hazardrate(E.ages, E.population)
         
+        # Curried transition function
+        t(a, n) = conservesum!(randomtruncate.(exp(-E.size * hazardrate(a, H)) * n), sum(n))
+        
         # Compute the transitions across the cohorts from the intensive hazard rate
-        for i in eachindex(E.ages)
-            @inbounds E.population[i] = conservesum!(randomtruncate.(exp(-E.size * hazardrate(E.ages[i], H)) * E.population[i]), sum(E.population[i]))
-            @inbounds E.age[i] = E.age[i] + E.size
-        end
+        E.population .= t.(E.ages, E.population)
+        E.ages .= E.ages .+ E.size
         
         # Youngest cohort is less than 1 year old, add births to youngest cohort
         if E.ages[end] < 1.0 then
