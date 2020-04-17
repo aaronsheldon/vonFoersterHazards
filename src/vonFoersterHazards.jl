@@ -28,7 +28,23 @@ struct evolve{S<:AbstractVector{Float64}, T<:AbstractVector{U} where U<:Abstract
     size::Float64
 end
 
-Base.iterate(E::evolve) = ((E.ages, E.population), 0)
+function Base.iterate(E::evolve)
+    (E.size > 0) ||
+        throw(DomainError(size, "time increment size must be positive"))
+    (length(E.ages) == length(E.population)) ||
+        throw(DimensionMismatch("unequal number of cohorts in ages and population"))
+    (l, u) = extrema(length.(E.population))
+    (l == u) ||
+        throw(DimensionMismatch("unequal number of states in the cohorts of population"))
+    (length(birthrate(E.ages, E.population)) == u) ||
+        throw(DimensionMismatch("unequal number of states in the birth rate and the cohorts of population"))
+    H = hazardrate(E.ages, E.population)
+    (size(H) == (l, u)) ||
+        throw(DimensionMismatch("unequal number of states in the extensize hazard rate and the cohorts of population"))
+    (size(hazardrate(1.0, H)) == (l, u)) ||
+        throw(DimensionMismatch("unequal number of states in the intensize hazard rate and the cohorts of population"))
+    ((E.ages, E.population), 0)
+end
 function Base.iterate(E::evolve, step::Int64)
     if step > E.count
         nothing
@@ -42,13 +58,13 @@ function Base.iterate(E::evolve, step::Int64)
         
         # Compute the transitions across the cohorts from the intensive hazard rate
         for i in eachindex(E.ages)
-            E.population[i] = conservesum!(randomtruncate.(exp(-E.size * hazardrate(E.ages[i], H)) * E.population[i]), sum(E.population[i]))
-            E.age[i] = E.age[i] + E.size
+            @inbounds E.population[i] = conservesum!(randomtruncate.(exp(-E.size * hazardrate(E.ages[i], H)) * E.population[i]), sum(E.population[i]))
+            @inbounds E.age[i] = E.age[i] + E.size
         end
         
         # Youngest cohort is less than 1 year old, add births to youngest cohort
         if E.ages[end] < 1 then
-            E.ages[end] = E.ages[end] + b
+            @inbounds E.ages[end] = E.ages[end] + b
             
         # Youngest cohort is more than 1 year old, generate a new youngest cohort
         else
