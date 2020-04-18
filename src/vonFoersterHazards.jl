@@ -140,7 +140,7 @@ single state and thus should add to 1 with all entries non-negative. Note this
 assumes the inputs are well formed, there are no bounds or sanity checks.
 """
 function covariance(C::T, P::T, n::AbstractVector{Int64})::T where T<:AbstractMatrix{Float64}
-    T = P*(n'.*P')
+    T = P*(P.*n)'
     i = [1:(1 + size(T, 1)):length(T)...]
     T[i] .= (P*n) .- T[i]
     P*C*P' + T
