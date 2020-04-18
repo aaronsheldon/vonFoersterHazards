@@ -9,7 +9,7 @@ module vonFoersterHazards
 import Base.iterate
 export randomtruncate,
        conservesum!,
-       covariance!,
+       covariance,
        evolve,
        hazardrate,
        birthrate
@@ -132,16 +132,15 @@ function conservesum!(A::T, a::Int64)::T where T<:AbstractVector{Int64}
 end
 
 """
-    covariance!(C, P, n)
+    covariance(C, P, n)
 
-In place update of the covariances C from the transition probabilities P and
-the previous state n. Each column of P is assumed to represent the exit 
-probabilities from a single state and thus should add to 1 with all entries
-non-negative. Note this assumes the inputs are well formed, there are no bounds
-or sanity checks.
+Update of the covariances C from the transition probabilities P and the previous
+state n. Each column of P is assumed to represent the exit  probabilities from a
+single state and thus should add to 1 with all entries non-negative. Note this
+assumes the inputs are well formed, there are no bounds or sanity checks.
 """
-function covariance!(C::T, P::T, n::AbstractVector{Int64})::T where T<:AbstractMatrix{Float64}
-    C
+function covariance(C::T, P::T, n::AbstractVector{Int64})::T where T<:AbstractMatrix{Float64}
+    P*C*P' + P*Diagonal(n)*P' + Diagonal(P*n - 2*P.*P*n)
 end
 
 end
