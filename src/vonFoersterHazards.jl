@@ -21,9 +21,11 @@ Iterable container for the population model. Conceptually the ages labels
 the rows of the population matrix, and the columns are the states. Cohorts
 are stored in reverse order, so that births can be pushed to the vector.
 """
-struct evolve{S<:AbstractVector{Float64}, T<:AbstractVector{U} where U<:AbstractVector{Int64}}
-    ages::S
-    population::T
+struct evolve{R<:AbstractVector{Float64}, S<:AbstractVector{U} where U<:AbstractVector{Int64}, T<:AbstractVector{V} where V<:AbstractMatrix{Float64}}
+    ages::R
+    population::S
+    covariances::T
+    elapsed::Float64
     count::Int64
     size::Float64
 end
@@ -49,7 +51,7 @@ function Base.iterate(E::evolve)
         throw(DimensionMismatch("states in the extensize hazard rate must equal the states in the cohorts of population"))
     (size(hazardrate(E.ages[1], H)) == (l, u)) ||
         throw(DimensionMismatch("states in the intensize hazard rate must equal the states in the cohorts of population"))
-    ((E.ages, E.population), 0)
+    (E, 0)
 end
 function Base.iterate(E::evolve, step::Int64)
     if step > E.count
@@ -68,6 +70,7 @@ function Base.iterate(E::evolve, step::Int64)
         # Compute the transitions within each cohort from the intensive hazard rate
         E.population .= t.(E.ages, E.population)
         E.ages .= E.ages .+ E.size
+        E.elapsed = E.elapsed + E.size
         
         # Youngest cohort is less than 1 year old, add births to youngest cohort
         if E.ages[end] < 1.0 then
@@ -78,7 +81,7 @@ function Base.iterate(E::evolve, step::Int64)
             push!(E.ages, 0.0)
             push!(E.population, b)
         end
-        ((E.ages, E.population), step + 1)
+        (E, step + 1)
     end
 end
 
