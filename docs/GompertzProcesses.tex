@@ -28,4 +28,44 @@
     theory of Gompertz processes, Poisson processes subordinated by integrated Geometric
     Brownian motion.
   \end{abstract}
+  \section{Motivation}
+  Integrated geometric Brownian motion occurs in the asymptotic limit of infinitesimal
+  stochastic accelerations. In the context of accelerated failure times we are observing a
+  fixed absorbing event. We do not have access to metabolic time, which integrated geometric
+  Brownian motion models. By L\'evy-Khintchine this is the only representation that is
+  L\'evy and jump free.
+  \begin{definition}[Gompertz Process]
+    A Gompertz process $G_t$ is a subordinated Poisson process $N_t$, with rate $\lambda$,
+    where the subordinating process is integrated geometric Brownian motion $Y_t$, with
+    drift $\mu$ and diffusion $\sigma$:
+    \begin{IEEEeqnarray}{rCl}
+      G_t
+      & = & 
+      N_{Y_t}
+    \end{IEEEeqnarray}
+    given:
+    \begin{IEEEeqnarray}{rCl}
+      Y_t
+      & = & 
+      \int_0^t X_s ds\\
+      & = &
+      \int_0^t e^{\mu s + \sigma W_s} ds
+    \end{IEEEeqnarray}
+  \end{definition}
+  \section{Preliminaries}
+  \begin{lemma}[Acceleration Lemma]
+    Induction on powers of geometric Brownian motion, conditioned on integrated geometric
+    Brownian motion.
+  \end{lemma}
+  \begin{lemma}[Recursion Convolution Lemma]
+    Powers of integrated geometric Brownian motion.
+  \end{lemma}
+  \section{Martingale}
+  Two point conditional expectation
+  \section{L\'evy Process}
+  Triangular matrix embedding resulting in independent multiplicative increments
+  \section{Fokker-Planck}
+  Two dimensional stochastic differential equation
+  \section{Hazard Rate}
+  Partial differential equation of Gompertz process hazard rate.
 \end{document}
