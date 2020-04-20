@@ -14,6 +14,7 @@
 
 \title{von Foerster Hazard Rate Models}
 \author{Aaron Geoffrey Sheldon}
+\date{\today}
 \begin{document}
   \pagenumbering{gobble}
   \begin{tikzpicture}[->,thick,node distance=3cm]
@@ -28,7 +29,7 @@
     \path
       (S) edge (FA)
       (S) edge node [above] {$\eta\hat{\sigma} \ln\hat{\omega}$} (I)
-      (I) edge node [above] {$\gamma\beta_\text{hos} e^{-\gamma\alpha_\text{hos} a}$} (H)
+      (I) edge node [above] {$\gamma\beta_\text{hos} e^{\gamma\alpha_\text{hos} a}$} (H)
       (I) edge node [right] {$\leftarrow\gamma\beta_\text{dis} e^{-\gamma\alpha_\text{dis} a}\rightarrow$} (R)
       (H) edge (D)
       (I) edge node [right] {$\leftarrow\gamma\beta_\text{age} e^{\gamma\alpha_\text{age} a}\rightarrow$} (FI)

@@ -9,19 +9,18 @@ Citing
 Not withstanding any [licenses][00], all use, incorporation, modification, or any other derivative products must cite the author and this work as a contributing source. If you fail to cite this work you are expressly **FORBIDDEN** to use this work in any form.
 
 ```
-Sheldon, A. 2020, von Foerster Hazard Rate Models, v1.0, Zenodo, doi:zenodo
+Aaron Sheldon (2020), "von Foerster Hazards" v1.0, Zenodo, doi:Pending registration with Zenodo
 ```
 
 ```tex
 @misc{vonFoersterHazards,
-    author       = {Sheldon, Aaron},
-    title        = {{von Foerster Hazard Rate Models}},
-    month        = apr,
-    year         = 2020,
-    doi          = {zenodo},
-    version      = {1.0},
-    publisher    = {Zenodo},
-    url          = {https://doi.org/zenodo.}
+    author    = {Aaron Sheldon},
+    title     = {{von Foerster Hazards}},
+    year      = 2020,
+    doi       = {Pending registration with Zenodo},
+    version   = {1.0},
+    publisher = {Zenodo},
+    url       = {https://doi.org}
     }
 ```
 
