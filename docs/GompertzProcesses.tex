@@ -23,17 +23,27 @@
   \author{Aaron Geoffrey Sheldon}
   \date{\today}
   \maketitle
+
   \begin{abstract}
     Motivated by considering infinitesimal stochastic accelerations of time, we outline a
     theory of Gompertz processes, Poisson processes subordinated by integrated Geometric
     Brownian motion.
   \end{abstract}
-  \section{Motivation}
+
+  \section{Preliminaries}
+  Basic science experiments in biology have observed that organisms respond to environmental
+  stress, including communicable diseases and exposures to toxins, with an acceleration in
+  their failure time. Outside of the controlled setting of a laboratory the environmental
+  stresses occur stochastically, resulting in a sequence of accelerations. The accelerations
+  can either increase the rate of failure, an exacerbation, or decrease the rate of failure,
+  a recovery. Even in the controlled setting of a laboratory it is very difficult to measure
+  the underlying metabolic time that is being accelerated, instead we have access to the
+  failure time in bare time units.
+
   Integrated geometric Brownian motion occurs in the asymptotic limit of infinitesimal
-  stochastic accelerations. In the context of accelerated failure times we are observing a
-  fixed absorbing event. We do not have access to metabolic time, which integrated geometric
-  Brownian motion models. By L\'evy-Khintchine this is the only representation that is
+  stochastic accelerations. By L\'evy-Khintchine this is the only representation that is
   L\'evy and jump free.
+
   \begin{definition}[Gompertz Process]
     A Gompertz process $G_t$ is a subordinated Poisson process $N_t$, with rate $\lambda$,
     where the subordinating process is integrated geometric Brownian motion $Y_t$, with
@@ -52,20 +62,140 @@
       \int_0^t e^{\mu s + \sigma W_s} ds
     \end{IEEEeqnarray}
   \end{definition}
-  \section{Preliminaries}
+  We will make great use of the increment relationship between $Y_t$ and its carrier process
+  $X_t$, for times $t > s$:
+  \begin{IEEEeqnarray}{rCl}
+    Y_t - Y_s
+    & \sim &
+    X_s Y_{t-s}
+  \end{IEEEeqnarray}
+  where the process $X_s$ is independent of the process $Y_{t-s}$.
+
   \begin{lemma}[Acceleration Lemma]
-    Induction on powers of geometric Brownian motion, conditioned on integrated geometric
-    Brownian motion.
+    The expectation of non-negative integer powers $n \ge 0 $ of the carrier process of
+    geometric Brownian motion $X_t$ conditioned on integrated geometric Brownian motion
+    $Y_t$ is given by:
+    \begin{IEEEeqnarray}{rCl}
+      \operatorname{\mathbb{E}}\left[ X_t^n \right\rVert\left. Y_t \right]
+      & = &
+      \frac{\operatorname{\mathbb{E}}\left[X_t^n\right]}{\operatorname{\mathbb{E}}\left[Y_t^n\right]}Y^n_t
+    \end{IEEEeqnarray}
   \end{lemma}
+
   \begin{lemma}[Recursion Convolution Lemma]
-    Powers of integrated geometric Brownian motion.
+    The expectation of non-negative integer powers $n \ge 0 $ of integrated geometric
+    Brownian motion $Y_t$ is given by:
+    \begin{IEEEeqnarray}{rCl}
+      \operatorname{\mathbb{E}}\left[ Y_t^n \right]
+      & = &
+      n \int_0^t e^{\left(n\mu + \frac{n^2}{2} \sigma^2\right)u} \operatorname{\mathbb{E}}\left[ Y_{t-u}^{n-1} \right] du
+    \end{IEEEeqnarray}
   \end{lemma}
+
   \section{Martingale}
-  Two point conditional expectation
+  The scaled two point increments of integrated geometric Brownian motion $Y_t$ form a
+  martingale, for a triplet of times $t_1 > t_0 > t_{-1}$:
+  \begin{IEEEeqnarray}{rCl}
+    \IEEEeqnarraymulticol{3}{l}
+    {
+      \operatorname{\mathbb{E}}
+      \left[
+        \frac{Y_{t_1} - Y_{t_0}}{e^{\left(\mu + \frac{\sigma^2}{2}\right)t_1} - e^{\left(\mu + \frac{\sigma^2}{2}\right)t_0}} 
+        \right\rVert\left.
+        \frac{Y_{t_0} - Y_{t_{-1}}}{e^{\left(\mu + \frac{\sigma^2}{2}\right)t_0} - e^{\left(\mu + \frac{\sigma^2}{2}\right)t_{-1}}} \right]
+    }\nonumber\\
+    \qquad\qquad\qquad\qquad\qquad\qquad\qquad\qquad
+    & = &
+    \frac{Y_{t_0} - Y_{t_{-1}}}{e^{\left(\mu + \frac{\sigma^2}{2}\right)t_0} - e^{\left(\mu + \frac{\sigma^2}{2}\right)t_{-1}}}
+  \end{IEEEeqnarray}
+
   \section{L\'evy Process}
-  Triangular matrix embedding resulting in independent multiplicative increments
+  Integrated geometric Brownian motion $Y_t$ and its carrier process of geometric Brownian
+  motion $X_t$ can be embedded into the Lie algebra of $2 \times 2$ upper triangular
+  matrices $\mathfrak{h}_2$ so that the increments are independent under matrix
+  multiplication, for times $t > s$:
+  \begin{IEEEeqnarray}{rCl}
+    \begin{bmatrix}
+      1 & Y_t\\
+      0 & X_t
+    \end{bmatrix}
+    & \sim &
+    \begin{bmatrix}
+      1 & \tilde{Y}_{t-s}\\
+      0 & \tilde{X}_{t-s}
+    \end{bmatrix}
+    \begin{bmatrix}
+      1 & Y_s\\
+      0 & X_s
+    \end{bmatrix}
+  \end{IEEEeqnarray}
+  where the increment processes of $\tilde{Y}_{t-s}$ and $\tilde{X}_{t-s}$ are independent
+  of the processes $Y_s$ and $X_s$.
+
   \section{Fokker-Planck}
-  Two dimensional stochastic differential equation
+  The upper triangular L\'evy process of integrated Brownian motion satisfies the stochastic
+  differential equation:
+  \begin{IEEEeqnarray}{rCl}
+    d \begin{bmatrix}
+      1 & Y_t\\
+      0 & X_t
+    \end{bmatrix}
+    & = &
+    \begin{bmatrix}
+      0 & X_t\\
+      0 & \left(\mu + \frac{\sigma^2}{2}\right) X_t
+    \end{bmatrix} dt
+    +
+    \begin{bmatrix}
+      0 & 0\\
+      0 & \sigma X_t
+    \end{bmatrix}dW_t
+  \end{IEEEeqnarray}
+  It follows from Fokker-Planck that the probability density of the joint process 
+  $p=\operatorname{\mathbb{P}}\left[Y_t=y,X_t=x\right]$ satisfies
+  the partial differential equation:
+  \begin{IEEEeqnarray}{rCl}
+    \frac{\partial p}{\partial t}
+    & = &
+    - \frac{\partial}{\partial x} \left(\mu + \frac{\sigma^2}{2}\right)xp
+    - \frac{\partial}{\partial y} x p
+    + \frac{\partial^2}{\partial x^2} \frac{\sigma^2}{2}x^2 p
+  \end{IEEEeqnarray}
+  We can restate this as an Eigen evolution equation:
+  \begin{IEEEeqnarray}{rCl}
+    \frac{\partial p}{\partial t}
+    + \left(\mu + \frac{3}{2}\sigma^2\right) x \frac{\partial p}{\partial x}
+    + x \frac{\partial p}{\partial y}
+    - \frac{\sigma^2}{2}x^2 \frac{\partial^2 p}{\partial x^2}
+    & = &
+    \left(-\mu + \frac{\sigma^2}{2}\right) p
+  \end{IEEEeqnarray}
+
   \section{Hazard Rate}
-  Partial differential equation of Gompertz process hazard rate.
+  Consider the first passage stopping time $T$ of the Gompertz process $G_t$, its cumulative
+  distribution is the characteristic functions of $Y_t$:
+  \begin{IEEEeqnarray}{rCl}
+    \operatorname{\mathbb{P}}\left[ T \ge t\right]
+    & = &
+    \operatorname{\mathbb{E}}\left[ e^{-\lambda Y_t} \right]
+  \end{IEEEeqnarray}
+  Thus the hazard rate $h$ of $T$:
+  \begin{IEEEeqnarray}{rCl}
+    h
+    & = &
+    \operatorname{\mathbb{P}}\left[ T = t\right\rVert\left. T \ge t\right]
+  \end{IEEEeqnarray}
+  satisfies the partial differential Eigen equation:
+  \begin{IEEEeqnarray}{rCl}
+    \frac{\operatorname{\mathbb{E}}\left[Y_t\right]}{\operatorname{\mathbb{E}}\left[X_t\right]}
+    \frac{\partial h}{\partial t} - \lambda\frac{\partial h}{\partial \lambda}
+    & = &
+    \left(\frac{\operatorname{\mathbb{E}}\left[Y_t\right]}{\operatorname{\mathbb{E}}\left[X_t\right]}\right)^2
+    \left(\frac{\partial}{\partial t}\frac{\operatorname{\mathbb{E}}\left[X_t\right]}{\operatorname{\mathbb{E}}\left[Y_t\right]}\right) h
+  \end{IEEEeqnarray}
+  Which by trial solution of separation of variables has the general solution:
+  \begin{IEEEeqnarray}{rCl}
+    h & = & \lambda^2 \operatorname{\mathbb{E}}\left[X_t\right] \operatorname{\mathbb{E}}\left[Y_t\right] \operatorname{f}\left( \lambda \operatorname{\mathbb{E}}\left[Y_t\right] \right)
+  \end{IEEEeqnarray}
+  for any $\operatorname{f}$ analytic.
 \end{document}
