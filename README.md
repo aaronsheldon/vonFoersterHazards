@@ -21,7 +21,7 @@ Aaron Sheldon (2020), "von Foerster Hazards" v1.0, Zenodo, doi:Pending registrat
     version   = {1.0},
     publisher = {Zenodo},
     url       = {https://doi.org}
-    }
+}
 ```
 
 Biography
