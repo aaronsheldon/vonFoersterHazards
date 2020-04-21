@@ -41,17 +41,43 @@
   $a_n < 1$, an alleviation from the stresses. However, even in the controlled setting of a
   laboratory it is experimentally challenging to directly measure the underlying accelerated
   metabolic time, instead we only have access to the failure time in bare units. Thus a
-  theory of ageing must be one the studies the subordination of the failure time by an 
+  theory of ageing must be one that studies the subordination of the failure time by an 
   elapsed metabolic time that is stochastically incremented.
 
-
-  Integrated geometric Brownian motion occurs in the asymptotic limit of infinitesimal
-  stochastic accelerations.
-  
-  If we assume as a first approximation that the stresses, and their respective
-  accelerations, are independent and stationary over time then by the L\'evy-Khintchine
-  characterization integrated Brownian motion is the only representation of elapsed
-  metabolic time that is L\'evy and continuous, \emph{jump free}.
+  Over the course of an organism's lifetime it will encounter exacerbations and alleviations
+  that accelerate $a_n,\dots,a_0=1$ metabolic time at times $t_n,\dots,t_0=0$. Furthermore,
+  because the accelerations are all positive $a_i > 0$ for each acceleration we can find a
+  finite real valued generator $b_n,\dots,b_0=0$ such that $a_i = e^{b_i}$. It follows that
+  the elapsed metabolic time $\tilde{t}_{t_n}$ at time $t_n$ is the sum of the products of
+  the accelerations up to time $t_{n-1}$ and the elapsed bare time steps $t_i - t_{i-1}$:
+  \begin{IEEEeqnarray}{rCl}
+    \tilde{t}_{t_n}
+    & = & 
+    \displaystyle \sum_{i=1}^{n}e^{\sum_{j=0}^{i-1} b_j} \left(t_i - t_{i-1}\right)
+  \end{IEEEeqnarray}
+  Provided no great explosions of acceleration occur in any small time scale, like say when
+  an actual explosion occurs, the generators $b_i$ will become infinitesimal on the same
+  order as $t_i - t_{i-1} \rightarrow 0$:
+  \begin{IEEEeqnarray}{rCl}
+    \mathcal{O}\left(b_i\right)
+    & = & 
+    \mathcal{O}\left(t_i - t_{i-1}\right)
+  \end{IEEEeqnarray}
+  The sum of products then becomes a stochastic process $\tilde{T}_t$ that is an integral of
+  a geometric random infinitesimal generator process $e^B_u$:
+  \begin{IEEEeqnarray}{rCl}
+    \tilde{T}_t
+    & = & 
+    \int_0^t e^{B_u} du
+  \end{IEEEeqnarray}
+  This is essentially the continuous part of the Kolmorgorov's characterization of
+  stochastic processes as being composed of either a finite number of discrete jumps or
+  an infinite number of continuous changes in a span of time. If we assume as a first
+  approximation that the stresses, and their respective accelerations, are independent and
+  stationary over time then by the L\'evy-Khintchine characterization Brownian motion is the
+  only infinitesimal generator $B_u$ of elapsed metabolic time that is L\'evy and
+  continuous, \emph{jump free}. The stochastic process of elapsed metabolic is better know
+  as integrated Brownian motion.
 
   \begin{definition}[Gompertz Process]
     A Gompertz process $G_t$ is a subordinated Poisson process $N_t$, with rate $\lambda$,
@@ -72,9 +98,9 @@
     \end{IEEEeqnarray}
   \end{definition}
   Phenomenologically the finite real stochastic process $\mu t + \sigma W_s$ is the
-  infinitesimal acceleration at time $t$ that generates a non-negative stochastic process
-  $X_t$ of accumulated accelerations up to time $t$ and whose integral $Y_t$ is a strictly
-  increasing stochastic process of elapsed metabolic time up to time $t$.
+  infinitesimal acceleration at time $t$ that generates a non-negative geometric stochastic
+  process $X_t$ of accumulated accelerations up to time $t$ and whose integral $Y_t$ is a
+  strictly increasing stochastic process of elapsed metabolic time up to time $t$.
 
   To start our exploration of the rich and subtletie of Gompertz processes we will briefly
   review of the properties of integrated geometric Brownian motion which are salient to
@@ -166,7 +192,7 @@
   usual statistics involving powers of $Y_t$, including the expectation, variance, and
   covariances.
 
-  \section{Martingale}
+  \section{Martingale Increments}
   The scaled increments of integrated geometric Brownian motion $Y_t$ form a two point
   martingale, for a triplet of times $t_1 > t_0 > t_{-1}$:
   \begin{IEEEeqnarray}{rCl}
