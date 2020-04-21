@@ -19,7 +19,7 @@
 \renewcommand{\IEEEQED}{\IEEEQEDopen}
 
 \begin{document}
-  \title{Gompertz Processes}
+  \title{Gompertz Processes: A Theory of Ageing}
   \author{Aaron Geoffrey Sheldon}
   \date{\today}
   \maketitle
@@ -31,18 +31,27 @@
   \end{abstract}
 
   \section{Preliminaries}
-  Basic science experiments in biology have observed that organisms respond to environmental
-  stress, including communicable diseases and exposures to toxins, with an acceleration in
-  their failure time. Outside of the controlled setting of a laboratory the environmental
-  stresses occur stochastically, resulting in a sequence of accelerations. The accelerations
-  can either increase the rate of failure, an exacerbation, or decrease the rate of failure,
-  a recovery. Even in the controlled setting of a laboratory it is very difficult to measure
-  the underlying metabolic time that is being accelerated, instead we have access to the
-  failure time in bare time units.
+  Basic science experiments in biology have ubiquitously observed that organisms respond to
+  environmental stresses, including communicable diseases and exposures to toxins, with an
+  acceleration $a$ in their failure time $a h\left(a t\right)$, where $h$ is the bare hazard
+  rate of the failure event. Outside of the controlled setting of a laboratory the
+  environmental stresses occur stochastically, resulting in a sequence of accelerations
+  $a_n$ of the underlying metabolic time. The accelerations can either increase the rate of
+  failure $a_n > 1$, an exacerbation of the stresses, or decrease the rate of failure
+  $a_n < 1$, an alleviation from the stresses. However, even in the controlled setting of a
+  laboratory it is experimentally challenging to directly measure the underlying accelerated
+  metabolic time, instead we only have access to the failure time in bare units. Thus a
+  theory of ageing must be one the studies the subordination of the failure time by an 
+  elapsed metabolic time that is stochastically incremented.
+
 
   Integrated geometric Brownian motion occurs in the asymptotic limit of infinitesimal
-  stochastic accelerations. By L\'evy-Khintchine this is the only representation that is
-  L\'evy and jump free.
+  stochastic accelerations.
+  
+  If we assume as a first approximation that the stresses, and their respective
+  accelerations, are independent and stationary over time then by the L\'evy-Khintchine
+  characterization integrated Brownian motion is the only representation of elapsed
+  metabolic time that is L\'evy and continuous, \emph{jump free}.
 
   \begin{definition}[Gompertz Process]
     A Gompertz process $G_t$ is a subordinated Poisson process $N_t$, with rate $\lambda$,
@@ -64,15 +73,14 @@
   \end{definition}
   Phenomenologically the finite real stochastic process $\mu t + \sigma W_s$ is the
   infinitesimal acceleration at time $t$ that generates a non-negative stochastic process
-  $X_t$ which measures the cumulative  acceleration up to time $t$ and whose integral $Y_t$
-  is a strictly increasing stochastic process that measures the elapsed metabolic time at
-  up to time $t$.
+  $X_t$ of accumulated accelerations up to time $t$ and whose integral $Y_t$ is a strictly
+  increasing stochastic process of elapsed metabolic time up to time $t$.
 
-  We begin with brief review of the properties of integrated geometric Brownian
-  motion which are salient to developing a theory of Gompertz processes. This is by no means
-  a comprehensive compendium. Much of the material I will cover has been explored deeply and
-  thoroughly in the quantitative finance literature within the context of pricing Asian
-  options.
+  To start our exploration of the rich and subtletie of Gompertz processes we will briefly
+  review of the properties of integrated geometric Brownian motion which are salient to
+  developing our theory. This is by no means a comprehensive compendium. Much of the
+  material I will cover has been explored deeply and thoroughly in the quantitative finance
+  literature within the context of pricing Asian options.
   
   Our first observation is that the increments of $Y_t$ can be factored by its carrier
   process $X_t$, for times $t > s$:
@@ -88,6 +96,17 @@
     & = &
     X_s^n \operatorname{\mathbb{E}}\left[ Y_{t-s}^n \right]
   \end{IEEEeqnarray}
+  We will liberally exploit this technique of arbitraging the elapsed metabolic time $Y_t$ 
+  against the accumulated acceleration $X_t$ to reduce expectations down to the well know
+  standard terms for $X_t$ and $Y_t$
+  \begin{IEEEeqnarray}{rCl}
+    \operatorname{\mathbb{E}}\left[ X_t \right]
+    & = &
+    e^{\left(\mu + \frac{\sigma^2}{2}\right)t}\\
+    \operatorname{\mathbb{E}}\left[ Y_t \right]
+    & = &
+    \frac{e^{\left(\mu + \frac{\sigma^2}{2}\right)t} - 1}{\mu + \frac{\sigma^2}{2}}
+  \end{IEEEeqnarray}
 
   \begin{lemma}[Acceleration Lemma]
     The expectation of non-negative integer powers $n \ge 0 $ of the carrier process of
@@ -100,10 +119,13 @@
       {\operatorname{\mathbb{E}}\left[\left(Y_t-Y_s\right)^n\right]}\left(Y_t-Y_s\right)^n
     \end{IEEEeqnarray}
   \end{lemma}
+  \begin{proof}
+    Carry out induction on $n$.
+  \end{proof}
 
   A simple corollary follows from a nearly trivial derivation.
 
-  \begin{corollary}
+  \begin{corollary}[Counterpoint Corollary]
     For a triplet of times $t_1 > t_0 > t_{-1}$ we have the following conditional
     expectation:
     \begin{IEEEeqnarray}{rCl}
@@ -119,6 +141,9 @@
       \left(Y_{t_0} - Y_{t_{-1}}\right)^n
     \end{IEEEeqnarray}
   \end{corollary}
+  \begin{proof}
+    Factor and apply the previous lemma.
+  \end{proof}
 
   Even with the factorization observation we are still in need of a means of reducing the
   expectation of the powers $Y_t^n$. A small lemma suffices to provide the means of finding
@@ -133,6 +158,13 @@
       n \int_0^t e^{\left(n\mu + \frac{n^2}{2} \sigma^2\right)u} \operatorname{\mathbb{E}}\left[ Y_{t-u}^{n-1} \right] du
     \end{IEEEeqnarray}
   \end{lemma}
+  \begin{proof}
+    Carry out a routine factorization.
+  \end{proof}
+
+  With the preceding lemma in hand we have the sufficient tools required to estimate all the
+  usual statistics involving powers of $Y_t$, including the expectation, variance, and
+  covariances.
 
   \section{Martingale}
   The scaled increments of integrated geometric Brownian motion $Y_t$ form a two point
@@ -151,9 +183,9 @@
     \frac{Y_{t_0} - Y_{t_{-1}}}{e^{\left(\mu + \frac{\sigma^2}{2}\right)t_0} - e^{\left(\mu + \frac{\sigma^2}{2}\right)t_{-1}}}
   \end{IEEEeqnarray}
   From this martingale property of $Y_t$ any triple of stopping times  $T_{n+1},T_n,T_{n-1}$
-  for consecutive passages of $G_t$ will have a $2$ Markov dependence. This amounts to a
-  concrete prediction that ageing alone introduces a statistical dependence in the intervals
-  between consecutive admissions for healthcare.
+  of consecutive passages of $G_t$ will have a $2$ Markov dependence. This amounts to a
+  concrete prediction that ageing alone introduces a statistical dependence between the
+  intervals of consecutive admissions for healthcare services.
 
   \section{L\'evy Process}
   Integrated geometric Brownian motion $Y_t$ and its carrier process of geometric Brownian
@@ -218,8 +250,8 @@
   \end{IEEEeqnarray}
 
   \section{Hazard Rate}
-  Consider the first passage stopping time $T_1$ of the Gompertz process $G_t$, its cumulative
-  distribution is the characteristic functions of $Y_t$:
+  Consider the first passage stopping time $T_1$ of the Gompertz process $G_t$, its 
+  cumulative distribution is the characteristic functions of $Y_t$:
   \begin{IEEEeqnarray}{rCl}
     \operatorname{\mathbb{P}}\left[ T_1 \ge t\right]
     & = &
@@ -241,27 +273,35 @@
   \end{IEEEeqnarray}
   Which by trial solution of separation of variables has the general solution:
   \begin{IEEEeqnarray}{rCl}
-    h & = & \lambda^2 \operatorname{\mathbb{E}}\left[X_t\right] \operatorname{\mathbb{E}}\left[Y_t\right] \operatorname{f}_{\mu, \sigma}\left( \lambda \operatorname{\mathbb{E}}\left[Y_t\right] \right)
+    h & = & \lambda^2 \operatorname{\mathbb{E}}\left[X_t\right] \operatorname{\mathbb{E}}\left[Y_t\right] f_{\mu, \sigma}\left( \lambda \operatorname{\mathbb{E}}\left[Y_t\right] \right)
   \end{IEEEeqnarray}
-  for any analytic $\operatorname{f}_{\mu, \sigma}$ dependent on the drift and diffusion of
-  the carrier process $X_t$. Taking the limit to deterministic subordinations yield the]
-  boundary conditions:
-  \begin{longtable}{l l}
-    \caption{Boundary constraints on the hazard rate $h$}\\
-    \multicolumn{1}{l}{Boundary} & \multicolumn{1}{l}{Constraint}\\
+  for any analytic $f_{\mu, \sigma}$ dependent on the drift and diffusion of
+  the carrier process $X_t$. Taking the limit to deterministic subordination yields the
+  constraints on $f_{\mu, \sigma}$ by L'H\^opital's rule:
+  \begin{longtable}{lll}
+    \caption{Boundary conditions on the hazard rate $h$}\\
+    \multicolumn{1}{l}{Boundary} & \multicolumn{1}{l}{Condition} & \multicolumn{1}{l}{Constrains}\\
     \hline
     \endfirsthead
     \caption*{Continued from previous page.}\\
-    \multicolumn{1}{l}{Boundary} & \multicolumn{1}{l}{Constraint}\\
+    \multicolumn{1}{l}{Boundary} & \multicolumn{1}{l}{Condition} & \multicolumn{1}{l}{Constrains}\\
     \hline
     \endhead
     \caption*{Continued on next page.}
     \endfoot
-    \caption*{Boundary constraints on the hazard rate derived from the limit to deterministic subordination.}
-    \endlastfoot
-    $\lambda = 0$      & $h = 0$\\
-    $t = 0$            & $h = \lambda$\\
-    $\mu = \sigma = 0$ & $h = \lambda$\\
-    $\sigma = 0$       & $h = \lambda \mu e^{\mu t}$
+    \caption*{Boundary conditions on the hazard rate derived from the limits to deterministic subordination.}
+    \endlastfoot\\
+    $\lambda = 0$
+    & $h = 0$ &
+    $\displaystyle\frac{\partial}{\partial\lambda}f_{\mu, \sigma}\left( \lambda \operatorname{\mathbb{E}}\left[Y_t\right] \right)$\\\\
+    $t = 0$
+    & $h = \lambda$ &
+    $\displaystyle\frac{\partial}{\partial t} f_{\mu, \sigma}\left( \lambda \operatorname{\mathbb{E}}\left[Y_t\right] \right)$\\\\
+    $\mu = \sigma = 0$
+    & $h = \lambda$ &
+    $\displaystyle\left[\frac{\partial}{\partial\mu}\cdot + \frac{\partial}{\partial\sigma}\cdot\right]\left(f_{\mu, \sigma}\left( \lambda \operatorname{\mathbb{E}}\left[Y_t\right] \right)\right)$\\\\
+    $\sigma = 0$
+    & $h = \lambda \mu e^{\mu t}$ &
+    $\displaystyle\frac{\partial}{\partial\sigma} f_{\mu, \sigma}\left( \lambda \operatorname{\mathbb{E}}\left[Y_t\right] \right)$\\\\
   \end{longtable}
 \end{document}
