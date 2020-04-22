@@ -59,10 +59,10 @@ function Base.iterate(E::evolve, step::Int64)
     else
         
         # One time computation of the extensize birth rate
-        b = birthrate(E.ages, E.population)
+        b = birthrate(E)
         
         # One time computation of the extensive hazard rate
-        H = hazardrate(E.ages, E.population)
+        H = hazardrate(E)
         
         # Curried transition function
         t(a, n) = conservesum!(randomtruncate.(exp(-E.size * hazardrate(a, H)) * n), sum(n))
@@ -74,7 +74,7 @@ function Base.iterate(E::evolve, step::Int64)
         
         # Youngest cohort is less than 1 year old, add births to youngest cohort
         if E.ages[end] < 1.0 then
-            @inbounds E.population[end] = E.population[end] + b
+            E.population[end] = E.population[end] + b
             
         # Youngest cohort is more than 1 year old, generate a new youngest cohort
         else
@@ -86,20 +86,20 @@ function Base.iterate(E::evolve, step::Int64)
 end
 
 """
-    birthrate(a, n)
+    birthrate(E)
 
 Stub function to be overloaded in implementation. Compute the extensive
-birth rate vector from the ages a and occupancy n of the population.
+birth rate vector from the population E.
 """
-function birthrate(a::AbstractVector{Float64}, n::AbstractVector{T})::T where T<:AbstractVector{Int64} end
+function birthrate(E::evolve)::T where T<:AbstractVector{Int64} end
 
 """
-    hazardrate(a, n)
+    hazardrate(E)
 
 Stub function to be overloaded in implementation. Compute the extensive
-hazard rate matrix from the ages a and occupancy n of the population.
+hazard rate matrix from the population E.
 """
-function hazardrate(a::AbstractVector{Float64}, n::AbstractVector{T} where T<:AbstractVector{Int64})::AbstractMatrix{Float64} end
+function hazardrate(E::evolve)::T where T<:AbstractMatrix{Float64} end
 
 """
     hazardrate(a, H)
