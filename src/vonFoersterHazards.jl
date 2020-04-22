@@ -15,7 +15,7 @@ export randomtruncate,
        birthrate
 
 """
-    evolve(ages, population, count, size)
+    evolve(ages, population, covariances, elapsed, count, size)
 
 Iterable container for the population model. Conceptually the ages labels
 the rows of the population matrix, and the columns are the states. Cohorts
