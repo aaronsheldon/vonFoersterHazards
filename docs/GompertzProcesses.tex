@@ -64,7 +64,7 @@
     \mathcal{O}\left(t_i - t_{i-1}\right)
   \end{IEEEeqnarray}
   The sum of products then becomes a stochastic process $\tilde{T}_t$ that is an integral of
-  a geometric random infinitesimal generator process $e^B_u$:
+  a geometric random infinitesimal generator process $e^{B_u}$:
   \begin{IEEEeqnarray}{rCl}
     \tilde{T}_t
     & = & 
@@ -73,11 +73,11 @@
   This is essentially the continuous part of the Kolmorgorov's characterization of
   stochastic processes as being composed of either a finite number of discrete jumps or
   an infinite number of continuous changes in a span of time. If we assume as a first
-  approximation that the stresses, and their respective accelerations, are independent and
-  stationary over time then by the L\'evy-Khintchine characterization Brownian motion is the
-  only infinitesimal generator $B_u$ of elapsed metabolic time that is L\'evy and
-  continuous, \emph{jump free}. The stochastic process of elapsed metabolic is better know
-  as integrated Brownian motion.
+  approximation that the exacerbations and alleviations, and their respective accelerations,
+  are independent and stationary over time then by the L\'evy-Khintchine characterization 
+  the only infinitesimal generator of elapsed metabolic time that is L\'evy and continuous,
+  \emph{jump free}, is Brownian motion $B_u$. The stochastic process of elapsed metabolic 
+  time is better known as integrated geometric Brownian motion.
 
   \begin{definition}[Gompertz Process]
     A Gompertz process $G_t$ is a subordinated Poisson process $N_t$, with rate $\lambda$,
@@ -102,11 +102,11 @@
   process $X_t$ of accumulated accelerations up to time $t$ and whose integral $Y_t$ is a
   strictly increasing stochastic process of elapsed metabolic time up to time $t$.
 
-  To start our exploration of the rich and subtletie of Gompertz processes we will briefly
+  To start our exploration of the rich and subtleties of Gompertz processes we will briefly
   review of the properties of integrated geometric Brownian motion which are salient to
   developing our theory. This is by no means a comprehensive compendium. Much of the
-  material I will cover has been explored deeply and thoroughly in the quantitative finance
-  literature within the context of pricing Asian options.
+  material I will cover has been deeply and thoroughly explored in the quantitative finance
+  literature in the theory of pricing Asian options.
   
   Our first observation is that the increments of $Y_t$ can be factored by its carrier
   process $X_t$, for times $t > s$:
