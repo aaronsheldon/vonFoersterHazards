@@ -95,7 +95,9 @@ end
 Base.eltype(::Type{evolve{S, T}}) = S
 Base.length(E::evolve) = E.count
 Base.size(E::evolve, d=1) = ((d==1) ? length(E) : 1)
-function Base.iterate(E::evolve)    
+function Base.iterate(E::evolve)
+    
+    # Sanity checks
     (E.size > 0) ||
         throw(DomainError(size, "time increment must be positive."))
     
@@ -109,73 +111,71 @@ function Base.iterate(E::evolve)
         throw(DomainError(E.initial.strata, "cohorts must be non-negative."))
     
     (minimum(E.initial.covariances) == convert(eltype(E.initial.covariances), 0) == maximum(E.initial.covariances)) ||
-        throw(DomainError(E.initial.covariances, "covariances must be zero."))   
-
+        throw(DomainError(E.initial.covariances, "covariances must be zero."))
+    
     H = hazardrate(E.initial)
     (al,) = size(E.initial.ages)
     (bl,) = size(birthrate(E.initial))
     (cl, cw) = size(E.initial.strata)
     (dl, dw) = size(H)
     (el, ew) = size(hazardrate(E.initial.ages[1], H))
-    (fl, fw, fh) = size(E.initial.covariances) 
+    (fl, fw, fh) = size(E.initial.covariances)
     
     (al == cl == fl) ||
-        throw(DimensionMismatch("number of cohorts and covariances must equal number of ages.")) 
-
+        throw(DimensionMismatch("number of cohorts and covariances must equal number of ages."))
+    
     (bl  == cw == dl == dw == el == ew == fw == fh) ||
         throw(DimensionMismatch("strata in covariances, birth rate, extensize hazard rate, intensize hazard rate, and cohorts must be equal."))
     
+    # Send
     (E.initial, (0, E.initial))
 end
 function Base.iterate(E::evolve, S)
-    if S[1] > E.count
-        nothing
-    else
+    (S[1] <= E.count) || return nothing
         
-        # One time computation of the extensize birth rate
-        b = birthrate(S[2])
-        
-        # One time computation of the extensive hazard rate
-        H = hazardrate(S[2])
-        
-        # Curried transition function
-        function t(c)
-            P = exp(-E.size * hazardrate(a, H))
-            cohort(
-                c.elapsed + E.size,
-                c.age + E.size,
-                conservesum!(randomtruncate.(P * c.stratum), sum(c.stratum)),
-                covariance(c.covariance, P, c.stratum)
-            )
-        end
-        
-        # Compute the transitions within each cohort
-        S[2] .= t.(S[2])
-        
-        # Youngest cohort is less than 1 year old, add births to youngest cohort
-        if S[1].ages[end] < 1.0 then
-            R = population(
-                S[2] + E.size,
-                S[2].ages,
-                S[2].strata,
-                S[2].covariances
-            )
-            R.cohorts[end, :] .= R.cohorts[end, :] .+ b'
-            
-        # Youngest cohort is more than 1 year old, generate a new youngest cohort
-        else
-            R = population(
-                S[2] + E.size,
-                S[2].ages,
-                [S[2].strata; b'],
-                [S[2].covariances; zeros(eltype(S[2].covariances), 1, size(S[2].covariances, 2), size(S[2].covariances, 3))]
-            )
-            push!(R.ages, convert(eltype(R.ages), 0))
-        end
-        
-        # Send
-        (R, (1 + S[1], R))
+    # One time computation of the extensize birth rate
+    b = birthrate(S[2])
+
+    # One time computation of the extensive hazard rate
+    H = hazardrate(S[2])
+
+    # Curried transition function
+    function t(c)
+        P = exp(-E.size * hazardrate(a, H))
+        cohort(
+            c.elapsed + E.size,
+            c.age + E.size,
+            conservesum!(randomtruncate.(P * c.stratum), sum(c.stratum)),
+            covariance(c.covariance, P, c.stratum)
+        )
     end
+
+    # Compute the transitions within each cohort
+    S[2] .= t.(S[2])
+
+    # Youngest cohort is less than 1 year old, add births to youngest cohort
+    if S[1].ages[end] < 1.0 then
+        R = population(
+            S[2] + E.size,
+            S[2].ages,
+            S[2].strata,
+            S[2].covariances
+        )
+        R.cohorts[end, :] .= R.cohorts[end, :] .+ b'
+
+    # Youngest cohort is more than 1 year old, generate a new youngest cohort
+    else
+        R = population(
+            S[2] + E.size,
+            S[2].ages,
+            [S[2].strata; b'],
+            [S[2].covariances; zeros(eltype(S[2].covariances), 1, size(S[2].covariances, 2), size(S[2].covariances, 3))]
+        )
+        push!(R.ages, convert(eltype(R.ages), 0))
+    end
+
+    # Send
+    (R, (1 + S[1], R))
 end
 
 """
