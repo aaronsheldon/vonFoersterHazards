@@ -19,18 +19,18 @@ export randomtruncate,
        conservesum!,
        covariance!,
        cohort,
-       population
+       population,
        evolve,
        hazardrate,
        birthrate
 
 """
-    cohort(elapsed, age, occupancy, covariance)
+    strata(elapsed, age, occupancy, covariance)
 
 Return type for indexing into the population. Container for the state occupancies
 of a specific age group, and the covariances between the occupancies.
 """
-struct cohort{
+struct strata{
         Q<:Real,
         R<:Real,
         S<:AbstractVector{U} where U<:Real,
@@ -38,10 +38,10 @@ struct cohort{
     }
     elapsed::Q
     age::R
-    occupancy::S
+    cohort::S
     covariance::T
 end
-cohort(a, o) = cohort(0.0, a, o, zeros(Float64, size(o, 1), size(o, 1)))
+strata(a, o) = strata(0.0, a, o, zeros(Float64, size(o, 1), size(o, 1)))
 
 """
     population(elapsed, ages, cohorts, covariances)
@@ -76,7 +76,7 @@ Base.lastindex(P::population) = length(P)
 Base.getindex(P::population, i) = cohort(P.elapsed, P.ages[i], view(P.cohorts, i, :), view(P.covariances, i, :, :))
 function Base.setindex!(P::population, C::cohort, i)
     P.ages[i] = C.age
-    P.cohorts[i, :] .= C.occupancy[:]
+    P.cohorts[i, :] .= C.cohort[:]
     P.covariances[i, :, :] .= C.covariance[:, :]
 end
 
@@ -143,10 +143,10 @@ function Base.iterate(E::evolve, S)
             r = cohort(
                 c.elapsed + E.size,
                 c.age + E.size,
-                conservesum!(randomtruncate.(P * c.occupancy), sum(c.occupancy)),
+                conservesum!(randomtruncate.(P * c.cohort), sum(c.cohort)),
                 c.covariance
             )
-            covariance!(r.covariance, P, r.occupancy)
+            covariance!(r.covariance, P, r.cohort)
             r
         end
         
