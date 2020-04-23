@@ -6,52 +6,126 @@ from the hazard rate, birth rate, and initial demographics.
 """
 module vonFoersterHazards
 
-import Base.iterate
+import Base.iterate,
+       Base.length,
+       Base.eltype,
+       Base.firstindex,
+       Base.lastindex,
+       Base.getindex,
+       Base.setindex!,
+       Base.size
 export randomtruncate,
        conservesum!,
        covariance,
+       cohort,
+       population
        evolve,
        hazardrate,
        birthrate
 
 """
-    evolve(ages, population, covariances, elapsed, count, size)
+    cohort(age, occupancy, covariance, elapsed)
 
-Iterable container for the population model. Conceptually the ages labels
-the rows of the population matrix, and the columns are the states. Cohorts
-are stored in reverse order, so that births can be pushed to the vector.
+Return type for indexing into the population. Container for the state occupancies
+of a specific age group, and the covariances between the occupancies.
 """
-struct evolve{R<:AbstractVector{Float64}, S<:AbstractVector{U} where U<:AbstractVector{Int64}, T<:AbstractVector{V} where V<:AbstractMatrix{Float64}}
+struct cohort{
+        Q<:Real,
+        R<:Real,
+        S<:AbstractVector{U} where U<:Real,
+        T<:AbstractMatrix{V} where V<:Real
+    }
+    elapsed::Q
+    age::R
+    occupancy::S
+    covariance::T
+end
+cohort(a, o) = cohort(0.0, a, o, zeros(Float64, size(o, 1), size(o, 1)))
+
+"""
+    population(elapsed, ages, cohorts, covariances)
+
+Indexable container for the demographics of a population at a single time step.
+Conceptually the ages labels the rows of the population matrix, and the columns
+are the states. Cohorts are stored in reverse order, so that births can be pushed
+to the vector.
+"""
+struct population{
+        Q<:Real, 
+        R<:AbstractVector{U} where U<:Real,
+        S<:AbstractMatrix{V} where V<:Real,
+        T<:AbstractArray{W, 3} where W<:Real
+    }
+    elapsed::Q
     ages::R
-    population::S
+    cohorts::S
     covariances::T
-    elapsed::Float64
-    count::Int64
-    size::Float64
+end
+population(a, c) = population(0.0, a, c, zeros(Float64, size(c, 1), size(c, 2), size(c, 2)))
+
+Base.eltype(::Type{population{Q, R{U}, S{V}, T{W}}}) = cohort{
+    Q, 
+    U, 
+    SubArray{V, 1, S, Tuple{Int64, Base.Slice{Base.OneTo{Int64}}}, true},
+    SubArray{W, 2, T, Tuple{Int64, Base.Slice{Base.OneTo{Int64}}, Base.Slice{Base.OneTo{Int64}}}, true}
+}
+Base.length(P::population) = length(P.ages)
+Base.size(P::population, d=1) = ((d==1) ? length(P) : 1)
+Base.firstindex(P::population) = 1
+Base.lastindex(P::population) = length(P)
+Base.getindex(P::population, i) = cohort(P.elapsed, P.ages[i], view(P.cohorts, i, :), view(P.covariances, i, :, :))
+function Base.setindex!(P::population, C::cohort, i)
+    P.ages[i] = C.age
+    P.cohorts[i, :] .= C.occupancy[:]
+    P.covariances[i, :, :] .= C.covariance[:, :]
 end
 
-function Base.iterate(E::evolve)
+"""
+    evolve(initial, size, count)
+
+Iterable container for the population evolution engine. Computes count steps of
+duration size from starting population initial.
+"""
+struct evolve{S<:population, T<:Real}
+    initial::S
+    size::T
+    count::Int64
+end
+
+Base.eltype(::Type{evolve{S, T}}) = S
+Base.length(E::evolve) = E.count
+Base.size(E::evolve, d=1) = ((d==1) ? length(E) : 1)
+function Base.iterate(E::evolve)    
     (E.size > 0) ||
-        throw(DomainError(size, "time increment size must be positive"))
-    (issorted(E.ages, rev=true)) ||
-        throw(DomainError(E.ages, "ages must be sorted in descending order"))
-    (0.0 <= E.ages[end]) ||
-        throw(DomainError(E.ages, "ages must be non-negative"))
-    (0 <= minimum(minimum.(E.population))) ||
-        throw(DomainError(E.population, "state occupancies in population must be non-negative"))
-    (length(E.ages) == length(E.population)) ||
-        throw(DimensionMismatch("cohorts in ages must equal cohorts in population"))
-    (l, u) = extrema(length.(E.population))
-    (l == u) ||
-        throw(DimensionMismatch("states in the cohorts of population must be equal"))
-    (length(birthrate(E.ages, E.population)) == u) ||
-        throw(DimensionMismatch("states in the birth rate must equal the states in the cohorts of population"))
-    H = hazardrate(E.ages, E.population)
-    (size(H) == (l, u)) ||
-        throw(DimensionMismatch("states in the extensize hazard rate must equal the states in the cohorts of population"))
-    (size(hazardrate(E.ages[1], H)) == (l, u)) ||
-        throw(DimensionMismatch("states in the intensize hazard rate must equal the states in the cohorts of population"))
-    (E, 0)
+        throw(DomainError(size, "time increment must be positive."))
+    
+    (issorted(E.initial.ages, rev=true)) ||
+        throw(DomainError(E.initial.ages, "ages must be sorted in descending order."))
+    
+    (convert(eltype(E.initial.ages), 0) <= E.initial.ages[end]) ||
+        throw(DomainError(E.initial.ages, "ages must be non-negative."))
+    
+    (convert(eltype(E.initial.cohorts), 0) <= minimum(E.initial.cohorts)) ||
+        throw(DomainError(E.initial.cohorts, "cohorts must be non-negative."))
+    
+     (minimum(E.initial.covariances) == convert(eltype(E.initial.covariances), 0) == maximum(E.initial.covariances)) ||
+        throw(DomainError(E.initial.covariances, "covariances must be zero."))   
+
+    H = hazardrate(E.initial)
+    (al,) = size(E.initial.ages)
+    (bl,) = size(birthrate(E.initial))
+    (cl, cw) = size(E.initial.cohorts)
+    (dl, dw) = size(H)
+    (el, ew) = size(hazardrate(E.initial.ages[1], H))
+    (fl, fw, fh) = size(E.initial.covariances) 
+    
+    (al == cl == fl) ||
+        throw(DimensionMismatch("stratas in ages, cohorts, and covariances must be equal.")) 
+
+    (bl  == cw == dl == dw == el == ew == fw == fh) ||
+        throw(DimensionMismatch("states in the covariances, birth rate, extensize hazard rate, intensize hazard rate, and cohorts must be equal."))
+    
+    (E.initial, 0)
 end
 function Base.iterate(E::evolve, step::Int64)
     if step > E.count
@@ -59,10 +133,10 @@ function Base.iterate(E::evolve, step::Int64)
     else
         
         # One time computation of the extensize birth rate
-        b = birthrate(E)
+        b = birthrate(E.initial)
         
         # One time computation of the extensive hazard rate
-        H = hazardrate(E)
+        H = hazardrate(E.intial)
         
         # Curried transition function
         t(a, n) = conservesum!(randomtruncate.(exp(-E.size * hazardrate(a, H)) * n), sum(n))
@@ -81,7 +155,7 @@ function Base.iterate(E::evolve, step::Int64)
             push!(E.ages, 0.0)
             push!(E.population, b)
         end
-        (E, step + 1)
+        (E.initial, step + 1)
     end
 end
 
@@ -89,17 +163,17 @@ end
     birthrate(E)
 
 Stub function to be overloaded in implementation. Compute the extensive
-birth rate vector from the population E.
+birth rate vector from the population P.
 """
-function birthrate(E::evolve)::T where T<:AbstractVector{Int64} end
+function birthrate(P::population) end
 
 """
     hazardrate(E)
 
 Stub function to be overloaded in implementation. Compute the extensive
-hazard rate matrix from the population E.
+hazard rate matrix from the population P.
 """
-function hazardrate(E::evolve)::T where T<:AbstractMatrix{Float64} end
+function hazardrate(P::population) end
 
 """
     hazardrate(a, H)
@@ -107,7 +181,7 @@ function hazardrate(E::evolve)::T where T<:AbstractMatrix{Float64} end
 Stub function to be overloaded in implementation. Compute the intensive
 hazard rate matrix from the extensive hazard rate matrix and a given age a.
 """
-function hazardrate(a::Float64, H::T)::T where T<:AbstractMatrix{Float64} end
+function hazardrate(a, H) end
 
 """
     randomtruncate(x)
