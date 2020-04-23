@@ -17,7 +17,7 @@ import Base.iterate,
 
 export randomtruncate,
        conservesum!,
-       covariance!,
+       covariance,
        cohort,
        population,
        evolve,
@@ -25,12 +25,12 @@ export randomtruncate,
        birthrate
 
 """
-    strata(elapsed, age, occupancy, covariance)
+    cohort(elapsed, age, stratum, covariance)
 
 Return type for indexing into the population. Container for the state occupancies
 of a specific age group, and the covariances between the occupancies.
 """
-struct strata{
+struct cohort{
         Q<:Real,
         R<:Real,
         S<:AbstractVector{U} where U<:Real,
@@ -38,13 +38,13 @@ struct strata{
     }
     elapsed::Q
     age::R
-    cohort::S
+    stratum::S
     covariance::T
 end
-strata(a, o) = strata(0.0, a, o, zeros(Float64, size(o, 1), size(o, 1)))
+cohort(a, o) = cohort(0.0, a, o, zeros(Float64, size(o, 1), size(o, 1)))
 
 """
-    population(elapsed, ages, cohorts, covariances)
+    population(elapsed, ages, strata, covariances)
 
 Indexable container for the demographics of a population at a single time step.
 Conceptually the ages labels the rows of the population matrix, and the columns
@@ -59,7 +59,7 @@ struct population{
     }
     elapsed::Q
     ages::R
-    cohorts::S
+    strata::S
     covariances::T
 end
 population(a, c) = population(0.0, a, c, zeros(Float64, size(c, 1), size(c, 2), size(c, 2)))
@@ -73,11 +73,12 @@ Base.length(P::population) = length(P.ages)
 Base.size(P::population, d=1) = ((d==1) ? length(P) : 1)
 Base.firstindex(P::population) = 1
 Base.lastindex(P::population) = length(P)
-Base.getindex(P::population, i) = cohort(P.elapsed, P.ages[i], view(P.cohorts, i, :), view(P.covariances, i, :, :))
+Base.getindex(P::population, i) = cohort(P.elapsed, P.ages[i], view(P.strata, i, :), view(P.covariances, i, :, :))
 function Base.setindex!(P::population, C::cohort, i)
     P.ages[i] = C.age
-    P.cohorts[i, :] .= C.cohort[:]
+    P.strata[i, :] .= C.stratum[:]
     P.covariances[i, :, :] .= C.covariance[:, :]
+    C
 end
 
 """
@@ -104,8 +105,8 @@ function Base.iterate(E::evolve)
     (convert(eltype(E.initial.ages), 0) <= E.initial.ages[end]) ||
         throw(DomainError(E.initial.ages, "ages must be non-negative."))
     
-    (convert(eltype(E.initial.cohorts), 0) <= minimum(E.initial.cohorts)) ||
-        throw(DomainError(E.initial.cohorts, "cohorts must be non-negative."))
+    (convert(eltype(E.initial.strata), 0) <= minimum(E.initial.strata)) ||
+        throw(DomainError(E.initial.strata, "cohorts must be non-negative."))
     
     (minimum(E.initial.covariances) == convert(eltype(E.initial.covariances), 0) == maximum(E.initial.covariances)) ||
         throw(DomainError(E.initial.covariances, "covariances must be zero."))   
@@ -113,16 +114,16 @@ function Base.iterate(E::evolve)
     H = hazardrate(E.initial)
     (al,) = size(E.initial.ages)
     (bl,) = size(birthrate(E.initial))
-    (cl, cw) = size(E.initial.cohorts)
+    (cl, cw) = size(E.initial.strata)
     (dl, dw) = size(H)
     (el, ew) = size(hazardrate(E.initial.ages[1], H))
     (fl, fw, fh) = size(E.initial.covariances) 
     
     (al == cl == fl) ||
-        throw(DimensionMismatch("stratas in ages, cohorts, and covariances must be equal.")) 
+        throw(DimensionMismatch("number of cohorts and covariances must equal number of ages.")) 
 
     (bl  == cw == dl == dw == el == ew == fw == fh) ||
-        throw(DimensionMismatch("states in the covariances, birth rate, extensize hazard rate, intensize hazard rate, and cohorts must be equal."))
+        throw(DimensionMismatch("strata in covariances, birth rate, extensize hazard rate, intensize hazard rate, and cohorts must be equal."))
     
     (E.initial, (0, E.initial))
 end
@@ -140,14 +141,12 @@ function Base.iterate(E::evolve, S)
         # Curried transition function
         function t(c)
             P = exp(-E.size * hazardrate(a, H))
-            r = cohort(
+            cohort(
                 c.elapsed + E.size,
                 c.age + E.size,
-                conservesum!(randomtruncate.(P * c.cohort), sum(c.cohort)),
-                c.covariance
+                conservesum!(randomtruncate.(P * c.stratum), sum(c.stratum)),
+                covariance(c.covariance, P, c.stratum)
             )
-            covariance!(r.covariance, P, r.cohort)
-            r
         end
         
         # Compute the transitions within each cohort
@@ -158,7 +157,7 @@ function Base.iterate(E::evolve, S)
             R = population(
                 S[2] + E.size,
                 S[2].ages,
-                S[2].cohorts,
+                S[2].strata,
                 S[2].covariances
             )
             R.cohorts[end, :] .= R.cohorts[end, :] .+ b'
@@ -168,8 +167,8 @@ function Base.iterate(E::evolve, S)
             R = population(
                 S[2] + E.size,
                 S[2].ages,
-                [S[2].cohorts; b'],
-                S[2].covariances
+                [S[2].strata; b'],
+                [S[2].covariances; zeros(eltype(S[2].covariances), 1, size(S[2].covariances, 2), size(S[2].covariances, 3))]
             )
             push!(R.ages, convert(eltype(R.ages), 0))
         end
@@ -229,19 +228,18 @@ function conservesum!(A, a)
 end
 
 """
-    covariance!(C, P, n)
+    covariance(C, P, n)
 
 Update of the covariances C from the transition probabilities P and the previous
 state n. Each column of P is assumed to represent the exit  probabilities from a
 single state and thus should add to 1 with all entries non-negative. Note this
 assumes the inputs are well formed, there are no bounds or sanity checks.
 """
-function covariance!(C, P, n)
+function covariance(C, P, n)
     U = (P.*n')*P'
-    i = [1:(1 + size(U, 1)):length(U)...]
-    U[i] .= (P*n) .- U[i]
-    C .= P*C*P' .+ U
-    C
+    I = [1:stride(U, 2):length(U)...]
+    U[I] .= (P*n) .- U[I]
+    P*C*P' .+ U
 end
 
 end
