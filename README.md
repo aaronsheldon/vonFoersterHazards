@@ -6,7 +6,7 @@ In this project I implement a model of age dependent communicable diseases using
 Land Acknowledgement
 --------------------
 
-The author has had the good fortune to have found a home near the mountains on the traditional territories of the [Treaty 7](https://www.treaty7.org/) people, and is blessed to have has good neighbors the peoples of the [Tsuut'ina Nation](https://tsuutinanation.com/).
+The author has had the good fortune to have found a home near the mountains on the traditional territories of the [Treaty 7](https://www.treaty7.org/) people, and is blessed to have as good neighbors the peoples of the [Tsuut'ina Nation](https://tsuutinanation.com/).
 
 Citing
 ------
