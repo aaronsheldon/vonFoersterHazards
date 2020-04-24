@@ -124,7 +124,7 @@
   \end{IEEEeqnarray}
   We will liberally exploit this technique of arbitraging the elapsed metabolic time $Y_t$ 
   against the accumulated acceleration $X_t$ to reduce expectations down to the well know
-  standard terms for $X_t$ and $Y_t$
+  standard terms for $X_t$ and $Y_t$:
   \begin{IEEEeqnarray}{rCl}
     \operatorname{\mathbb{E}}\left[ X_t \right]
     & = &
@@ -133,6 +133,8 @@
     & = &
     \frac{e^{\left(\mu + \frac{\sigma^2}{2}\right)t} - 1}{\mu + \frac{\sigma^2}{2}}
   \end{IEEEeqnarray}
+  Note the in the last equation we have implicitly invoked Fubini's theorem to switch the
+  order of integration, and will broadly continue to throughout this work.
 
   \begin{lemma}[Acceleration Lemma]
     The expectation of non-negative integer powers $n \ge 0 $ of the carrier process of
@@ -193,8 +195,8 @@
   covariances.
 
   \section{Martingale Increments}
-  The scaled increments of integrated geometric Brownian motion $Y_t$ form a two point
-  martingale, for a triplet of times $t_1 > t_0 > t_{-1}$:
+  By our counterpoint corollary the scaled increments of integrated geometric Brownian
+  motion $Y_t$ form a two point martingale, for a triplet of times $t_1 > t_0 > t_{-1}$:
   \begin{IEEEeqnarray}{rCl}
     \IEEEeqnarraymulticol{3}{l}
     {
@@ -216,8 +218,8 @@
   \section{L\'evy Process}
   Integrated geometric Brownian motion $Y_t$ and its carrier process of geometric Brownian
   motion $X_t$ can be embedded into the Lie algebra of $2 \times 2$ upper triangular
-  matrices $\mathfrak{h}_2$ so that the increments are independent under matrix
-  multiplication, for times $t > s$:
+  matrices $\mathfrak{h}_2$ by means of the factorization observed earlier, so that the
+  increments are independent under matrix multiplication, for times $t > s$:
   \begin{IEEEeqnarray}{rCl}
     \begin{bmatrix}
       1 & Y_t\\
@@ -330,4 +332,27 @@
     & $h = \lambda e^{\mu t}$ &
     $\displaystyle\frac{\partial}{\partial\sigma} f_{\mu, \sigma}\left( \lambda \operatorname{\mathbb{E}}\left[Y_t\right] \right)$\\\\
   \end{longtable}
+  From the boundary conditions we can immediately deduce that in the deterministic limit of
+  $\sigma \rightarrow 0$ we have:
+  \begin{IEEEeqnarray}{rCl}
+    f_{\mu, \sigma}\left(x\right)
+    & \xrightarrow{\sigma = 0} &
+    \frac{1}{x}
+  \end{IEEEeqnarray}
+  However this alone cannot be the solutions as it is the characteristic function in
+  $\lambda$ of a purely deterministic $Y_t$. Until more constraints can be found the
+  following proposition remains open.
+  \begin{proposition}[Gompertz Hazard]
+    The analytic function $f_{\mu, \sigma}$ is simply the exponential divide by its
+    argument, so that the hazard $h$ is given by:
+    \begin{IEEEeqnarray}{rCl}
+      h
+      & = &
+      \lambda \operatorname{\mathbb{E}}\left[X_t\right]
+      e^{\frac{\sigma^2}{2}\lambda \operatorname{\mathbb{E}}\left[Y_t\right]}
+    \end{IEEEeqnarray}
+  \end{proposition}
+  In most circumstances $\lambda$ is new born infant mortality due to ageing alone and is
+  less than one in ten thousand person years. As such the hazard is very close to the
+  original hazard observed by Gompertz.
 \end{document}
