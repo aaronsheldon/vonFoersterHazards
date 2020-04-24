@@ -3,6 +3,11 @@ von Foerster Hazards
 
 In this project I implement a model of age dependent communicable diseases using a mysterious and magical alchemy of von Foerster dynamics, Gompertz processes - biologically endogenous ageing modeled by Poisson processes subordinated by integrated geometric Brownian motion, Makeham processes - biologically exogenous casualties of serialized interactions, accelerated failure time models, phase type distributions, and the Lie algebra of hazard rates, while incanting the theory of stochastic processes.
 
+Land Acknowledgement
+--------------------
+
+The author has had the good fortune to have found a home near the mountains on the traditional territories of the [Treaty 7](https://www.treaty7.org/) people, and is blessed to have has good neighbors the peoples of the [Tsuut'ina Nation](https://tsuutinanation.com/).
+
 Citing
 ------
 
