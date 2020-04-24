@@ -10,12 +10,9 @@ using vonFoersterHazards
 
 function gompertzrate end
 function makehamrate end
-function infectionrate end
-function dischargerate end
 function recoveryrate end
 function hospitalizationrate end
 function ageingmortality end
-function hospitalmortality end
 function infectionmortality end
 function hazardrate end
 function hazardrate end

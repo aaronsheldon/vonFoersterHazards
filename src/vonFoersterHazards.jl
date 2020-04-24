@@ -181,7 +181,7 @@ end
 """
     birthrate(P)
 
-Stub function to be overloaded in implementation. Compute the extensive
+Stub function to be overloaded in implementation. Compute the exogenous
 birth rate vector from the population P.
 """
 function birthrate(P::population) end
