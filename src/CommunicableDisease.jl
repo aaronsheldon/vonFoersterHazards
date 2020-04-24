@@ -1,9 +1,14 @@
+"""
+    CommunicableDisease
+
+Demonstration implementation of the minimum module of age dependent
+communicable diseases outlined in the notebook.
+"""
 module CommunicableDisease
 
 using vonFoersterHazards
 
 function gompertzrate end
-function scatterrate end
 function makehamrate end
 function infectionrate end
 function dischargerate end
@@ -14,6 +19,7 @@ function hospitalmortality end
 function infectionmortality end
 function hazardrate end
 function hazardrate end
+function scatterrate end
 function birthrate end
 function runengine end
 

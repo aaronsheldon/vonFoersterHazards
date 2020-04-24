@@ -141,7 +141,7 @@ function Base.iterate(E::evolve, S)
 
     # Curried transition function
     function t(c)
-        P = exp(-E.size * hazardrate(a, H))
+        P = exp(-E.size * (hazardrate(a) + scatterrate(a) * H))
         cohort(
             c.elapsed + E.size,
             c.age + E.size,
@@ -154,7 +154,7 @@ function Base.iterate(E::evolve, S)
     S[2] .= t.(S[2])
 
     # Youngest cohort is less than 1 year old, add births to youngest cohort
-    if S[1].ages[end] < 1.0 then
+    if S[1].ages[end] < convert(eltype(S[1].ages), 1) then
         R = population(
             S[2] + E.size,
             S[2].ages,
@@ -189,18 +189,26 @@ function birthrate(P::population) end
 """
     hazardrate(P)
 
-Stub function to be overloaded in implementation. Compute the extensive
+Stub function to be overloaded in implementation. Compute the exogenous
 hazard rate matrix from the population P.
 """
 function hazardrate(P::population) end
 
 """
-    hazardrate(a, H)
+    hazardrate(a)
 
-Stub function to be overloaded in implementation. Compute the intensive
-hazard rate matrix from the extensive hazard rate matrix H and a given age a.
+Stub function to be overloaded in implementation. Compute the endogenous
+hazard rate matrix a given age a.
 """
-function hazardrate(a, H) end
+function hazardrate(a::Real) end
+
+"""
+    scatterrate(a)
+
+Stub function to be overloaded in implementation. Compute the scattering
+rate Eigen function.
+"""
+function scatterrate(a::Real) end
 
 """
     randomtruncate(x)
