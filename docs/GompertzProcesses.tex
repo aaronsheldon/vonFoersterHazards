@@ -126,12 +126,12 @@
   against the accumulated acceleration $X_t$ to reduce expectations down to the well know
   standard terms for $X_t$ and $Y_t$:
   \begin{IEEEeqnarray}{rCl}
-    \operatorname{\mathbb{E}}\left[ X_t \right]
+    \operatorname{\mathbb{E}}\left[ X_t^n \right]
     & = &
-    e^{\left(\mu + \frac{\sigma^2}{2}\right)t}\\
+    e^{\left(n \mu + n^2 \sigma^2 / 2\right)t}\\
     \operatorname{\mathbb{E}}\left[ Y_t \right]
     & = &
-    \frac{e^{\left(\mu + \frac{\sigma^2}{2}\right)t} - 1}{\mu + \frac{\sigma^2}{2}}
+    \frac{e^{\left(\mu + \sigma^2 / 2\right)t} - 1}{\mu + \sigma^2 / 2}
   \end{IEEEeqnarray}
   Note the in the last equation we have implicitly invoked Fubini's theorem to switch the
   order of integration, and will broadly continue to throughout this work.
@@ -157,14 +157,9 @@
     For a triplet of times $t_1 > t_0 > t_{-1}$ we have the following conditional
     expectation:
     \begin{IEEEeqnarray}{rCl}
-      \IEEEeqnarraymulticol{3}{l}
-      {
-        \operatorname{\mathbb{E}}\left[ \left(Y_{t_1}-Y_{t_0}\right)^n \right\rVert\left. Y_{t_0} - Y_{t_{-1}} \right]
-      }\nonumber\\
-      \qquad\qquad\qquad\qquad
+      \operatorname{\mathbb{E}}\left[ \left(Y_{t_1}-Y_{t_0}\right)^n \right\rVert\left. Y_{t_0} - Y_{t_{-1}} \right]
       & = &
-      e^{\left(n\mu+\frac{n^2}{2}\sigma\right)t_0}
-      \frac{\operatorname{\mathbb{E}}\left[Y_{t_1 - t_0}^n\right]}
+      \displaystyle\frac{\operatorname{\mathbb{E}}\left[\left(Y_{t_1} - Y_{t_0}\right)^n\right]}
       {\operatorname{\mathbb{E}}\left[\left(Y_{t_0} - Y_{t_{-1}}\right)^n\right]}
       \left(Y_{t_0} - Y_{t_{-1}}\right)^n
     \end{IEEEeqnarray}
@@ -183,7 +178,7 @@
     \begin{IEEEeqnarray}{rCl}
       \operatorname{\mathbb{E}}\left[ Y_t^n \right]
       & = &
-      n \int_0^t e^{\left(n\mu + \frac{n^2}{2} \sigma^2\right)u} \operatorname{\mathbb{E}}\left[ Y_{t-u}^{n-1} \right] du
+      n \int_0^t \operatorname{\mathbb{E}}\left[X_u^n\right] \operatorname{\mathbb{E}}\left[ Y_{t-u}^{n-1} \right] du
     \end{IEEEeqnarray}
   \end{lemma}
   \begin{proof}
@@ -196,19 +191,19 @@
 
   \section{Martingale Increments}
   By our counterpoint corollary the scaled increments of integrated geometric Brownian
-  motion $Y_t$ form a two point martingale, for a triplet of times $t_1 > t_0 > t_{-1}$:
+  motion $Y_{s \uparrow t}$, with $t>s$:
   \begin{IEEEeqnarray}{rCl}
-    \IEEEeqnarraymulticol{3}{l}
-    {
-      \operatorname{\mathbb{E}}
-      \left[
-        \frac{Y_{t_1} - Y_{t_0}}{e^{\left(\mu + \frac{\sigma^2}{2}\right)t_1} - e^{\left(\mu + \frac{\sigma^2}{2}\right)t_0}} 
-        \right\rVert\left.
-        \frac{Y_{t_0} - Y_{t_{-1}}}{e^{\left(\mu + \frac{\sigma^2}{2}\right)t_0} - e^{\left(\mu + \frac{\sigma^2}{2}\right)t_{-1}}} \right]
-    }\nonumber\\
-    \qquad\qquad\qquad\qquad\qquad\qquad\qquad\qquad
+    Y_{s \uparrow t}
     & = &
-    \frac{Y_{t_0} - Y_{t_{-1}}}{e^{\left(\mu + \frac{\sigma^2}{2}\right)t_0} - e^{\left(\mu + \frac{\sigma^2}{2}\right)t_{-1}}}
+    \displaystyle\frac
+    {Y_t - Y_s}
+    {\operatorname{\mathbb{E}}\left[ Y_t - Y_s \right]}
+  \end{IEEEeqnarray}  
+  form a two point martingale, so that for a triplet of times $t_1 > t_0 > t_{-1}$:
+  \begin{IEEEeqnarray}{rCl}
+    \operatorname{\mathbb{E}}\left[ Y_{t_0 \uparrow t_1} \right\rVert\left. Y_{t_{-1} \uparrow t_0} \right]
+    & = &
+    Y_{t_{-1} \uparrow t_0}
   \end{IEEEeqnarray}
   From this martingale property of $Y_t$ any triple of stopping times  $T_{n+1},T_n,T_{n-1}$
   of consecutive passages of $G_t$ will have a $2$ Markov dependence. This amounts to a
@@ -291,9 +286,9 @@
     p
     & = &
     \operatorname{\mathbb{E}}\left[ Y_t \right]
-    g_{\mu, \sigma}\left(y \operatorname{\mathbb{E}}\left[ Y_t \right]\right)
+    f_{\mu, \sigma}\left(y \operatorname{\mathbb{E}}\left[ Y_t \right]\right)
   \end{IEEEeqnarray}
-  for any analytic $g_{\mu, \sigma}$ dependent on the drift and diffusion of the carrier
+  for any analytic $f_{\mu, \sigma}$ dependent on the drift and diffusion of the carrier
   process $X_t$. Note that we are offloading the dimensional analysis into the analytic
   function.
 
@@ -325,11 +320,11 @@
     & = &
     \lambda^2 \operatorname{\mathbb{E}}\left[X_t\right]
     \operatorname{\mathbb{E}}\left[Y_t\right]
-    f_{\mu, \sigma}\left( \lambda \operatorname{\mathbb{E}}\left[Y_t\right] \right)
+    g_{\mu, \sigma}\left( \lambda \operatorname{\mathbb{E}}\left[Y_t\right] \right)
   \end{IEEEeqnarray}
-  for any analytic $f_{\mu, \sigma}$ dependent on the drift and diffusion of
+  for any analytic $g_{\mu, \sigma}$ dependent on the drift and diffusion of
   the carrier process $X_t$. Taking the limit to deterministic subordination yields the
-  constraints on $f_{\mu, \sigma}$:
+  constraints on $g_{\mu, \sigma}$:
   \begin{longtable}{lll}
     \caption{Sequential Boundary Conditions}\\
     \multicolumn{1}{l}{Boundary} & \multicolumn{1}{l}{Condition} & \multicolumn{1}{l}{Removes}\\
@@ -350,11 +345,11 @@
   From the boundary conditions we can immediately deduce that in the deterministic limit of
   $\sigma \rightarrow 0$ we have:
   \begin{IEEEeqnarray}{rCl}
-    f_{\mu, \sigma}\left(x\right)
+    g_{\mu, \sigma}\left(x\right)
     & \xrightarrow{\sigma = 0} &
     \frac{1}{x}
   \end{IEEEeqnarray}
-  However this alone cannot be the solution as it is the characteristic function in
+  However this alone cannot be the solution as it results in the characteristic function in
   $\lambda$ of a purely deterministic $Y_t$. Equating the general solution for the hazard
   rate to the Laplace of the Fokker-Planck solution yields the implicit equation in
   $f_{\mu,\sigma}$ and $g_{\mu,\sigma}$:
@@ -362,18 +357,17 @@
     \displaystyle-\frac{\partial}{\partial t} \ln
     \int_0^\infty
     e^\frac{\lambda u}{\operatorname{\mathbb{E}}\left[Y_t\right]}
-    g_{\mu,\sigma}\left(u\right)
+    f_{\mu,\sigma}\left(u\right)
     du
     & = &
     \lambda^2
     \operatorname{\mathbb{E}}\left[X_t\right]
     \operatorname{\mathbb{E}}\left[Y_t\right]
-    f_{\mu, \sigma}\left( \lambda \operatorname{\mathbb{E}}\left[Y_t\right] \right)
+    g_{\mu, \sigma}\left( \lambda \operatorname{\mathbb{E}}\left[Y_t\right] \right)
   \end{IEEEeqnarray} 
-  Until more constraints can be found we only have dimensional analysis to inform our choice
-  in solution leaving the following proposition open.
+  Dimensional analysis provides an inference for a solution, which remains an open problem:
   \begin{proposition}[Gompertz Anomaly]
-    The analytic function $f_{\mu, \sigma}$ is simply the exponential divided by its
+    The analytic function $g_{\mu, \sigma}$ is simply the exponential divided by its
     argument, so that the hazard $h$ is given by:
     \begin{IEEEeqnarray}{rCl}
       h
@@ -382,8 +376,35 @@
       e^{\frac{\sigma^2 / 2}{\mu + \sigma^2 / 2}  \lambda \operatorname{\mathbb{E}}\left[Y_t\right]}
     \end{IEEEeqnarray}
   \end{proposition}
-  In most circumstances $\lambda$ is the new born infant mortality due to ageing alone and
-  is less than one in thirty thousand person years. As such the hazard is very close to the
-  original hazard observed by Gompertz. Intuitively, when $\mu \ggg \sigma^2 / 2$ the
-  process becomes approximately deterministic due to the large impact of the drift.
+  \begin{proof}
+    The parity multiplied derivatives of the exponential of the integral of the hazard rate
+    satisfies the recursion-convolution lemma, generating the moments of $Y_t$, and hence is
+    the characteristic function of $Y_t$.
+  \end{proof}
+  In most circumstances $\lambda$ is the new born infant mortality due to ageing alone and,
+  is less than $1$ in $32000$ person-years. As such the hazard is very close to the original
+  hazard observed by Gompertz. Intuitively, when $\mu \ggg \sigma^2 / 2$ the process becomes
+  approximately deterministic due to the large impact of the drift.
+
+  Conversely, the central conjecture in the preliminary material is that ageing is driven by
+  stochastic accelerations, hence requiring that the drift vanish $\mu = 0$. In this case
+  the anomalous Gompertz hazard rate simplifies to:
+  \begin{IEEEeqnarray}{rCl}
+    h
+    & = &
+    \lambda e^{t\sigma^2 / 2}
+    e^{\lambda \frac{e^{t\sigma^2 / 2} - 1}{\sigma^2 / 2}}
+  \end{IEEEeqnarray}
+  We have observed the anomalous Gompertz hazard rate in mortality rates in Alberta in the
+  Hazard Rate Zoo experiment. Specifically when we remove the dominate exponential process
+  of a doubling of mortality every $7$ years from an infant mortality of $1$ in $32000$
+  person-years:
+  \begin{IEEEeqnarray}{rCl}
+    h
+    & = &
+    \displaystyle\frac{2^{t/7}}{32000}
+    e^\frac{7 \left(2^{t/7} - 1\right)}{32000 \ln 2}
+  \end{IEEEeqnarray}
+  there remains a residual anomalous growth in mortality with ageing, reflecting the higher
+  order affect of the stochastic accelerations.
 \end{document}
