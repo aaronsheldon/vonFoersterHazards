@@ -279,10 +279,10 @@
   Marginalizing over the probability of $X_t$ and applying the acceleration lemma
   yields the first order partial differential equation for the distribution of $Y_t$:
   \begin{IEEEeqnarray}{rCl}
-    \frac{\operatorname{\mathbb{E}}\left[ X_t \right]}
-    {\operatorname{\mathbb{E}}\left[ Y_t \right]}
+    \frac{\operatorname{\mathbb{E}}\left[ Y_t \right]}
+    {\operatorname{\mathbb{E}}\left[ X_t \right]}
     \frac{\partial p}{\partial t}
-    - \frac{\partial p}{\partial y}
+    - y\frac{\partial p}{\partial y}
     & = &
     p
   \end{IEEEeqnarray}
@@ -290,11 +290,12 @@
   \begin{IEEEeqnarray}{rCl}
     p
     & = &
-    e^{\frac{1}{\mu + \frac{\sigma^2}{2}}\left(t - \frac{\operatorname{\mathbb{E}}\left[ Y_t \right]}{\operatorname{\mathbb{E}}\left[ E_t \right]}\right)}
-    g_{\mu, \sigma}\left(y + \frac{1}{\mu + \frac{\sigma^2}{2}}\left(t - \frac{\operatorname{\mathbb{E}}\left[ Y_t \right]}{\operatorname{\mathbb{E}}\left[ E_t \right]}\right) \right)
+    \operatorname{\mathbb{E}}\left[ Y_t \right]
+    g_{\mu, \sigma}\left(y \operatorname{\mathbb{E}}\left[ Y_t \right]\right)
   \end{IEEEeqnarray}
   for any analytic $g_{\mu, \sigma}$ dependent on the drift and diffusion of the carrier
-  process $X_t$.
+  process $X_t$. Note that we are offloading the dimensional analysis into the analytic
+  function.
 
   \section{Hazard Rate}
   Consider the first passage stopping time $T_1$ of the Gompertz process $G_t$, its 
@@ -328,32 +329,23 @@
   \end{IEEEeqnarray}
   for any analytic $f_{\mu, \sigma}$ dependent on the drift and diffusion of
   the carrier process $X_t$. Taking the limit to deterministic subordination yields the
-  constraints on $f_{\mu, \sigma}$ by L'H\^opital's rule:
+  constraints on $f_{\mu, \sigma}$:
   \begin{longtable}{lll}
-    \caption{Boundary conditions on the hazard rate $h$}\\
-    \multicolumn{1}{l}{Boundary} & \multicolumn{1}{l}{Condition} & \multicolumn{1}{l}{Constrains}\\
+    \caption{Sequential Boundary Conditions}\\
+    \multicolumn{1}{l}{Boundary} & \multicolumn{1}{l}{Condition} & \multicolumn{1}{l}{Removes}\\
     \hline
     \endfirsthead
     \caption*{Continued from previous page.}\\
-    \multicolumn{1}{l}{Boundary} & \multicolumn{1}{l}{Condition} & \multicolumn{1}{l}{Constrains}\\
+    \multicolumn{1}{l}{Boundary} & \multicolumn{1}{l}{Condition} & \multicolumn{1}{l}{Removes}\\
     \hline
     \endhead
     \caption*{Continued on next page.}
     \endfoot
-    \caption*{Boundary conditions on the hazard rate derived from the limits to deterministic subordination.}
+    \caption*{Sequential boundary conditions on the hazard rate $h$ derived from the limits to deterministic subordination.}
     \endlastfoot\\
-    $\lambda = 0$
-    & $h = 0$ &
-    $\displaystyle\frac{\partial}{\partial\lambda}f_{\mu, \sigma}\left( \lambda \operatorname{\mathbb{E}}\left[Y_t\right] \right)$\\\\
-    $t = 0$
-    & $h = \lambda$ &
-    $\displaystyle\frac{\partial}{\partial t} f_{\mu, \sigma}\left( \lambda \operatorname{\mathbb{E}}\left[Y_t\right] \right)$\\\\
-    $\mu = \sigma = 0$
-    & $h = \lambda$ &
-    $\displaystyle\left[\frac{\partial}{\partial\mu}\cdot + \frac{\partial}{\partial\sigma}\cdot\right]\left(f_{\mu, \sigma}\left( \lambda \operatorname{\mathbb{E}}\left[Y_t\right] \right)\right)$\\\\
-    $\sigma = 0$
-    & $h = \lambda e^{\mu t}$ &
-    $\displaystyle\frac{\partial}{\partial\sigma} f_{\mu, \sigma}\left( \lambda \operatorname{\mathbb{E}}\left[Y_t\right] \right)$\\\\
+    $\sigma=0$    & $h=\lambda e^{\mu t}$ & diffusion\\\\
+    $\mu=0$       & $h=\lambda$           & then drift\\\\
+    $\lambda = 0$ & $h=0$                 & finally jumps
   \end{longtable}
   From the boundary conditions we can immediately deduce that in the deterministic limit of
   $\sigma \rightarrow 0$ we have:
@@ -367,24 +359,19 @@
   rate to the Laplace of the Fokker-Planck solution yields the implicit equation in
   $f_{\mu,\sigma}$ and $g_{\mu,\sigma}$:
   \begin{IEEEeqnarray}{rCl}
-    \IEEEeqnarraymulticol{3}{l}
-    {
-      \displaystyle-\frac{\partial}{\partial t} \ln\int_{\frac{1}{\mu + \frac{\sigma^2}{2}}\left(t - \frac{\operatorname{\mathbb{E}}\left[ Y_t \right]}{\operatorname{\mathbb{E}}\left[ E_t \right]}\right)}^\infty
-      e^{\lambda u}
-      g_{\mu, \sigma}\left(u \right)
-      du
-    }\nonumber\\
-    \qquad\qquad\qquad\qquad
+    \displaystyle-\frac{\partial}{\partial t} \ln
+    \int_0^\infty
+    e^\frac{\lambda u}{\operatorname{\mathbb{E}}\left[Y_t\right]}
+    g_{\mu,\sigma}\left(u\right)
+    du
     & = &
-    \displaystyle
-    \left(1 - \lambda\right)
-    \frac{\operatorname{\mathbb{E}}\left[ Y_t \right]}{\operatorname{\mathbb{E}}\left[ E_t \right]}
-    + \lambda^2
+    \lambda^2
     \operatorname{\mathbb{E}}\left[X_t\right]
     \operatorname{\mathbb{E}}\left[Y_t\right]
     f_{\mu, \sigma}\left( \lambda \operatorname{\mathbb{E}}\left[Y_t\right] \right)
   \end{IEEEeqnarray} 
-  Until more constraints can be found the following proposition remains open.
+  Until more constraints can be found we only have dimensional analysis to inform our choice
+  in solution leaving the following proposition open.
   \begin{proposition}[Gompertz Anomaly]
     The analytic function $f_{\mu, \sigma}$ is simply the exponential divided by its
     argument, so that the hazard $h$ is given by:
@@ -392,10 +379,11 @@
       h
       & = &
       \lambda \operatorname{\mathbb{E}}\left[X_t\right]
-      e^{\frac{\sigma^2}{2}\lambda \operatorname{\mathbb{E}}\left[Y_t\right]}
+      e^{\frac{\sigma^2 / 2}{\mu + \sigma^2 / 2}  \lambda \operatorname{\mathbb{E}}\left[Y_t\right]}
     \end{IEEEeqnarray}
   \end{proposition}
   In most circumstances $\lambda$ is the new born infant mortality due to ageing alone and
   is less than one in thirty thousand person years. As such the hazard is very close to the
-  original hazard observed by Gompertz.
+  original hazard observed by Gompertz. Intuitively, when $\mu \ggg \sigma^2 / 2$ the
+  process becomes approximately deterministic due to the large impact of the drift.
 \end{document}
