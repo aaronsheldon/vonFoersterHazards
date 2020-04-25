@@ -1,8 +1,10 @@
 """
     CommunicableDisease
 
-Demonstration implementation of the minimum module of age dependent
-communicable diseases outlined in the notebook.
+Demonstration implementation of a minimum module of age dependent 
+communicable diseases outlined in the notebook. This module effectively
+infers the counterfactual utilization in the asymptotic limit of infinite
+hospital capacity.
 """
 module CommunicableDisease
 
