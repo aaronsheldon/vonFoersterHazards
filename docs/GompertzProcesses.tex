@@ -234,8 +234,8 @@
   of the processes $Y_s$ and $X_s$.
 
   \section{Fokker-Planck}
-  The upper triangular L\'evy process of integrated Brownian motion satisfies the stochastic
-  differential equation:
+  The upper triangular L\'evy process of integrated geometric Brownian motion satisfies the
+  stochastic differential equation:
   \begin{IEEEeqnarray}{rCl}
     d \begin{bmatrix}
       1 & Y_t\\
@@ -300,7 +300,7 @@
     & = &
     \operatorname{\mathbb{E}}\left[ e^{-\lambda Y_t} \right]
   \end{IEEEeqnarray}
-  Thus the hazard rate $h$ of $T$:
+  Thus the hazard rate $h$ of $T_1$:
   \begin{IEEEeqnarray}{rCl}
     h
     & = &
@@ -373,7 +373,7 @@
       h
       & = &
       \lambda \operatorname{\mathbb{E}}\left[X_t\right]
-      e^{\frac{\sigma^2 / 2}{\mu + \sigma^2 / 2}  \lambda \operatorname{\mathbb{E}}\left[Y_t\right]}
+      e^{\frac{\sigma^2 / 2}{\mu + \sigma^2 / 2}  \lambda\operatorname{\mathbb{E}}\left[Y_t\right]}
     \end{IEEEeqnarray}
   \end{proposition}
   \begin{proof}
