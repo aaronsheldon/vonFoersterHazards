@@ -95,7 +95,7 @@ struct evolve{R<:population, S<:Real, T<:Real}
     gestation::T
     count::Int64
 end
-Base.eltype(::Type{evolve{S, T}}) = S
+Base.eltype(::Type{evolve{R, S, T}}) = R
 Base.length(E::evolve) = E.count
 Base.size(E::evolve, d=1) = ((d==1) ? length(E) : 1)
 function Base.iterate(E::evolve)
