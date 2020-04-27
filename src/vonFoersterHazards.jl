@@ -21,6 +21,7 @@ export randomtruncate,
        cohort,
        population,
        evolve,
+       scatterrate,
        hazardrate,
        birthrate
 
@@ -82,14 +83,16 @@ function Base.setindex!(P::population, C::cohort, i)
 end
 
 """
-    evolve(initial, size, count)
+    evolve(initial, size, count, gestation)
 
 Iterable container for the population evolution engine. Computes count steps of
-duration size from starting population initial.
+duration size from starting population initial, generating a new cohort after
+every gestation has elapsed
 """
-struct evolve{S<:population, T<:Real}
-    initial::S
-    size::T
+struct evolve{R<:population, S<:Real, T<:Real}
+    initial::R
+    size::S
+    gestation::T
     count::Int64
 end
 Base.eltype(::Type{evolve{S, T}}) = S
@@ -99,33 +102,41 @@ function Base.iterate(E::evolve)
     
     # Sanity checks
     (E.size > 0) ||
-        throw(DomainError(size, "time increment must be positive."))
+        throw(DomainError(E.size, "time increment must be positive."))
+    
+    (E.gestation > 0) ||
+        throw(DomainError(E.gestation, "gestation must be positive."))
+    
+    (E.count > 0) ||
+        throw(DomainError(E.gestation, "count must be positive."))
     
     (issorted(E.initial.ages, rev=true)) ||
         throw(DomainError(E.initial.ages, "ages must be sorted in descending order."))
     
-    (convert(eltype(E.initial.ages), 0) <= E.initial.ages[end]) ||
+    (convert(0 <= E.initial.ages[end]) ||
         throw(DomainError(E.initial.ages, "ages must be non-negative."))
     
-    (convert(eltype(E.initial.strata), 0) <= minimum(E.initial.strata)) ||
+    (convert(0 <= minimum(E.initial.strata)) ||
         throw(DomainError(E.initial.strata, "cohorts must be non-negative."))
     
     (minimum(E.initial.covariances) == convert(eltype(E.initial.covariances), 0) == maximum(E.initial.covariances)) ||
         throw(DomainError(E.initial.covariances, "covariances must be zero."))
     
-    H = hazardrate(E.initial)
     (al,) = size(E.initial.ages)
     (bl,) = size(birthrate(E.initial))
     (cl, cw) = size(E.initial.strata)
-    (dl, dw) = size(H)
-    (el, ew) = size(hazardrate(E.initial.ages[1], H))
+    (dl,) = size(scatterrate(E.initial.ages[1]))
+    (el, ew, eh) = size(hazardrate(E.initial))
     (fl, fw, fh) = size(E.initial.covariances)
     
     (al == cl == fl) ||
         throw(DimensionMismatch("number of cohorts and covariances must equal number of ages."))
     
-    (bl  == cw == dl == dw == el == ew == fw == fh) ||
-        throw(DimensionMismatch("strata in covariances, birth rate, extensize hazard rate, intensize hazard rate, and cohorts must be equal."))
+    (dl == el) ||
+        throw(DimensionMismatch("number of summands in spectral decomposition returned by hazard rate and scatter rate must be equal."))
+    
+    (bl  == cw == ew == eh == fw == fh) ||
+        throw(DimensionMismatch("strata in covariances, birth rate, hazard rate, and cohorts must be equal."))
     
     # Send
     (E.initial, (0, E.initial))
@@ -133,15 +144,15 @@ end
 function Base.iterate(E::evolve, S)
     (S[1] <= E.count) || return nothing
         
-    # One time computation of the extensize birth rate
+    # One time computation of the exogenous birth rate
     b = birthrate(S[2])
 
-    # One time computation of the extensive hazard rate
+    # One time computation of the exogenous hazard rates
     H = hazardrate(S[2])
 
     # Curried transition function
     function t(c)
-        P = exp(-E.size * (hazardrate(a) + scatterrate(a) * H))
+        P = exp(-E.size * sum(scatterrate(a) .* H, dims=1)[1, :, :])
         cohort(
             c.elapsed + E.size,
             c.age + E.size,
@@ -153,8 +164,8 @@ function Base.iterate(E::evolve, S)
     # Compute the transitions within each cohort
     S[2] .= t.(S[2])
 
-    # Youngest cohort is less than 1 year old, add births to youngest cohort
-    if S[1].ages[end] < convert(eltype(S[1].ages), 1) then
+    # Youngest cohort is less than gestation time old, add births to youngest cohort
+    if S[1].ages[end] < E.gestation then
         R = population(
             S[2] + E.size,
             S[2].ages,
@@ -163,7 +174,7 @@ function Base.iterate(E::evolve, S)
         )
         R.cohorts[end, :] .= R.cohorts[end, :] .+ b'
 
-    # Youngest cohort is more than 1 year old, generate a new youngest cohort
+    # Youngest cohort is more than gestation time old, generate a new youngest cohort
     else
         R = population(
             S[2] + E.size,
@@ -171,7 +182,7 @@ function Base.iterate(E::evolve, S)
             [S[2].strata; b'],
             [S[2].covariances; zeros(eltype(S[2].covariances), 1, size(S[2].covariances, 2), size(S[2].covariances, 3))]
         )
-        push!(R.ages, convert(eltype(R.ages), 0))
+        push!(R.ages, 0)
     end
 
     # Send
@@ -187,28 +198,23 @@ birth rate vector from the population P.
 function birthrate(P::population) end
 
 """
-    hazardrate(P)
-
-Stub function to be overloaded in implementation. Compute the exogenous
-hazard rate matrix from the population P.
-"""
-function hazardrate(P::population) end
-
-"""
-    hazardrate(a)
-
-Stub function to be overloaded in implementation. Compute the endogenous
-hazard rate matrix a given age a.
-"""
-function hazardrate(a::Real) end
-
-"""
     scatterrate(a)
 
-Stub function to be overloaded in implementation. Compute the scattering
-rate Eigen function.
+Stub function to be overloaded in implementation. For the age a return
+a vector where the elements correspond to the spectral decomposition of
+the endogeneous scattering rate.
 """
 function scatterrate(a::Real) end
+
+"""
+    hazardrate(P)
+
+Stub function to be overloaded in implementation. For the population P return
+a three dimensional array where the length corresponds to the spectral
+decomposition and the height and width are square corresponding to the
+exogenous hazard rate.
+"""
+function hazardrate(P::population) end
 
 """
     randomtruncate(x)
