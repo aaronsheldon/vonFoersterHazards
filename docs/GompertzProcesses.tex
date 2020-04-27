@@ -76,7 +76,7 @@
   approximation that the exacerbations and alleviations, and their respective accelerations,
   are independent and stationary over time then by the L\'evy-Khintchine characterization 
   the only infinitesimal generator of elapsed metabolic time that is L\'evy and continuous,
-  \emph{jump free}, is Brownian motion $B_u$. The stochastic process of elapsed metabolic 
+  \emph{``jump free''}, is Brownian motion $B_u$. The stochastic process of elapsed metabolic 
   time is better known as integrated geometric Brownian motion.
 
   \begin{definition}[Gompertz Process]
@@ -111,9 +111,9 @@
   Our first observation is that the increments of $Y_t$ can be factored by its carrier
   process $X_t$, for times $t > s$:
   \begin{IEEEeqnarray}{rCl}
-    Y_t - Y_s
-    & \sim &
-    X_s Y_{t-s}
+    \operatorname{\mathbb{P}}\left[Y_t - Y_s\right]
+    & = &
+    \operatorname{\mathbb{P}}\left[X_s\right] \operatorname{\mathbb{P}}\left[Y_{t-s}\right]
   \end{IEEEeqnarray}
   where the process $X_s$ is independent of the process $Y_{t-s}$. For example, this allows
   us to immediately observe that for times $t > s$:
@@ -383,7 +383,7 @@
   \end{proof}
 
   \section{Discussion}
-  In most circumstances $\lambda$ is the new born infant mortality due to ageing alone and,
+  In most circumstances $\lambda$ is the new born infant mortality due to ageing alone, and
   is less than $1$ in $32000$ person-years. As such the hazard is very close to the original
   hazard observed by Gompertz. Intuitively, when $\mu \ggg \sigma^2 / 2$ the process becomes
   approximately deterministic due to the large impact of the drift.
