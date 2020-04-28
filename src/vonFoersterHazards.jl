@@ -20,6 +20,9 @@ import Base.iterate,
 export randomtruncate,
        conservesum!,
        covariance,
+       abstractcohort,
+       abstractpopulation,
+       abstractevolve,
        cohort,
        population,
        evolve,
@@ -30,26 +33,15 @@ export randomtruncate,
 """
     abtractcohort
 
-Container type for cohort to hide concrete parametric types.
+Parametric container type for concrete cohort types.
 """
-abstract type abstractcohort end
-
-
-"""
-    abstractpopulation
-
-Container type for population to hide concrete parametric types.
-"""
-abstract type abstractpopulation end
-
-
-"""
-    abstractevolve
-
-Container type for evolve to hide concrete parametric types.
-"""
-abstract type abstractevolve end
-
+abstract type abstractcohort{
+    Q<:Real,
+    R<:Real,
+    S<:AbstractVector{U} where U<:Real,
+    T<:AbstractMatrix{V} where V<:Real
+}
+end
 
 """
     cohort(elapsed, age, stratum, covariance)
@@ -57,18 +49,26 @@ abstract type abstractevolve end
 Return type for indexing into the population. Container for the state occupancies
 of a specific age group, and the covariances between the occupancies.
 """
-struct cohort{
-        Q<:Real,
-        R<:Real,
-        S<:AbstractVector{U} where U<:Real,
-        T<:AbstractMatrix{V} where V<:Real
-    } <: abstractcohort
+struct cohort{Q, R, S, T} <: abstractcohort{Q, R, S, T}
     elapsed::Q
     age::R
     stratum::S
     covariance::T
 end
 cohort(a, s) = cohort(0.0, a, s, zeros(Float64, size(s, 1), size(s, 1)))
+
+"""
+    abstractpopulation
+
+Parametric container type for concrete population types.
+"""
+abstract type abstractpopulation{
+    Q<:Real, 
+    R<:AbstractVector{U} where U<:Real,
+    S<:AbstractMatrix{V} where V<:Real,
+    T<:AbstractArray{W, 3} where W<:Real
+}
+end
 
 """
     population(elapsed, ages, strata, covariances)
@@ -78,19 +78,14 @@ Conceptually the ages labels the rows of the population matrix, and the columns
 are the states. Cohorts are stored in reverse order, so that births can be pushed
 to the vector.
 """
-struct population{
-        Q<:Real, 
-        R<:AbstractVector{U} where U<:Real,
-        S<:AbstractMatrix{V} where V<:Real,
-        T<:AbstractArray{W, 3} where W<:Real
-    } <: abstractpopulation
+struct population{Q, R, S, T} <: abstractpopulation{Q, R, S, T}
     elapsed::Q
     ages::R
     strata::S
     covariances::T
 end
 population(a, s) = population(0.0, a, s, zeros(Float64, size(s, 1), size(s, 2), size(s, 2)))
-Base.eltype(::Type{population{Q, R, S, T}}) where {
+Base.eltype(::Type{abstractpopulation{Q, R, S, T}}) where {
     Q<:Real, 
     U<:Real,
     R<:AbstractVector{U},
@@ -104,12 +99,12 @@ Base.eltype(::Type{population{Q, R, S, T}}) where {
     SubArray{V, 1, S, Tuple{Int64, Base.Slice{Base.OneTo{Int64}}}, true},
     SubArray{W, 2, T, Tuple{Int64, Base.Slice{Base.OneTo{Int64}}, Base.Slice{Base.OneTo{Int64}}}, true}
 }
-Base.length(P::population) = length(P.ages)
-Base.size(P::population, d=1) where T<:abstractpopulation = ((d==1) ? length(P) : 1)
-Base.firstindex(P::population) = 1
-Base.lastindex(P::population) = length(P)
-Base.getindex(P::population, i) = cohort(P.elapsed, P.ages[i], view(P.strata, i, :), view(P.covariances, i, :, :))
-function Base.setindex!(P::population C::cohort, i)
+Base.length(P::abstractpopulation) = length(P.ages)
+Base.size(P::abstractpopulation, d=1) where T<:abstractpopulation = ((d==1) ? length(P) : 1)
+Base.firstindex(P::abstractpopulation) = 1
+Base.lastindex(P::abstractpopulation) = length(P)
+Base.getindex(P::abstractpopulation, i) = cohort(P.elapsed, P.ages[i], view(P.strata, i, :), view(P.covariances, i, :, :))
+function Base.setindex!(P::abstractpopulation C::abstractcohort, i)
     P.ages[i] = C.age
     P.strata[i, :] .= C.stratum[:]
     P.covariances[i, :, :] .= C.covariance[:, :]
@@ -117,14 +112,12 @@ function Base.setindex!(P::population C::cohort, i)
 end
 
 """
-    evolve(initial, size, count, gestation)
+    abstractevolve
 
-Iterable container for the population evolution engine. Computes count steps of
-duration size from starting population initial, generating a new cohort after
-every gestation has elapsed
+Parametric container type for concrete evolve types.
 """
-struct evolve{
-    Q<:population{T, U, V, W} where {
+abstract type abstractevolve{
+    Q<:abstractpopulation{T, U, V, W} where {
         T<:Real, 
         X<:Real,
         V<:AbstractVector{X},
@@ -135,27 +128,37 @@ struct evolve{
     },
     R<:Real,
     S<:Real
-} <: abstractevolve
-    initial::Q
-    size::R
-    gestation::S
+}
+end
+
+"""
+    evolve(initial, size, count, gestation)
+
+Iterable container for the population evolution engine. Computes count steps of
+duration size from starting population initial, generating a new cohort after
+every gestation has elapsed
+"""
+struct evolve{R, S, T} <: abstractevolve{R, S, T}
+    initial::R
+    size::S
+    gestation::T
     count::Int64
 end
-Base.eltype(::Type{evolve{Q, R, S}}) where {
+Base.eltype(::Type{abstractevolve{Q, R, S}}) where {
     T<:Real, 
     X<:Real,
-    V<:AbstractVector{X},
+    U<:AbstractVector{X},
     Y<:Real,
     V<:AbstractMatrix{Y},
     Z<:Real,
-    W<:AbstractArray{Z, 3}
-    Q<:population{T, U, V, W},
+    W<:AbstractArray{Z, 3},
+    Q<:abstractpopulation{T, U, V, W},
     R<:Real,
     S<:Real
 } = Q
-Base.length(E::evolve) = E.count
-Base.size(E::evolve, d=1) = ((d==1) ? length(E) : 1)
-function Base.iterate(E::evolve)
+Base.length(E::abstractevolve) = E.count
+Base.size(E::abstractevolve, d=1) = ((d==1) ? length(E) : 1)
+function Base.iterate(E::abstractevolve)
     
     # Sanity checks
     (E.size > 0) ||
@@ -198,7 +201,7 @@ function Base.iterate(E::evolve)
     # Send
     (E.initial, (0, E.initial))
 end
-function Base.iterate(E::evolve, S)
+function Base.iterate(E::abstractevolve, S)
     (S[1] <= E.count) || return nothing
         
     # One time computation of the exogenous birth rate
@@ -252,7 +255,7 @@ end
 Stub function to be overloaded in implementation. Compute the exogenous
 birth rate vector from the population P.
 """
-function birthrate(P::population) end
+function birthrate(P::abstractpopulation) end
 
 """
     scatterrate(a)
@@ -271,7 +274,7 @@ a three dimensional array where the length corresponds to the spectral
 decomposition and the height and width are square corresponding to the
 exogenous hazard rate.
 """
-function hazardrate(P::population) end
+function hazardrate(P::abstractpopulation) end
 
 """
     randomtruncate(x)
