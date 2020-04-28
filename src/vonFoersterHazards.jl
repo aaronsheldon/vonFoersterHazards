@@ -233,10 +233,11 @@ end
 """
     conservesum!(A, a)
 
-In place enforcement that the sum of the columns of A equals a. Note this 
-assumes the inputs are well formed, there are no bounds or sanity checks.
+In place enforcement that the sum of A equals a. Note this assumes the inputs
+are well formed, there are no bounds or sanity checks.
 """
 function conservesum!(A, a)
+    (a == 0) && return zeros(eltype(A), size(A))
     d = a - sum(A)
     I = sortperm(A, rev=(d<0))
     A[I] .= A[I] .+ [sign(d) .* ones(Int64, abs(d)) ; zeros(Int64, length(A)-abs(d))]
