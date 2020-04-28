@@ -28,6 +28,30 @@ export randomtruncate,
        birthrate
 
 """
+    abtractcohort
+
+Container type for cohort to hide concrete parametric types.
+"""
+abstract type abstractcohort end
+
+
+"""
+    abstractpopulation
+
+Container type for population to hide concrete parametric types.
+"""
+abstract type abstractpopulation end
+
+
+"""
+    abstractevolve
+
+Container type for evolve to hide concrete parametric types.
+"""
+abstract type abstractevolve end
+
+
+"""
     cohort(elapsed, age, stratum, covariance)
 
 Return type for indexing into the population. Container for the state occupancies
@@ -38,13 +62,13 @@ struct cohort{
         R<:Real,
         S<:AbstractVector{U} where U<:Real,
         T<:AbstractMatrix{V} where V<:Real
-    }
+    } <: abstractcohort
     elapsed::Q
     age::R
     stratum::S
     covariance::T
 end
-cohort(a, o) = cohort(0.0, a, o, zeros(Float64, size(o, 1), size(o, 1)))
+cohort(a, s) = cohort(0.0, a, s, zeros(Float64, size(s, 1), size(s, 1)))
 
 """
     population(elapsed, ages, strata, covariances)
@@ -59,25 +83,33 @@ struct population{
         R<:AbstractVector{U} where U<:Real,
         S<:AbstractMatrix{V} where V<:Real,
         T<:AbstractArray{W, 3} where W<:Real
-    }
+    } <: abstractpopulation
     elapsed::Q
     ages::R
     strata::S
     covariances::T
 end
-population(a, c) = population(0.0, a, c, zeros(Float64, size(c, 1), size(c, 2), size(c, 2)))
-Base.eltype(::Type{population{Q, R{U}, S{V}, T{W}}}) = cohort{
+population(a, s) = population(0.0, a, s, zeros(Float64, size(s, 1), size(s, 2), size(s, 2)))
+Base.eltype(::Type{population{Q, R, S, T}}) where {
+    Q<:Real, 
+    U<:Real,
+    R<:AbstractVector{U},
+    V<:Real,
+    S<:AbstractMatrix{V},
+    W<:Real,
+    T<:AbstractArray{W, 3}
+} = cohort{
     Q, 
     U, 
     SubArray{V, 1, S, Tuple{Int64, Base.Slice{Base.OneTo{Int64}}}, true},
     SubArray{W, 2, T, Tuple{Int64, Base.Slice{Base.OneTo{Int64}}, Base.Slice{Base.OneTo{Int64}}}, true}
 }
 Base.length(P::population) = length(P.ages)
-Base.size(P::population, d=1) = ((d==1) ? length(P) : 1)
+Base.size(P::population, d=1) where T<:abstractpopulation = ((d==1) ? length(P) : 1)
 Base.firstindex(P::population) = 1
 Base.lastindex(P::population) = length(P)
 Base.getindex(P::population, i) = cohort(P.elapsed, P.ages[i], view(P.strata, i, :), view(P.covariances, i, :, :))
-function Base.setindex!(P::population, C::cohort, i)
+function Base.setindex!(P::population C::cohort, i)
     P.ages[i] = C.age
     P.strata[i, :] .= C.stratum[:]
     P.covariances[i, :, :] .= C.covariance[:, :]
@@ -91,13 +123,36 @@ Iterable container for the population evolution engine. Computes count steps of
 duration size from starting population initial, generating a new cohort after
 every gestation has elapsed
 """
-struct evolve{R<:population, S<:Real, T<:Real}
-    initial::R
-    size::S
-    gestation::T
+struct evolve{
+    Q<:population{T, U, V, W} where {
+        T<:Real, 
+        X<:Real,
+        V<:AbstractVector{X},
+        Y<:Real,
+        V<:AbstractMatrix{Y},
+        Z<:Real,
+        W<:AbstractArray{Z, 3}
+    },
+    R<:Real,
+    S<:Real
+} <: abstractevolve
+    initial::Q
+    size::R
+    gestation::S
     count::Int64
 end
-Base.eltype(::Type{evolve{R, S, T}}) = R
+Base.eltype(::Type{evolve{Q, R, S}}) where {
+    T<:Real, 
+    X<:Real,
+    V<:AbstractVector{X},
+    Y<:Real,
+    V<:AbstractMatrix{Y},
+    Z<:Real,
+    W<:AbstractArray{Z, 3}
+    Q<:population{T, U, V, W},
+    R<:Real,
+    S<:Real
+} = Q
 Base.length(E::evolve) = E.count
 Base.size(E::evolve, d=1) = ((d==1) ? length(E) : 1)
 function Base.iterate(E::evolve)
