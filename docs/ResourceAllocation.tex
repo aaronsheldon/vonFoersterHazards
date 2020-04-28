@@ -24,8 +24,11 @@
     \node[state] (RC) [below of=RR]       {RC};
     \path
       (RA) edge [bend left] node [above] {$\displaystyle\int_0^\infty \gamma\beta_\text{hos} e^{\gamma\alpha_\text{hos} a} n_\text{I} da$} (RO)
-      (RR) edge [bend left] node [below] {$\beta_\text{ref}$} (RA)
-      (RO) edge [bend left] node [right] {$\displaystyle\int_0^\infty \left(\gamma\beta_\text{age} e^{\gamma\alpha_\text{age} a} + \gamma\beta_\text{dis} e^{-\gamma\alpha_\text{dis} a}\right) n_{H} da$} (RR)
+      (RR) edge [bend left] node [below] {$\beta_\text{ref}\quad$} (RA)
+      (RO) edge [bend left] node [right] {$\quad
+      \frac{\displaystyle\int_0^\infty \left(\gamma\beta_\text{age} e^{\gamma\alpha_\text{age} a} + \gamma\beta_\text{dis} e^{-\gamma\alpha_\text{dis} a}\right) n_{H} da}
+      {\displaystyle\int_0^\infty n_\text{RO} da}
+      $} (RR)
       (RR) edge (RC);
   \end{tikzpicture}
 \end{document}

@@ -2,7 +2,9 @@
     vonFoersterHazards
 
 Engine and utilities to forward propagate the von Foerster evolution
-from the hazard rate, birth rate, and initial demographics.
+from the hazard rate, birth rate, and initial demographics. Remember
+that our transition matrix convention is that SOURCES are columns 
+and DESTINATIONS are rows.
 """
 module vonFoersterHazards
 

@@ -11,7 +11,7 @@ The author has had the good fortune to have found a home near the mountains on t
 Citing
 ------
 
-Not withstanding any [licenses][00], all use, incorporation, modification, or any other derivative products must cite the author and this work as a contributing source. If you fail to cite this work you are expressly **FORBIDDEN** to use this work in any form.
+Notwithstanding any [licenses][00], all use, incorporation, modification, or any other derivative products must cite the author and this work as a contributing source. If you fail to cite this work you are expressly **FORBIDDEN** to use this work in any form.
 
 ```
 Aaron Sheldon (2020), "von Foerster Hazards" v1.0, Zenodo, doi:Pending registration with Zenodo
@@ -37,7 +37,7 @@ I am a feral mathematician set loose in the life sciences. I specialize in build
 Disclaimer
 ----------
 
-Not withstanding any [licenses][00], this material is intended for general information only, and is provided on an *"as is"*, or *"where is"* basis. Although reasonable efforts were made to confirm the accuracy of the information, the author does not make any representation or warranty, express, implied, or statutory, as to the accuracy, reliability, completeness, applicability, or fitness for a particular purpose of such information. This material is not a substitute for the advice of a qualified health professional. The author expressly disclaims all liability for the use of these materials, and for any claims, actions, demands, or suits arising from such use.
+Notwithstanding any [licenses][00], this material is intended for general information only, and is provided on an *"as is"*, or *"where is"* basis. Although reasonable efforts were made to confirm the accuracy of the information, the author does not make any representation or warranty, express, implied, or statutory, as to the accuracy, reliability, completeness, applicability, or fitness for a particular purpose of such information. This material is not a substitute for the advice of a qualified health professional. The author expressly disclaims all liability for the use of these materials, and for any claims, actions, demands, or suits arising from such use.
 
 [00]: LICENSE
 [01]: https://en.wikipedia.org/wiki/Reproducibility
