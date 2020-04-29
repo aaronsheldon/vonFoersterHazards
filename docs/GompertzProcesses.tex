@@ -189,7 +189,7 @@
   usual statistics involving powers of $Y_t$, including the expectation, variance, and
   covariances.
 
-  \section{Martingale Increments}
+  \section{Martingale}
   By our counterpoint corollary the scaled increments of integrated geometric Brownian
   motion $Y_{s \uparrow t}$, with $t>s$:
   \begin{IEEEeqnarray}{rCl}
@@ -205,12 +205,33 @@
     & = &
     Y_{t_{-1} \uparrow t_0}
   \end{IEEEeqnarray}
-  From this martingale property of $Y_t$ any triple of stopping times  $T_{n+1},T_n,T_{n-1}$
-  of consecutive passages of $G_t$ will have a $2$ Markov dependence. This amounts to a
-  concrete prediction that ageing alone introduces a statistical dependence between the
-  intervals of consecutive admissions for healthcare services.
+  This allows us to leverage optional stopping time theorems to evaluate expectations of 
+  stopped versions of Gompertz processes.
 
-  \section{L\'evy Process}
+  \section{Markov}
+  From the Martingale $Y_{s \uparrow t}$ we can infer that $Y_t$ is a 2 step Markov process.
+  To verify this consider the sequence of bare times $0=t_0 < \dots < t_{n+1}=t$, and 
+  accelerated times $0=y_0 < \dots < y_{n+1}=y$, working through the conditional probability
+  we have:
+  \begin{IEEEeqnarray}{rCl}
+    \IEEEeqnarraymulticol{3}{l}{
+      \operatorname{\mathbb{P}}\left[ Y_{t_{n+1}} = y_{n+1} \right\rVert\left. Y_{t_n} = y_n, \dots , Y_{t_0} = y_0 \right]
+    }\nonumber\\
+    & \qquad\qquad\qquad\qquad = &
+    \int_0^\infty \int_0^\infty\operatorname{\mathbb{P}}\left[ X_{t_n - t_{n-1}} = \frac{u}{v}\frac{y_{n+1} - y_n}{y_n - y_{n-1}} \right]\nonumber\\
+    & \qquad\qquad\qquad\qquad   &
+    \qquad\qquad\qquad\qquad\cdot\operatorname{\mathbb{P}}\left[ Y_{t_n - t_{n-1}} = u \right]\nonumber\\
+    & \qquad\qquad\qquad\qquad   &
+    \qquad\qquad\qquad\qquad\qquad\cdot\operatorname{\mathbb{P}}\left[ Y_{t_{n+1} - t_n} = v \right] du dv\\
+    & \qquad\qquad\qquad\qquad = &
+    \operatorname{\mathbb{P}}\left[ Y_{t_{n+1}} = y_{n+1} \right\rVert\left. Y_{t_n} = y_n, Y_{t_{n-1}} = y_{n-1} \right]
+  \end{IEEEeqnarray}
+  Thus any triple of stopping times $T_{n+1},T_n,T_{n-1}$ of consecutive passages of $G_t$
+  will have a $2$ step Markov dependence. This amounts to a concrete prediction that ageing
+  alone introduces a statistical dependence between the intervals of consecutive admissions
+  for healthcare services.
+
+  \section{L\'evy}
   Integrated geometric Brownian motion $Y_t$ and its carrier process of geometric Brownian
   motion $X_t$ can be embedded into the Lie algebra of $2 \times 2$ upper triangular
   matrices $\mathfrak{h}_2$ by means of the factorization observed earlier, so that the
