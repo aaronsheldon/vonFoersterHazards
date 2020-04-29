@@ -4,7 +4,7 @@
 Engine and utilities to forward propagate the von Foerster evolution
 from the hazard rate, birth rate, and initial demographics. Remember
 that our transition matrix convention is that SOURCES are columns 
-and DESTINATIONS are rows.
+and TARGETS are rows.
 """
 module vonFoersterHazards
 
@@ -85,14 +85,15 @@ struct population{Q, R, S, T} <: abstractpopulation{Q, R, S, T}
     covariances::T
 end
 population(a, s) = population(0.0, a, s, zeros(Float64, size(s, 1), size(s, 2), size(s, 2)))
-Base.eltype(::Type{abstractpopulation{Q, R, S, T}}) where {
+Base.eltype(::Type{A}) where {
     Q<:Real, 
     U<:Real,
     R<:AbstractVector{U},
     V<:Real,
     S<:AbstractMatrix{V},
     W<:Real,
-    T<:AbstractArray{W, 3}
+    T<:AbstractArray{W, 3},
+    A<:abstractpopulation{Q, R, S, T}
 } = cohort{
     Q, 
     U, 
@@ -104,7 +105,7 @@ Base.size(P::abstractpopulation, d=1) where T<:abstractpopulation = ((d==1) ? le
 Base.firstindex(P::abstractpopulation) = 1
 Base.lastindex(P::abstractpopulation) = length(P)
 Base.getindex(P::abstractpopulation, i) = cohort(P.elapsed, P.ages[i], view(P.strata, i, :), view(P.covariances, i, :, :))
-function Base.setindex!(P::abstractpopulation C::abstractcohort, i)
+function Base.setindex!(P::abstractpopulation, C::abstractcohort, i)
     P.ages[i] = C.age
     P.strata[i, :] .= C.stratum[:]
     P.covariances[i, :, :] .= C.covariance[:, :]
@@ -120,7 +121,7 @@ abstract type abstractevolve{
     Q<:abstractpopulation{T, U, V, W} where {
         T<:Real, 
         X<:Real,
-        V<:AbstractVector{X},
+        U<:AbstractVector{X},
         Y<:Real,
         V<:AbstractMatrix{Y},
         Z<:Real,
@@ -144,7 +145,7 @@ struct evolve{R, S, T} <: abstractevolve{R, S, T}
     gestation::T
     count::Int64
 end
-Base.eltype(::Type{abstractevolve{Q, R, S}}) where {
+Base.eltype(::Type{A}) where {
     T<:Real, 
     X<:Real,
     U<:AbstractVector{X},
@@ -154,7 +155,8 @@ Base.eltype(::Type{abstractevolve{Q, R, S}}) where {
     W<:AbstractArray{Z, 3},
     Q<:abstractpopulation{T, U, V, W},
     R<:Real,
-    S<:Real
+    S<:Real,
+    A<:abstractevolve{Q, R, S}
 } = Q
 Base.length(E::abstractevolve) = E.count
 Base.size(E::abstractevolve, d=1) = ((d==1) ? length(E) : 1)
@@ -173,13 +175,13 @@ function Base.iterate(E::abstractevolve)
     (issorted(E.initial.ages, rev=true)) ||
         throw(DomainError(E.initial.ages, "ages must be sorted in descending order."))
     
-    (convert(0 <= E.initial.ages[end]) ||
+    (0 <= E.initial.ages[end]) ||
         throw(DomainError(E.initial.ages, "ages must be non-negative."))
     
-    (convert(0 <= minimum(E.initial.strata)) ||
+    (0 <= minimum(E.initial.strata)) ||
         throw(DomainError(E.initial.strata, "cohorts must be non-negative."))
     
-    (minimum(E.initial.covariances) == convert(eltype(E.initial.covariances), 0) == maximum(E.initial.covariances)) ||
+    (minimum(E.initial.covariances) == 0 == maximum(E.initial.covariances)) ||
         throw(DomainError(E.initial.covariances, "covariances must be zero."))
     
     (al,) = size(E.initial.ages)
@@ -212,7 +214,7 @@ function Base.iterate(E::abstractevolve, S)
 
     # Curried transition function
     function t(c)
-        P = exp(-E.size * sum(scatterrate(a) .* H, dims=1)[1, :, :])
+        P = exp(-E.size * sum(scatterrate(c.age) .* H, dims=1)[1, :, :])
         cohort(
             c.elapsed + E.size,
             c.age + E.size,
