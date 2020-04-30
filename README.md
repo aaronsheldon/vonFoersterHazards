@@ -32,7 +32,7 @@ Aaron Sheldon (2020), "von Foerster Hazards" v1.0, Zenodo, doi:Pending registrat
 Biography
 ---------
 
-I am a feral mathematician set loose in the life sciences. I specialize in building precisely calibrated high resolution scientific instruments that integrate, at scale, large, high dimensional, heterogeneous longitudinal administrative and transactional enterprise data sources, to conduct rigorous [observational experiments][01] that [test hypotheses][02] about the processes of entire organizations, systems, and economies, at the level of individual interactions. I have an eclectic background in the sciences, spanning mathematics, physics, computer science, molecular biology, clinical research, epidemiology, and population surveillance. The tools I use are equally eclectic, and project dependent. I have an insignificant publication record, with my first and best [work][03] stemming from the tail end of an unremarkable Bachelors of Science in Mathematics and Physics from [Bishop's University][04]. I hold a similarly undistinguished [Masters of Science in Mathematical Statistics][05] from the [University of Calgary][06]. I am currently employed with [Alberta Health Services][07], where I am working to establish my vision of a public sector that efficiently reallocates resources to equitably redistribute the risks that are within society's control, with a specific mission to elucidate the fundamental mechanics and dynamics of risk. Sometimes I have time to think about topics deeply, but most of the time I can be found herding bits into data sets. The on-line communities I am willing to publicly admit to lurking around are [Github][08], [Tableau Forums][09], [Tableau Public][10], and nearly two decades ago once submitting to [MatLab][11]. I am not an [algorithmist][12]. I [think like a physicist][13].
+I am a feral mathematician set loose in the life sciences. I specialize in building precisely calibrated high resolution scientific instruments that integrate, at scale, large, high dimensional, heterogeneous longitudinal administrative and transactional enterprise data sources, to conduct rigorous [observational experiments][01] that [test hypotheses][02] about the processes of entire organizations, systems, and economies, at the level of individual interactions. To theoretically ground my experimental work I study the [representations][03] of [stochastic processes][04] in [Lie algebras][05]. I have an eclectic background in the sciences, spanning mathematics, physics, computer science, molecular biology, clinical research, epidemiology, and population surveillance. The tools I use are equally eclectic, and project dependent. I have an insignificant publication record, with my first and best [work][06] stemming from the tail end of an unremarkable Bachelors of Science in Mathematics and Physics from [Bishop's University][07]. I hold a similarly undistinguished [Masters of Science in Mathematical Statistics][08] from the [University of Calgary][09]. I am currently employed with [Alberta Health Services][10], where I am working to establish my vision of a public sector that efficiently reallocates resources to equitably redistribute the risks that are within society's control, with a specific mission to elucidate the fundamental mechanics and dynamics of risk. Sometimes I have time to think about topics deeply, but most of the time I can be found herding bits into data sets. The on-line communities I am willing to publicly admit to lurking around are [Github][11], [Tableau Forums][12], [Tableau Public][13], and nearly two decades ago once submitting to [MatLab][14]. I am not an [algorithmist][15]. I [think like a physicist][16].
 
 Disclaimer
 ----------
@@ -42,14 +42,17 @@ Notwithstanding any [licenses][00], this material is intended for general inform
 [00]: LICENSE
 [01]: https://en.wikipedia.org/wiki/Reproducibility
 [02]: https://en.wikipedia.org/wiki/Falsifiability
-[03]: https://www.jstor.org/stable/2988567
-[04]: https://www.ubishops.ca/
-[05]: https://github.com/aaronsheldon/markov-lie-frechet/blob/master/project-main.pdf
-[06]: https://ucalgary.ca/
-[07]: https://www.albertahealthservices.ca/
-[08]: https://github.com/aaronsheldon
-[09]: https://community.tableau.com/people/aaron.sheldon
-[10]: https://public.tableau.com/profile/aaron.sheldon
-[11]: https://www.mathworks.com/matlabcentral/profile/authors/869469-aaron-sheldon
-[12]: https://en.wikipedia.org/wiki/Deep_learning
-[13]: https://www.amazon.ca/Thinking-Physicist-Physics-Problems-Undergraduates/dp/0852745133
+[03]: https://en.wikipedia.org/wiki/Representation_theory
+[04]: https://en.wikipedia.org/wiki/Stochastic_process
+[05]: https://en.wikipedia.org/wiki/Lie_algebra
+[06]: https://www.jstor.org/stable/2988567
+[07]: https://www.ubishops.ca/
+[08]: https://github.com/aaronsheldon/markov-lie-frechet/blob/master/project-main.pdf
+[09]: https://ucalgary.ca/
+[10]: https://www.albertahealthservices.ca/
+[11]: https://github.com/aaronsheldon
+[12]: https://community.tableau.com/people/aaron.sheldon
+[13]: https://public.tableau.com/profile/aaron.sheldon
+[14]: https://www.mathworks.com/matlabcentral/profile/authors/869469-aaron-sheldon
+[15]: https://en.wikipedia.org/wiki/Deep_learning
+[16]: https://www.amazon.ca/Thinking-Physicist-Physics-Problems-Undergraduates/dp/0852745133
