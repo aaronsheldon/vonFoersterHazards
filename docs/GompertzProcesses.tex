@@ -116,15 +116,8 @@
     & = &
     \lambda Y_t
   \end{IEEEeqnarray}
-  Working through the re-parametrization by $Y_t$ of the incomplete gamma function
-  representation of the cumulative probability of the stopping $T_n$ of the n-th passage of
-  $G_t$ conditioned on $Y_t$ we have the probability density:
-  \begin{IEEEeqnarray}{rCl}
-    \operatorname{\mathbb{P}}\left[T_n =t \right\rVert\left. Y_t \right]
-    & = & 
-    \frac{\left(\mu+\sigma^2/2\right)e^{\left(\mu+\sigma^2/2\right)t}}{e^{\left(\mu+\sigma^2/2\right)t}-1} \frac{\left(\lambda Y_t\right)^n}{\left(n-1\right)!} e^{-\lambda Y_t}
-  \end{IEEEeqnarray}
-  Later we will see how we reached the conclusion of the right hand side of the equation.
+  Reflecting that integrated geometric Brownian motion $Y_t$ is truly measuring the elapsed
+  stochastically accelerated metabolic time.
 
   To start our exploration of the rich and subtleties of Gompertz processes we will briefly
   review of the properties of integrated geometric Brownian motion which are salient to
@@ -157,8 +150,9 @@
     & = &
     \frac{e^{\left(\mu + \sigma^2 / 2\right)t} - 1}{\mu + \sigma^2 / 2}
   \end{IEEEeqnarray}
-  Note the in the last equation we have implicitly invoked Fubini's theorem to switch the
-  order of integration, and will broadly continue to throughout this work.
+  Note the in the last equation we have implicitly invoked the Fubini-Tonelli Theorem to
+  switch the order of integration, and will broadly continue to use this theorem throughout
+  this work.
 
   \begin{lemma}[Acceleration Lemma]
     The expectation of non-negative integer powers $n \ge 0 $ of the carrier process of
@@ -172,7 +166,50 @@
     \end{IEEEeqnarray}
   \end{lemma}
   \begin{proof}
-    Carry out induction on $n$.
+    We proceed with induction on $n$.
+    \begin{enumerate}
+      \item For $n=0$ clearly $\operatorname{\mathbb{E}}\left[ X_t^0 \right\rVert\left. Y_t - Y_s \right] = 1$
+      \item Now assume that up to $n$ the relation holds.
+      \item For $u \in \left[s,t\right]$ consider the integrable function
+      \begin{IEEEeqnarray}{rCl}
+        f\left(s, u, t, y\right)
+        & = &
+        \operatorname{\mathbb{E}}\left[ X_u X_t^n \right\rVert\left. Y_t - Y_s = y \right]
+      \end{IEEEeqnarray}
+      \item It follows by the Fubini-Tonelli Theorem that and the induction assumption that
+        for $n$ the relation holds
+        \begin{IEEEeqnarray}{rCl}
+          \int_s^t f\left(s, u, t, y\right) du
+          & = &
+          y^{n+1} \frac{\operatorname{\mathbb{E}}\left[X_t^n\right]}
+          {\operatorname{\mathbb{E}}\left[\left(Y_t-Y_s\right)^n\right]}
+        \end{IEEEeqnarray}
+      \item Thus by the Fundamental Theorem of Calculus the integrand has the decomposition
+        $f\left(s, u, t, y\right) = y^{n+1} f\left(s, u, t\right)$
+      \item By the Law of Conditional Expectations we have
+        \begin{IEEEeqnarray}{rCl}
+          \operatorname{\mathbb{E}}\left[ X_u X_t^n\right]
+          & = &
+          \operatorname{\mathbb{E}}\left[\operatorname{\mathbb{E}}\left[ X_u X_t^n \right\rVert\left. Y_t - Y_s \right]\right]\\
+          & = &
+          f\left(s, u, t\right) \operatorname{\mathbb{E}}\left[ \left(Y_t-Y_s\right)^{n+1}\right]
+        \end{IEEEeqnarray}
+      \item Which immediately yields the decomposed integrand as
+        \begin{IEEEeqnarray}{rCl}
+          f\left(s,u,t\right)
+          & = &\frac{\operatorname{\mathbb{E}}\left[X_u X_t^n\right]}
+          {\operatorname{\mathbb{E}}\left[\left(Y_t-Y_s\right)^{n+1}\right]}
+        \end{IEEEeqnarray}
+      \item Finally taking $u=t$ yields the desired result
+        \begin{IEEEeqnarray}{rCl}
+          \operatorname{\mathbb{E}}\left[ X_t^{n+1} \right\rVert\left. Y_t - Y_s \right]
+          & = &
+          f\left(s,t,t\right)\left(Y_t-Y_s\right)^{n+1}\\
+          & = &
+          \frac{\operatorname{\mathbb{E}}\left[X_t^{n+1}\right]}
+          {\operatorname{\mathbb{E}}\left[\left(Y_t-Y_s\right)^{n+1}\right]}\left(Y_t-Y_s\right)^{n+1}
+        \end{IEEEeqnarray}
+    \end{enumerate}
   \end{proof}
 
   A simple corollary follows from a nearly trivial derivation.
@@ -189,7 +226,19 @@
     \end{IEEEeqnarray}
   \end{corollary}
   \begin{proof}
-    Factor and apply the previous lemma.
+    Factoring and applying the previous lemma:
+    \begin{IEEEeqnarray}{rCl}
+      \operatorname{\mathbb{E}}\left[ \left(Y_{t_1}-Y_{t_0}\right)^n \right\rVert\left. Y_{t_0} - Y_{t_{-1}} \right]
+      & = &
+      \operatorname{\mathbb{E}}\left[ X_{t_0}^n \right\rVert\left. Y_{t_0} - Y_{t_{-1}} \right]\operatorname{\mathbb{E}}\left[ Y_{t_1-t_0}^n \right]\\
+      & = &
+      \frac{\operatorname{\mathbb{E}}\left[ Y_{t_1-t_0}^n \right]\operatorname{\mathbb{E}}\left[X_{t_0}^n\right]}
+      {\operatorname{\mathbb{E}}\left[\left(Y_{t_0}-Y_{t_{-1}}\right)^n\right]}\left(Y_{t_0}-Y_{t_{-1}}\right)^n\\
+      & = &
+      \frac{\operatorname{\mathbb{E}}\left[\left(Y_{t_1} - Y_{t_0}\right)^n\right]}
+      {\operatorname{\mathbb{E}}\left[\left(Y_{t_0} - Y_{t_{-1}}\right)^n\right]}
+      \left(Y_{t_0} - Y_{t_{-1}}\right)^n
+    \end{IEEEeqnarray}
   \end{proof}
 
   Even with the factorization observation we are still in need of a means of reducing the
@@ -206,7 +255,17 @@
     \end{IEEEeqnarray}
   \end{lemma}
   \begin{proof}
-    Carry out a routine factorization.
+    Expanding the expectant as a multi-variable integral we have, applying th Fubini-Tonelli
+    Theorem we have, and then factoring we have:
+    \begin{IEEEeqnarray}{rCl}
+      \operatorname{\mathbb{E}}\left[ Y_t^n \right]
+      & = &
+      \int_0^t \dots \int_0^t \operatorname{\mathbb{E}}\left[ X_t^n \right] du_1 \dots du_n\\
+      & = &
+      \binom{n}{1} \int_0^t \operatorname{\mathbb{E}}\left[ X_u \left(Y_t - Y_u\right)^{n-1} \right] du\\
+      & = &
+      n \int_0^t \operatorname{\mathbb{E}}\left[ X_u^n\right] \operatorname{\mathbb{E}}\left[Y_{t-u}^{n-1} \right] du
+    \end{IEEEeqnarray}
   \end{proof}
 
   With the preceding lemma in hand we have the sufficient tools required to estimate all the
@@ -233,23 +292,34 @@
   stopped versions of Gompertz processes.
 
   \section{Markov}
-  From the Martingale $Y_{s \uparrow t}$ we can infer that $Y_t$ is a 2 step Markov process.
-  To verify this consider the sequence of bare times $0=t_0 < \dots < t_{n+1}=t$, and 
-  accelerated times $0=y_0 < \dots < y_{n+1}=y$, working through the conditional probability
-  we have:
+  From the Martingale $Y_{s \uparrow t}$ we can infer that $Y_t$ is a 2 step Markov process,
+  and that the increments $Y_t - Y_s$, with $t > s$ are Markov. To verify this consider the 
+  sequence of bare times $0=t_0 < \dots < t_{n+1}=t$, and accelerated times
+  $0=y_0 < \dots < y_{n+1}=y$, working through the conditional probability we have:
   \begin{IEEEeqnarray}{rCl}
     \IEEEeqnarraymulticol{3}{l}{
-      \operatorname{\mathbb{P}}\left[ Y_{t_{n+1}} = y_{n+1} \right\rVert\left. Y_{t_n} = y_n, \dots , Y_{t_0} = y_0 \right]
+      \operatorname{\mathbb{P}}\left[ Y_{t_{n+1}} - Y_{t_n} = y_{n+1} - y_n \right\rVert\left. Y_{t_n} - Y_{t_{n-1}} = y_n - y_{n-1}, \dots , Y_{t_1} - Y_{t_0} = y_1 - y_0 \right]
     }\nonumber\\
-    & \qquad\qquad\qquad\qquad = &
+    & \qquad\qquad\qquad = &
     \int_0^\infty \int_0^\infty\operatorname{\mathbb{P}}\left[ X_{t_n - t_{n-1}} = \frac{u}{v}\frac{y_{n+1} - y_n}{y_n - y_{n-1}} \right]\nonumber\\
-    & \qquad\qquad\qquad\qquad   &
+    & \qquad\qquad\qquad   &
     \qquad\qquad\qquad\qquad\cdot\operatorname{\mathbb{P}}\left[ Y_{t_n - t_{n-1}} = u \right]\nonumber\\
-    & \qquad\qquad\qquad\qquad   &
+    & \qquad\qquad\qquad   &
     \qquad\qquad\qquad\qquad\qquad\cdot\operatorname{\mathbb{P}}\left[ Y_{t_{n+1} - t_n} = v \right] du dv\\
-    & \qquad\qquad\qquad\qquad = &
-    \operatorname{\mathbb{P}}\left[ Y_{t_{n+1}} = y_{n+1} \right\rVert\left. Y_{t_n} = y_n, Y_{t_{n-1}} = y_{n-1} \right]
+    & \qquad\qquad\qquad = &
+    \operatorname{\mathbb{P}}\left[ Y_{t_{n+1}} - Y_{t_n} = y_{n+1} - y_n \right\rVert\left.  Y_{t_n} - Y_{t_{n-1}} = y_n - y_{n-1} \right]
   \end{IEEEeqnarray}
+  For the stopping time $T_n$ of the passage of the Gompertz process $G_{T_n} = n$ we have
+  the conditional expectation:
+  \begin{IEEEeqnarray}{rCl}
+    \operatorname{\mathbb{P}}\left[ T_n \right\rVert\left. Y_{T_n} \right]
+    & = &
+    \frac{\operatorname{\mathbb{E}}\left[ X_t \right]}{\operatorname{\mathbb{E}}\left[ Y_t \right]}
+    \frac{\left(\lambda Y_t\right)^n}{\left(n-1\right)!}
+    e^{-\lambda Y_t}
+  \end{IEEEeqnarray}
+  In practice we cannot measure the accelerated metabolic time $Y_t$ instead we have access
+  to the stopping times $T_n, \dots , T_0$.
   Thus any triple of stopping times $T_{n+1},T_n,T_{n-1}$ of consecutive passages of $G_t$
   will have a $2$ step Markov dependence. This amounts to a concrete prediction that ageing
   alone introduces a statistical dependence between the intervals of consecutive admissions
