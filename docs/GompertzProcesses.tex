@@ -25,9 +25,11 @@
   \maketitle
 
   \begin{abstract}
-    Motivated by considering infinitesimal stochastic accelerations of time, we outline a
-    theory of Gompertz processes, Poisson processes subordinated by integrated Geometric
-    Brownian motion.
+    Ageing is a accelerating failure process that is universal to all biological systems.
+    Motivated by considering infinitesimal stochastic accelerations of time, we hypothesize
+    a general explanation for the emergent determinism of ageing processes in the theory of
+    Gompertz processes: Poisson processes subordinated by integrated Geometric Brownian
+    motion.
   \end{abstract}
 
   \section{Preliminaries}
@@ -36,19 +38,19 @@
   acceleration $a$ in their failure time $a h\left(a t\right)$, where $h$ is the bare hazard
   rate of the failure event. Outside of the controlled setting of a laboratory the
   environmental stresses occur stochastically, resulting in a sequence of accelerations
-  $a_n$ of the underlying metabolic time. The accelerations can either increase the rate of
+  $a_n$ of the organism's metabolic time. The accelerations can either increase the rate of
   failure $a_n > 1$, an exacerbation of the stresses, or decrease the rate of failure
   $a_n < 1$, an alleviation from the stresses. However, even in the controlled setting of a
-  laboratory it is experimentally challenging to directly measure the underlying accelerated
-  metabolic time, instead we only have access to the failure time in bare units. Thus a
-  theory of ageing must be one that studies the subordination of the failure time by an 
-  elapsed metabolic time that is stochastically incremented.
+  laboratory it is experimentally challenging to directly measure the organism's accelerated
+  metabolic time of the organism, instead we only have access to the failure times in bare
+  units. Thus a theory of ageing must be one that studies the subordination of the failure
+  time by an accelerated metabolic time that is stochastically incremented.
 
   Over the course of an organism's lifetime it will encounter exacerbations and alleviations
   that accelerate $a_n,\dots,a_0=1$ metabolic time at times $t_n,\dots,t_0=0$. Furthermore,
   because the accelerations are all positive $a_i > 0$ for each acceleration we can find a
   finite real valued generator $w_n,\dots,w_0=0$ such that $a_i = e^{w_i}$. It follows that
-  the elapsed metabolic time $y_{t_n}$ at time $t_n$ is the sum of the products of
+  the accelerated metabolic time $y_{t_n}$ at time $t_n$ is the sum of the products of
   the accelerations up to time $t_{n-1}$ and the elapsed bare time steps $t_i - t_{i-1}$:
   \begin{IEEEeqnarray}{rCl}
     y_{t_n}
@@ -64,7 +66,7 @@
     \mathcal{O}\left(t_i - t_{i-1}\right)
   \end{IEEEeqnarray}
   The sum of products then becomes a stochastic process $Y_t$ that is an integral of
-  a geometric random infinitesimal generator process $e^{W_u}$:
+  a random geometric infinitesimal generator process $e^{W_u}$:
   \begin{IEEEeqnarray}{rCl}
     Y_t
     & = & 
@@ -75,9 +77,9 @@
   an infinite number of continuous changes in a span of time. If we assume as a first
   approximation that the exacerbations and alleviations, and their respective accelerations,
   are independent and stationary over time then by the L\'evy-Khintchine characterization 
-  the only infinitesimal generator of elapsed metabolic time that is L\'evy and continuous,
-  \emph{``jump free''}, is Brownian motion $W_u$. The stochastic process of elapsed
-  metabolic time is better known as integrated geometric Brownian motion.
+  the only infinitesimal generator of accelerated metabolic time that is L\'evy and
+  continuous \emph{``jump free''} is Brownian motion $W_u$. The stochastic process of
+  accelerated metabolic time is better known as integrated geometric Brownian motion.
 
   \section{Gompertz}
   Motivated by the preceding heuristic derivation we formally define the Gompertz process on
@@ -103,11 +105,10 @@
   Phenomenologically the finite real stochastic process $\mu t + \sigma W_s$ is the
   infinitesimal acceleration at time $t$ that generates a non-negative geometric stochastic
   process $X_t$ of accumulated accelerations up to time $t$ and whose integral $Y_t$ is a
-  strictly increasing stochastic process of elapsed metabolic time up to time $t$.
+  strictly increasing stochastic process of accelerated metabolic time up to time $t$.
 
-  It is immediately clear from the definition that conditioning the Gompertz process $G_t$
-  on integrated geometric Brownian motion $Y_t$ yields the analogous relationships from the
-  familiar standard Poisson process:
+  From the definition of the Gompertz process $G_t$ conditioning on the history of a sample
+  path of integrated geometric Brownian motion $Y_t$ yields a conditional Poisson process:
   \begin{IEEEeqnarray}{rCl}
     \operatorname{\mathbb{P}}\left[G_t = n \right\rVert\left. Y_t \right]
     & = & 
@@ -132,16 +133,18 @@
     & = &
     \operatorname{\mathbb{P}}\left[X_s\right] \operatorname{\mathbb{P}}\left[Y_{t-s}\right]
   \end{IEEEeqnarray}
-  where the process $X_s$ is independent of the process $Y_{t-s}$. For example, this allows
-  us to immediately observe that for times $t > s$:
+  where the process $X_s$ is independent of the process $Y_{t-s}$. Phenomenologically the
+  increments of $Y_t - Y_s$ are equivalent to a process that starts with acceleration $X_s$.
+  Analogous to the Fundamental Theorem of Arithmetic this factorization allows us to reach
+  many useful inferences; for example we can immediately observe that for times $t > s$:
   \begin{IEEEeqnarray}{rCl}
     \operatorname{\mathbb{E}}\left[ \left(Y_t - Y_s\right)^n \right\rVert\left. X_s \right]
     & = &
     X_s^n \operatorname{\mathbb{E}}\left[ Y_{t-s}^n \right]
   \end{IEEEeqnarray}
-  We will liberally exploit this technique of arbitraging the elapsed metabolic time $Y_t$ 
-  against the accumulated acceleration $X_t$ to reduce expectations down to the well know
-  standard terms for $X_t$ and $Y_t$:
+  We will liberally exploit this technique of arbitraging the accelerated metabolic time 
+  $Y_t$ against the accumulated acceleration $X_t$ to reduce expectations down to the well
+  known standard terms for $X_t$ and $Y_t$:
   \begin{IEEEeqnarray}{rCl}
     \operatorname{\mathbb{E}}\left[ X_t^n \right]
     & = &
@@ -309,21 +312,65 @@
     & \qquad\qquad\qquad = &
     \operatorname{\mathbb{P}}\left[ Y_{t_{n+1}} - Y_{t_n} = y_{n+1} - y_n \right\rVert\left.  Y_{t_n} - Y_{t_{n-1}} = y_n - y_{n-1} \right]
   \end{IEEEeqnarray}
-  For the stopping time $T_n$ of the passage of the Gompertz process $G_{T_n} = n$ we have
-  the conditional expectation:
+  In practice we cannot directly measure the accelerated metabolic time $Y_t$ instead we
+  have access to the stopping times $T_n$ of the passage $G_{T_n} = n$ of the Gompertz
+  process.
+  
+  To study the Markov properties of the stopping times we return to our ability to recover
+  the Poisson process from the Gompertz process by conditioning on the history of the sample
+  path of integrated geometric Brownian motion. By differentiating the subordinated
+  cumulative distribution of a single stopping time we have the conditional expectation:
   \begin{IEEEeqnarray}{rCl}
-    \operatorname{\mathbb{P}}\left[ T_n \right\rVert\left. Y_{T_n} \right]
+    \operatorname{\mathbb{P}}\left[ T_n = t \right\rVert\left. Y_{T_n} \right]
     & = &
     \frac{\operatorname{\mathbb{E}}\left[ X_t \right]}{\operatorname{\mathbb{E}}\left[ Y_t \right]}
     \frac{\left(\lambda Y_t\right)^n}{\left(n-1\right)!}
     e^{-\lambda Y_t}
   \end{IEEEeqnarray}
-  In practice we cannot measure the accelerated metabolic time $Y_t$ instead we have access
-  to the stopping times $T_n, \dots , T_0$.
-  Thus any triple of stopping times $T_{n+1},T_n,T_{n-1}$ of consecutive passages of $G_t$
-  will have a $2$ step Markov dependence. This amounts to a concrete prediction that ageing
-  alone introduces a statistical dependence between the intervals of consecutive admissions
-  for healthcare services.
+  Of central interest in the study of the biological systems is the latency $T_n - T_{n-1}$
+  between consecutive stopping times. From the preceding derivation we can immediately
+  deduce that the expectation and the tail probability of the latency are given by:
+  \begin{IEEEeqnarray}{rCl}
+    \operatorname{\mathbb{E}}\left[ T_n - T_{n-1} \right]
+    & = &
+    \int_0^\infty \operatorname{\mathbb{E}}\left[ e^{-\lambda X_{T_{n-1}} Y_t} \right] dt\\\nonumber\\
+    \operatorname{\mathbb{P}}\left[ T_n - T_{n-1} \ge t \right]
+    & = &
+    \operatorname{\mathbb{E}}\left[ e^{-\lambda X_{T_{n-1}} Y_t } \right]
+  \end{IEEEeqnarray}
+  where $X_t$ and $Y_t$ are the increment process independent of $X_{T_{n-1}}$, which in 
+  turn sets the initial acceleration at the start of the increment. We have presented the
+  unconditional expectation over $T_{n-1}$ because in many experiments, due to immortal time
+  bias \emph{``we cannot see indefinitely into the past''}, we are only able to observe
+  consecutive passages of the Gompertz process, without knowledge of how many had occurred
+  before the consecutive passages were observed. Further exploration of the unconditional
+  expectations requires a deeper understanding of the characteristic function of integrated
+  geometric Brownian motion, which we will develop later.
+  
+  While the consecutive increments of integrated geometric Brownian motion are Markov,
+  because knowledge of just the most recent stopping time and it's passage count is
+  sufficient. This is because conditioning on a sample path of integrated geometric Brownian
+  motion is sufficient to recovery a Poisson process from a Gompertz process. It is thus
+  more important to understand the conditional dependence of consecutive stopping times
+  while marginalizing over a lack of knowledge of the past. To do so, consider triple of
+  stopping times of consecutive passages of the Gompertz process
+   $T_{2 + G_t}, T_{1 + G_t}, T_{G_t}$ from the Law of Total Expectation we then have:
+  \begin{IEEEeqnarray}{rCl}
+    \operatorname{\mathbb{P}}\left[ T_{2 + G_t} - T_{1 + G_t} \ge r \right\rVert\left. T_{1 + G_t} - T_{G_t} = s \right]
+    & = &
+    \operatorname{\mathbb{E}}\left[ e^{-\lambda X_{s+t} Y_r}\right]
+  \end{IEEEeqnarray}
+  where the initial acceleration $X_{s+t}$ and the increment $Y_r$ are independent. 
+  Furthermore the conditional expectation marginalized of lack of knowledge of the past is
+  given by the integral:
+  \begin{IEEEeqnarray}{rCl}
+    \operatorname{\mathbb{E}}\left[ T_{2 + G_t} - T_{1 + G_t} \right\rVert\left. T_{1 + G_t} - T_{G_t} = s \right]
+    & = &
+    \int_0^\infty \operatorname{\mathbb{E}}\left[ e^{-\lambda X_{s+t}Y_u} \right] du
+  \end{IEEEeqnarray}
+  again where the initial acceleration $X_{s+t}$ and the increment $Y_u$ are independent.
+  This amounts to a concrete prediction that ageing alone introduces a statistical
+  dependence between the intervals of consecutive admissions for healthcare services.
 
   \section{L\'evy}
   Integrated geometric Brownian motion $Y_t$ and its carrier process of geometric Brownian
@@ -335,17 +382,17 @@
       1 & Y_t\\
       0 & X_t
     \end{bmatrix}
-    & \sim &
+    & = &
     \begin{bmatrix}
-      1 & \tilde{Y}_{t-s}\\
-      0 & \tilde{X}_{t-s}
+      1 & Y_{t-s}\\
+      0 & X_{t-s}
     \end{bmatrix}
     \begin{bmatrix}
       1 & Y_s\\
       0 & X_s
     \end{bmatrix}
   \end{IEEEeqnarray}
-  where the increment processes of $\tilde{Y}_{t-s}$ and $\tilde{X}_{t-s}$ are independent
+  where the increment processes of $Y_{t-s}$ and $X_{t-s}$ are independent
   of the processes $Y_s$ and $X_s$.
 
   \section{Fokker-Planck}
