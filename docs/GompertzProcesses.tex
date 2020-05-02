@@ -313,13 +313,14 @@
     \operatorname{\mathbb{P}}\left[ Y_{t_{n+1}} - Y_{t_n} = y_{n+1} - y_n \right\rVert\left.  Y_{t_n} - Y_{t_{n-1}} = y_n - y_{n-1} \right]
   \end{IEEEeqnarray}
   In practice we cannot directly measure the accelerated metabolic time $Y_t$ instead we
-  have access to the stopping times $T_n$ of the passage $G_{T_n} = n$ of the Gompertz
+  have access to the stopping times $T_n$ of the passages $G_{T_n} = n$ of the Gompertz
   process.
   
-  To study the Markov properties of the stopping times we return to our ability to recover
-  the Poisson process from the Gompertz process by conditioning on the history of the sample
-  path of integrated geometric Brownian motion. By differentiating the subordinated
-  cumulative distribution of a single stopping time we have the conditional expectation:
+  To study the Markov properties of the stopping times of the passages of the Gompertz
+  process we revisit the recovery of the Poisson process from the Gompertz process by
+  conditioning on the history of the sample path of integrated geometric Brownian motion.
+  By differentiating the subordinated cumulative distribution of a single stopping time we
+  have the conditional probability distribution:
   \begin{IEEEeqnarray}{rCl}
     \operatorname{\mathbb{P}}\left[ T_n = t \right\rVert\left. Y_{T_n} \right]
     & = &
@@ -327,50 +328,78 @@
     \frac{\left(\lambda Y_t\right)^n}{\left(n-1\right)!}
     e^{-\lambda Y_t}
   \end{IEEEeqnarray}
-  Of central interest in the study of the biological systems is the latency $T_n - T_{n-1}$
-  between consecutive stopping times. From the preceding derivation we can immediately
-  deduce that the expectation and the tail probability of the latency are given by:
-  \begin{IEEEeqnarray}{rCl}
-    \operatorname{\mathbb{E}}\left[ T_n - T_{n-1} \right]
-    & = &
-    \int_0^\infty \operatorname{\mathbb{E}}\left[ e^{-\lambda X_{T_{n-1}} Y_t} \right] dt\\\nonumber\\
-    \operatorname{\mathbb{P}}\left[ T_n - T_{n-1} \ge t \right]
-    & = &
-    \operatorname{\mathbb{E}}\left[ e^{-\lambda X_{T_{n-1}} Y_t } \right]
-  \end{IEEEeqnarray}
-  where $X_t$ and $Y_t$ are the increment process independent of $X_{T_{n-1}}$, which in 
-  turn sets the initial acceleration at the start of the increment. We have presented the
-  unconditional expectation over $T_{n-1}$ because in many experiments, due to immortal time
-  bias \emph{``we cannot see indefinitely into the past''}, we are only able to observe
-  consecutive passages of the Gompertz process, without knowledge of how many had occurred
-  before the consecutive passages were observed. Further exploration of the unconditional
-  expectations requires a deeper understanding of the characteristic function of integrated
-  geometric Brownian motion, which we will develop later.
+  Finding a closed form for the distribution of the stopping times of the passages of the
+  Gompertz process will require a deeper understanding of the characteristic function of
+  integrated geometric Brownian motion, which we will develop later. In the meantime there
+  are many fruits to be plucked from a study of stopping times of the passages of the
+  Gompertz process.
+
+  The central statistic of study in the longitudinal analysis of biological systems is the
+  latency $T_{1+G_t} - T_{G_t} =T_{1+G_t} -t$ between consecutive stopping times of the
+  passages of the Gompertz process. Due to immortal time bias
+  \emph{``we cannot see indefinitely into the past''} we have subordinated the stopping
+  times $T_{n+G_t}$ of the passages of the Gompertz process by the increments of the
+  Gompertz process $n+G_t$ from a sentinel event $G_t$. In practice observational studies,
+  particularly in clinical research and epidemiology, are only able to observe consecutive
+  passages of the Gompertz process from a fixed sentinel event without the knowledge of how
+  many events have occurred before the sentinel event.
   
-  While the consecutive increments of integrated geometric Brownian motion are Markov,
-  because knowledge of just the most recent stopping time and it's passage count is
-  sufficient. This is because conditioning on a sample path of integrated geometric Brownian
-  motion is sufficient to recovery a Poisson process from a Gompertz process. It is thus
-  more important to understand the conditional dependence of consecutive stopping times
-  while marginalizing over a lack of knowledge of the past. To do so, consider triple of
-  stopping times of consecutive passages of the Gompertz process
-   $T_{2 + G_t}, T_{1 + G_t}, T_{G_t}$ from the Law of Total Expectation we then have:
+  From the preceding probability density we can immediately deduce the tail probability and
+  hence the expectation of the latency $s>0$ conditioned on a sentinel event at time $t>0$:
   \begin{IEEEeqnarray}{rCl}
-    \operatorname{\mathbb{P}}\left[ T_{2 + G_t} - T_{1 + G_t} \ge r \right\rVert\left. T_{1 + G_t} - T_{G_t} = s \right]
+    \operatorname{\mathbb{P}}\left[ T_{1+G_t} - T_{G_t} \ge s \right\rVert\left. T_{G_t}=t \right]
     & = &
-    \operatorname{\mathbb{E}}\left[ e^{-\lambda X_{s+t} Y_r}\right]
+    \operatorname{\mathbb{E}}\left[ e^{-\lambda X_t Y_s } \right]\\\nonumber\\
+    \operatorname{\mathbb{E}}\left[T_{1+G_t} - T_{G_t}  \right\rVert\left. T_{G_t}=t \right]
+    & = &
+    \int_0^\infty \operatorname{\mathbb{E}}\left[ e^{-\lambda X_t Y_s} \right] ds
   \end{IEEEeqnarray}
-  where the initial acceleration $X_{s+t}$ and the increment $Y_r$ are independent. 
-  Furthermore the conditional expectation marginalized of lack of knowledge of the past is
-  given by the integral:
+  where $Y_s$ is the increment process independent of the acceleration $X_t$ at the start of
+  the increment. 
+  
+  Remarkably the stopping times of the passages for the Gompertz process are Markov in their
+  absolute values, even though the accelerated metabolic time of integrated geometric
+  Brownian motion is only Markov in its increments. Specifically knowledge of the age
+  $t_0>0$ at a sentinel event $G_{t_0}$ in the history of the Gompertz process is sufficient
+  to determine the distribution of the latency $t > 0$ to next event $T_{1+n+G_{t_0}}$. To see
+  this consider the subordinated stopping times
+  $T_{n+G_{t_0}}=t_n, \dots , T_{G_{t_0}} = t_0$, the cumulative probability of the latency
+  conditioned of the previous events is:
   \begin{IEEEeqnarray}{rCl}
-    \operatorname{\mathbb{E}}\left[ T_{2 + G_t} - T_{1 + G_t} \right\rVert\left. T_{1 + G_t} - T_{G_t} = s \right]
+    \IEEEeqnarraymulticol{3}{l}{
+      \operatorname{\mathbb{P}}\left[ T_{1 + n + G_t} - T_{n + G_t} \ge t \right\rVert\left. T_{n+G_{t_0}}=t_n, \dots , T_{G_{t_0}} = t_0 \right]
+    }\nonumber\\
+    \qquad
     & = &
-    \int_0^\infty \operatorname{\mathbb{E}}\left[ e^{-\lambda X_{s+t}Y_u} \right] du
+    \operatorname{\mathbb{E}}\left[ e^{-\lambda \left(Y_{t + t_n} - Y_{t_n}\right)} \right\rVert\left. T_{n+G_{t_0}}=t_n, \dots , T_{G_{t_0}} = t_0 \right]\\
+    \qquad
+    & = &
+    \operatorname{\mathbb{E}}\left[ e^{-\lambda X_{t_n} Y_t}\right]\\
+    \qquad
+    & = &
+    \operatorname{\mathbb{P}}\left[ T_{1 + G_{t_n}} - T_{G_{t_n}} \ge t \right\rVert\left. T_{G_{t_n}}=t_n \right]
   \end{IEEEeqnarray}
-  again where the initial acceleration $X_{s+t}$ and the increment $Y_u$ are independent.
-  This amounts to a concrete prediction that ageing alone introduces a statistical
-  dependence between the intervals of consecutive admissions for healthcare services.
+  where $Y_t$ is the increment process independent of the acceleration $X_{t_n}$ at the
+  start of the increment.
+
+  The immediate prediction from these results is that age of an organism introduces a
+  correlation between the latencies of consecutive events, and that this correlation can be
+  fully removed by conditioning on the age of the organism at the sentinel event. However to
+  date not a single longitudinal study of a biological system has properly accounted for the
+  Gompertz process of ageing.
+  
+  Analogous to the Hubble constant which describes the intrinsic expansion of space-time the
+  Gompertz processes introduces an irreducible exponential dependence on age
+  \emph{``older organisms are red-shifted with respect to younger organisms''} that cannot
+  be removed or linearized by a coordinate transform, just as no coordinate transform can
+  remove the intrinsic red-shift of space-time. The serious consequence of this observation
+  is that every single longitudinal study that has followed outcomes whose latencies are on
+  the same timescale as the lifespan of the investigated organism has introduced spurious
+  correlations into their longitudinal analysis of event latency which are purely an
+  artefact of the exponential age dependence of the Gompertz process. Fortunately the
+  majority of the studies of biological systems have either been cross sectional or of short
+  enough duration that the hazard of the Gompertz process is approximately constant over the
+  timescale of the followup on the organism.
 
   \section{L\'evy}
   Integrated geometric Brownian motion $Y_t$ and its carrier process of geometric Brownian
