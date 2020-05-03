@@ -117,14 +117,26 @@
     & = &
     \lambda Y_t
   \end{IEEEeqnarray}
+  And the dual relationship that conditioning on the Gompertz process estimates the elapsed
+  stochastically accelerated metabolic time:
+  \begin{IEEEeqnarray}{rCl}
+    \operatorname{\mathbb{P}}\left[Y_t \le y \right\rVert\left. G_t \right]
+    & = & 
+    \displaystyle\int_0^{\lambda y} \frac{u^{G_t - 1} e^{-u}}{\left(G_t - 1\right)!} du\\\nonumber\\
+    \operatorname{\mathbb{E}}\left[Y_t \right\rVert\left. G_t \right]
+    & = &
+    \frac{G_t}{\lambda}
+  \end{IEEEeqnarray}
   Reflecting that integrated geometric Brownian motion $Y_t$ is truly measuring the elapsed
   stochastically accelerated metabolic time.
 
-  To start our exploration of the rich and subtleties of Gompertz processes we will briefly
-  review of the properties of integrated geometric Brownian motion which are salient to
+  To start our exploration of the rich subtleties of Gompertz processes we will briefly
+  review the properties of integrated geometric Brownian motion which are salient to
   developing our theory. This is by no means a comprehensive compendium. Much of the
   material I will cover has been deeply and thoroughly explored in the quantitative finance
-  literature in the theory of pricing Asian options.
+  literature in the theory of pricing Asian options, and the stochastic processes syllabus
+  on subordinated Poisson processes, usually in the context of deriving the characteristic
+  function of the subordinating process.
   
   Our first observation is that the increments of $Y_t$ can be factored by its carrier
   process $X_t$, for times $t > s$:
@@ -276,20 +288,33 @@
   covariances.
 
   \section{Martingale}
-  By our counterpoint corollary the scaled increments of integrated geometric Brownian
-  motion $Y_{s \uparrow t}$, with $t>s$:
+  By our counterpoint corollary the amortized integrated geometric Brownian motion:
   \begin{IEEEeqnarray}{rCl}
-    Y_{s \uparrow t}
+    \hat{Y}_t
     & = &
     \displaystyle\frac
-    {Y_t - Y_s}
-    {\operatorname{\mathbb{E}}\left[ Y_t - Y_s \right]}
+    {Y_t}
+    {\operatorname{\mathbb{E}}\left[ Y_t \right]}
   \end{IEEEeqnarray}  
-  form a two point martingale, so that for a triplet of times $t_1 > t_0 > t_{-1}$:
+  forms a martingale, so that for times $t > s$:
   \begin{IEEEeqnarray}{rCl}
-    \operatorname{\mathbb{E}}\left[ Y_{t_0 \uparrow t_1} \right\rVert\left. Y_{t_{-1} \uparrow t_0} \right]
+    \operatorname{\mathbb{E}}\left[ \hat{Y}_t \right\rVert\left. \hat{Y}_s \right]
     & = &
-    Y_{t_{-1} \uparrow t_0}
+    \hat{Y}_s
+  \end{IEEEeqnarray}
+  We can deduce that the amortized Gompertz process:
+  \begin{IEEEeqnarray}{rCl}
+    \hat{G}_t
+    & = &
+    \displaystyle\frac
+    {G_t}
+    {\operatorname{\mathbb{E}}\left[ Y_t \right]}
+  \end{IEEEeqnarray}
+  is a martingale, so that for times $t  > s$:
+  \begin{IEEEeqnarray}{rCl}
+    \operatorname{\mathbb{E}}\left[ \hat{G}_t \right\rVert\left. \hat{G}_s \right]
+    & = &
+    \hat{G}_s
   \end{IEEEeqnarray}
   This allows us to leverage optional stopping time theorems to evaluate expectations of 
   stopped versions of Gompertz processes.
@@ -381,6 +406,8 @@
   \end{IEEEeqnarray}
   where $Y_t$ is the increment process independent of the acceleration $X_{t_n}$ at the
   start of the increment.
+
+  TODO conditional correlation
 
   The immediate prediction from these results is that age of an organism introduces a
   correlation between the latencies of consecutive events, and that this correlation can be

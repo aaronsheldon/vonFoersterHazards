@@ -44,18 +44,26 @@ abstract type abstractcohort{
 end
 
 """
-    cohort(elapsed, age, stratum, covariance)
+    cohort(elapsed, age, stratum, covariance, conserving)
 
 Return type for indexing into the population. Container for the state occupancies
-of a specific age group, and the covariances between the occupancies.
+of a specific age group, and the covariances between the occupancies. The occupancies
+are conserved in groups in boundaries indicated by the true values of conserving.
 """
 struct cohort{Q, R, S, T} <: abstractcohort{Q, R, S, T}
     elapsed::Q
     age::R
     stratum::S
     covariance::T
+    conserving::BitArray{1}
 end
-cohort(a, s) = cohort(0.0, a, s, zeros(Float64, size(s, 1), size(s, 1)))
+cohort(a, s) = cohort(
+    0.0,
+    a,
+    s,
+    zeros(Float64, size(s, 1), size(s, 1)),
+    BitArray(zeros(size(s, 1)))
+)
 
 """
     abstractpopulation
@@ -71,20 +79,28 @@ abstract type abstractpopulation{
 end
 
 """
-    population(elapsed, ages, strata, covariances)
+    population(elapsed, ages, strata, covariances, conserving)
 
 Indexable container for the demographics of a population at a single time step.
 Conceptually the ages labels the rows of the population matrix, and the columns
 are the states. Cohorts are stored in reverse order, so that births can be pushed
-to the vector.
+to the vector. The occupancies are conserved in groups in boundaries indicated by
+the true values of conserving.
 """
 struct population{Q, R, S, T} <: abstractpopulation{Q, R, S, T}
     elapsed::Q
     ages::R
     strata::S
     covariances::T
+    conserving::BitArray{1}
 end
-population(a, s) = population(0.0, a, s, zeros(Float64, size(s, 1), size(s, 2), size(s, 2)))
+population(a, s) = population(
+    0.0,
+    a,
+    s,
+    zeros(Float64, size(s, 1), size(s, 2), size(s, 2)),
+    BitArray(zeros(size(s, 2)))
+)
 Base.eltype(::Type{A}) where {
     Q<:Real, 
     U<:Real,
@@ -101,10 +117,16 @@ Base.eltype(::Type{A}) where {
     SubArray{W, 2, T, Tuple{Int64, Base.Slice{Base.OneTo{Int64}}, Base.Slice{Base.OneTo{Int64}}}, true}
 }
 Base.length(P::abstractpopulation) = length(P.ages)
-Base.size(P::abstractpopulation, d=1) where T<:abstractpopulation = ((d==1) ? length(P) : 1)
+Base.size(P::abstractpopulation, d=1) = ((d==1) ? length(P) : 1)
 Base.firstindex(P::abstractpopulation) = 1
 Base.lastindex(P::abstractpopulation) = length(P)
-Base.getindex(P::abstractpopulation, i) = cohort(P.elapsed, P.ages[i], view(P.strata, i, :), view(P.covariances, i, :, :))
+Base.getindex(P::abstractpopulation, i) = cohort(
+    P.elapsed,
+    P.ages[i],
+    view(P.strata, i, :),
+    view(P.covariances, i, :, :),
+    P.conserving
+)
 function Base.setindex!(P::abstractpopulation, C::abstractcohort, i)
     P.ages[i] = C.age
     P.strata[i, :] .= C.stratum[:]
@@ -161,45 +183,46 @@ Base.eltype(::Type{A}) where {
 Base.length(E::abstractevolve) = E.count
 Base.size(E::abstractevolve, d=1) = ((d==1) ? length(E) : 1)
 function Base.iterate(E::abstractevolve)
-    
+
     # Sanity checks
     (E.size > 0) ||
         throw(DomainError(E.size, "time increment must be positive."))
-    
+
     (E.gestation > 0) ||
         throw(DomainError(E.gestation, "gestation must be positive."))
-    
+
     (E.count > 0) ||
         throw(DomainError(E.gestation, "count must be positive."))
-    
+
     (issorted(E.initial.ages, rev=true)) ||
         throw(DomainError(E.initial.ages, "ages must be sorted in descending order."))
-    
+
     (0 <= E.initial.ages[end]) ||
         throw(DomainError(E.initial.ages, "ages must be non-negative."))
-    
+
     (0 <= minimum(E.initial.strata)) ||
         throw(DomainError(E.initial.strata, "cohorts must be non-negative."))
-    
+
     (minimum(E.initial.covariances) == 0 == maximum(E.initial.covariances)) ||
         throw(DomainError(E.initial.covariances, "covariances must be zero."))
-    
+
     (al,) = size(E.initial.ages)
     (bl,) = size(birthrate(E.initial))
     (cl, cw) = size(E.initial.strata)
     (dl,) = size(scatterrate(E.initial.ages[1]))
     (el, ew, eh) = size(hazardrate(E.initial))
     (fl, fw, fh) = size(E.initial.covariances)
-    
+    (gl,) = size(E.initial.conserving)
+
     (al == cl == fl) ||
         throw(DimensionMismatch("number of cohorts and covariances must equal number of ages."))
-    
+
     (dl == el) ||
         throw(DimensionMismatch("number of summands in spectral decomposition returned by hazard rate and scatter rate must be equal."))
-    
-    (bl  == cw == ew == eh == fw == fh) ||
-        throw(DimensionMismatch("strata in covariances, birth rate, hazard rate, and cohorts must be equal."))
-    
+
+    (bl  == cw == ew == eh == fw == fh == gl) ||
+        throw(DimensionMismatch("strata in covariances, birth rate, hazard rate, conserving, and cohorts must be equal."))
+
     # Send
     (E.initial, (0, E.initial))
 end
@@ -218,7 +241,7 @@ function Base.iterate(E::abstractevolve, S)
         cohort(
             c.elapsed + E.size,
             c.age + E.size,
-            conservesum!(randomtruncate.(P * c.stratum), sum(c.stratum)),
+            conservesum!(randomtruncate.(P * c.stratum), c.stratum, c.conserving),
             covariance(c.covariance, P, c.stratum)
         )
     end
@@ -227,12 +250,13 @@ function Base.iterate(E::abstractevolve, S)
     S[2] .= t.(S[2])
 
     # Youngest cohort is less than gestation time old, add births to youngest cohort
-    if S[1].ages[end] < E.gestation then
+    if S[1].ages[end] < E.gestation
         R = population(
             S[2] + E.size,
             S[2].ages,
             S[2].strata,
-            S[2].covariances
+            S[2].covariances,
+            S[2].conserving
         )
         R.cohorts[end, :] .= R.cohorts[end, :] .+ b'
 
@@ -242,7 +266,8 @@ function Base.iterate(E::abstractevolve, S)
             S[2] + E.size,
             S[2].ages,
             [S[2].strata; b'],
-            [S[2].covariances; zeros(eltype(S[2].covariances), 1, size(S[2].covariances, 2), size(S[2].covariances, 3))]
+            [S[2].covariances; zeros(eltype(S[2].covariances), 1, size(S[2].covariances, 2), size(S[2].covariances, 3))],
+            S[2].conserving
         )
         push!(R.ages, 0)
     end
@@ -291,13 +316,13 @@ function randomtruncate(x)
 end
 
 """
-    conservesum!(A, a)
+    conservesum!(A, a, c)
 
-In place enforcement that the sum of A equals a. Note this assumes the inputs
-are well formed, there are no bounds or sanity checks.
+In place enforcement that the subset sums of A equals the subset sums of a, where
+the boundary of the subsets are set by c. Note this assumes the inputs are well formed,
+there are no bounds or sanity checks.
 """
-function conservesum!(A, a)
-    (a == 0) && return zeros(eltype(A), size(A))
+function conservesum!(A, a, c)
     d = a - sum(A)
     I = sortperm(A, rev=(d<0))
     A[I] .= A[I] .+ [sign(d) .* ones(Int64, abs(d)) ; zeros(Int64, length(A)-abs(d))]
