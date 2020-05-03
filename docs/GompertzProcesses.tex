@@ -37,21 +37,23 @@
   environmental stresses, including communicable diseases and exposures to toxins, with an
   acceleration $a$ in their failure time $a h\left(a t\right)$, where $h$ is the bare hazard
   rate of the failure event. Outside of the controlled setting of a laboratory the
-  environmental stresses occur stochastically, resulting in a sequence of accelerations
-  $a_n$ of the organism's metabolic time. The accelerations can either increase the rate of
-  failure $a_n > 1$, an exacerbation of the stresses, or decrease the rate of failure
-  $a_n < 1$, an alleviation from the stresses. However, even in the controlled setting of a
-  laboratory it is experimentally challenging to directly measure the organism's accelerated
-  metabolic time of the organism, instead we only have access to the failure times in bare
-  units. Thus a theory of ageing must be one that studies the subordination of the failure
-  time by an accelerated metabolic time that is stochastically incremented.
+  environmental stresses occur stochastically, resulting in a stochastic sequence of
+  accelerations $a_n$ of the organism's metabolic time. The stochastic accelerations can
+  either increase the rate of failure $a_n > 1$, an exacerbation of the stresses, or
+  decrease the rate of failure $a_n < 1$, an alleviation from the stresses. However, even in
+  the controlled setting of a laboratory it is experimentally challenging to directly
+  measure the organism's stochastically accelerated metabolic time of the organism, instead
+  we only have access to the failure times in bare units. Thus a theory of ageing must be
+  one that studies the subordination of the failure time by a stochastically accelerated
+  metabolic time that is stochastically incremented.
 
   Over the course of an organism's lifetime it will encounter exacerbations and alleviations
-  that accelerate $a_n,\dots,a_0=1$ metabolic time at times $t_n,\dots,t_0=0$. Furthermore,
-  because the accelerations are all positive $a_i > 0$ for each acceleration we can find a
-  finite real valued generator $w_n,\dots,w_0=0$ such that $a_i = e^{w_i}$. It follows that
-  the accelerated metabolic time $y_{t_n}$ at time $t_n$ is the sum of the products of
-  the accelerations up to time $t_{n-1}$ and the elapsed bare time steps $t_i - t_{i-1}$:
+  that stochastically accelerate $a_n,\dots,a_0=1$ metabolic time at times
+  $t_n,\dots,t_0=0$. Furthermore, because the stochastic accelerations are all positive
+  $a_i > 0$ for each stochastic acceleration we can find a finite real valued generator
+  $w_n,\dots,w_0=0$ such that $a_i = e^{w_i}$. It follows that the stochastically
+  accelerated metabolic time $y_{t_n}$ at time $t_n$ is the sum of the products of the
+  stochastic accelerations up to time $t_{n-1}$ and the elapsed bare time steps $t_i - t_{i-1}$:
   \begin{IEEEeqnarray}{rCl}
     y_{t_n}
     & = & 
@@ -75,11 +77,12 @@
   This is essentially the continuous part of the Kolmorgorov's characterization of
   stochastic processes as being composed of either a finite number of discrete jumps or
   an infinite number of continuous changes in a span of time. If we assume as a first
-  approximation that the exacerbations and alleviations, and their respective accelerations,
-  are independent and stationary over time then by the L\'evy-Khintchine characterization 
-  the only infinitesimal generator of accelerated metabolic time that is L\'evy and
-  continuous \emph{``jump free''} is Brownian motion $W_u$. The stochastic process of
-  accelerated metabolic time is better known as integrated geometric Brownian motion.
+  approximation that the exacerbations and alleviations, and their respective stochastic
+  accelerations, are independent and stationary over time then by the L\'evy-Khintchine
+  characterization the only infinitesimal generator of stochastically accelerated metabolic
+  time that is L\'evy and continuous \emph{``jump free''} is Brownian motion $W_u$. The
+  stochastically accelerated metabolic time is better known as integrated geometric Brownian
+  motion.
 
   \section{Gompertz}
   Motivated by the preceding heuristic derivation we formally define the Gompertz process on
@@ -105,7 +108,7 @@
   Phenomenologically the finite real stochastic process $\mu t + \sigma W_s$ is the
   infinitesimal acceleration at time $t$ that generates a non-negative geometric stochastic
   process $X_t$ of accumulated accelerations up to time $t$ and whose integral $Y_t$ is a
-  strictly increasing stochastic process of accelerated metabolic time up to time $t$.
+  strictly increasing stochastically accelerated metabolic time up to time $t$.
 
   From the definition of the Gompertz process $G_t$ conditioning on the history of a sample
   path of integrated geometric Brownian motion $Y_t$ yields a conditional Poisson process:
@@ -154,9 +157,9 @@
     & = &
     X_s^n \operatorname{\mathbb{E}}\left[ Y_{t-s}^n \right]
   \end{IEEEeqnarray}
-  We will liberally exploit this technique of arbitraging the accelerated metabolic time 
-  $Y_t$ against the accumulated acceleration $X_t$ to reduce expectations down to the well
-  known standard terms for $X_t$ and $Y_t$:
+  We will liberally exploit this technique of arbitraging the stochastically accelerated
+  metabolic time $Y_t$ against the accumulated stochastic accelerations $X_t$ to reduce
+  expectations down to the well known standard terms for $X_t$ and $Y_t$:
   \begin{IEEEeqnarray}{rCl}
     \operatorname{\mathbb{E}}\left[ X_t^n \right]
     & = &
@@ -320,10 +323,11 @@
   stopped versions of Gompertz processes.
 
   \section{Markov}
-  From the Martingale $Y_{s \uparrow t}$ we can infer that $Y_t$ is a 2 step Markov process,
-  and that the increments $Y_t - Y_s$, with $t > s$ are Markov. To verify this consider the 
-  sequence of bare times $0=t_0 < \dots < t_{n+1}=t$, and accelerated times
-  $0=y_0 < \dots < y_{n+1}=y$, working through the conditional probability we have:
+  Even though amortized integrated geometric Brownian motion $\hat{Y}_t$ is a martingale,
+  integrated geometric Brownian motion $Y_t$ is a 2 step Markov process, and thus the
+  increments $Y_t - Y_s$, with $t > s$ are Markov. To verify this consider the sequence of
+  bare times $0=t_0 < \dots < t_{n+1}=t$, and accelerated times $0=y_0 < \dots < y_{n+1}=y$,
+  working through the conditional probability we have:
   \begin{IEEEeqnarray}{rCl}
     \IEEEeqnarraymulticol{3}{l}{
       \operatorname{\mathbb{P}}\left[ Y_{t_{n+1}} - Y_{t_n} = y_{n+1} - y_n \right\rVert\left. Y_{t_n} - Y_{t_{n-1}} = y_n - y_{n-1}, \dots , Y_{t_1} - Y_{t_0} = y_1 - y_0 \right]
@@ -337,9 +341,18 @@
     & \qquad\qquad\qquad = &
     \operatorname{\mathbb{P}}\left[ Y_{t_{n+1}} - Y_{t_n} = y_{n+1} - y_n \right\rVert\left.  Y_{t_n} - Y_{t_{n-1}} = y_n - y_{n-1} \right]
   \end{IEEEeqnarray}
-  In practice we cannot directly measure the accelerated metabolic time $Y_t$ instead we
-  have access to the stopping times $T_n$ of the passages $G_{T_n} = n$ of the Gompertz
-  process.
+  We can conveniently derive from the martingale the conditional expectation of the
+  increment for a triple of times $t_1 > t_0 > t_{-1}$:
+  \begin{IEEEeqnarray}{rCl}
+    \operatorname{\mathbb{E}}\left[ Y_{t_1} - Y_{t_0} \right\rVert\left. Y_{t_0} - Y_{t_{-1}} \right]
+    & = &
+    \frac{\operatorname{\mathbb{E}}\left[ Y_{t_1} - Y_{t_0}\right]}
+    {\operatorname{\mathbb{E}}\left[Y_{t_0} - Y_{t_{-1}} \right]}
+    \left(Y_{t_0} - Y_{t_{-1}}\right)
+  \end{IEEEeqnarray}
+  In practice we cannot directly measure the stochastically accelerated metabolic time $Y_t$
+  instead we have access to the stopping times $T_n$ of the passages $G_{T_n} = n$ of the
+  Gompertz process.
   
   To study the Markov properties of the stopping times of the passages of the Gompertz
   process we revisit the recovery of the Poisson process from the Gompertz process by
@@ -383,11 +396,11 @@
   the increment. 
   
   Remarkably the stopping times of the passages for the Gompertz process are Markov in their
-  absolute values, even though the accelerated metabolic time of integrated geometric
-  Brownian motion is only Markov in its increments. Specifically knowledge of the age
-  $t_0>0$ at a sentinel event $G_{t_0}$ in the history of the Gompertz process is sufficient
-  to determine the distribution of the latency $t > 0$ to next event $T_{1+n+G_{t_0}}$. To see
-  this consider the subordinated stopping times
+  absolute values, even though the stochastically accelerated metabolic time of integrated
+  geometric Brownian motion is only Markov in its increments. Specifically knowledge of the
+  age $t_0>0$ at a sentinel event $G_{t_0}$ in the history of the Gompertz process is
+  sufficient to determine the distribution of the latency $t > 0$ to next event
+  $T_{1+n+G_{t_0}}$. To see this consider the subordinated stopping times
   $T_{n+G_{t_0}}=t_n, \dots , T_{G_{t_0}} = t_0$, the cumulative probability of the latency
   conditioned of the previous events is:
   \begin{IEEEeqnarray}{rCl}
