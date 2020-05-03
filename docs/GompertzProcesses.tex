@@ -171,58 +171,58 @@
 
   \begin{lemma}[Acceleration Lemma]
     The expectation of non-negative integer powers $n \ge 0 $ of the carrier process of
-    geometric Brownian motion $X_t$ conditioned on the increment of integrated geometric
-    Brownian motion $Y_t - Y_s$, where $t > s$, is given by:
+    geometric Brownian motion $X_t$ conditioned on integrated geometric Brownian motion 
+    $Y_t$ is given by:
     \begin{IEEEeqnarray}{rCl}
-      \operatorname{\mathbb{E}}\left[ X_t^n \right\rVert\left. Y_t - Y_s \right]
+      \operatorname{\mathbb{E}}\left[ X_t^n \right\rVert\left. Y_t \right]
       & = &
       \frac{\operatorname{\mathbb{E}}\left[X_t^n\right]}
-      {\operatorname{\mathbb{E}}\left[\left(Y_t-Y_s\right)^n\right]}\left(Y_t-Y_s\right)^n
+      {\operatorname{\mathbb{E}}\left[Y_t^n\right]}Y_t^n
     \end{IEEEeqnarray}
   \end{lemma}
   \begin{proof}
     We proceed with induction on $n$.
     \begin{enumerate}
-      \item For $n=0$ clearly $\operatorname{\mathbb{E}}\left[ X_t^0 \right\rVert\left. Y_t - Y_s \right] = 1$
+      \item For $n=0$ clearly $\operatorname{\mathbb{E}}\left[ X_t^0 \right\rVert\left. Y_t\right] = 1$
       \item Now assume that up to $n$ the relation holds.
-      \item For $u \in \left[s,t\right]$ consider the integrable function
+      \item For $u < t$ consider the integrable function
       \begin{IEEEeqnarray}{rCl}
-        f\left(s, u, t, y\right)
+        f\left(u, t, y\right)
         & = &
-        \operatorname{\mathbb{E}}\left[ X_u X_t^n \right\rVert\left. Y_t - Y_s = y \right]
+        \operatorname{\mathbb{E}}\left[ X_u X_t^n \right\rVert\left. Y_t = y \right]
       \end{IEEEeqnarray}
-      \item It follows by the Fubini-Tonelli Theorem that and the induction assumption that
-        for $n$ the relation holds
+      \item It follows from the Fubini-Tonelli Theorem and the induction assumption that for
+        $n$ the relation holds
         \begin{IEEEeqnarray}{rCl}
-          \int_s^t f\left(s, u, t, y\right) du
+          \int_0^t f\left(u, t, y\right) du
           & = &
           y^{n+1} \frac{\operatorname{\mathbb{E}}\left[X_t^n\right]}
-          {\operatorname{\mathbb{E}}\left[\left(Y_t-Y_s\right)^n\right]}
+          {\operatorname{\mathbb{E}}\left[Y_t^n\right]}
         \end{IEEEeqnarray}
       \item Thus by the Fundamental Theorem of Calculus the integrand has the decomposition
-        $f\left(s, u, t, y\right) = y^{n+1} f\left(s, u, t\right)$
+        $f\left(u, t, y\right) = y^{n+1} f\left(u, t\right)$
       \item By the Law of Conditional Expectations we have
         \begin{IEEEeqnarray}{rCl}
           \operatorname{\mathbb{E}}\left[ X_u X_t^n\right]
           & = &
-          \operatorname{\mathbb{E}}\left[\operatorname{\mathbb{E}}\left[ X_u X_t^n \right\rVert\left. Y_t - Y_s \right]\right]\\
+          \operatorname{\mathbb{E}}\left[\operatorname{\mathbb{E}}\left[ X_u X_t^n \right\rVert\left. Y_t \right]\right]\\
           & = &
-          f\left(s, u, t\right) \operatorname{\mathbb{E}}\left[ \left(Y_t-Y_s\right)^{n+1}\right]
+          f\left(u, t\right) \operatorname{\mathbb{E}}\left[ Y_t^{n+1}\right]
         \end{IEEEeqnarray}
       \item Which immediately yields the decomposed integrand as
         \begin{IEEEeqnarray}{rCl}
-          f\left(s,u,t\right)
+          f\left(u,t\right)
           & = &\frac{\operatorname{\mathbb{E}}\left[X_u X_t^n\right]}
-          {\operatorname{\mathbb{E}}\left[\left(Y_t-Y_s\right)^{n+1}\right]}
+          {\operatorname{\mathbb{E}}\left[Y_t^{n+1}\right]}
         \end{IEEEeqnarray}
       \item Finally taking $u=t$ yields the desired result
         \begin{IEEEeqnarray}{rCl}
-          \operatorname{\mathbb{E}}\left[ X_t^{n+1} \right\rVert\left. Y_t - Y_s \right]
+          \operatorname{\mathbb{E}}\left[ X_t^{n+1} \right\rVert\left. Y_t \right]
           & = &
-          f\left(s,t,t\right)\left(Y_t-Y_s\right)^{n+1}\\
+          f\left(s,t,t\right)Y_t^{n+1}\\
           & = &
           \frac{\operatorname{\mathbb{E}}\left[X_t^{n+1}\right]}
-          {\operatorname{\mathbb{E}}\left[\left(Y_t-Y_s\right)^{n+1}\right]}\left(Y_t-Y_s\right)^{n+1}
+          {\operatorname{\mathbb{E}}\left[Y_t^{n+1}\right]}Y_t^{n+1}
         \end{IEEEeqnarray}
     \end{enumerate}
   \end{proof}
@@ -230,29 +230,29 @@
   A simple corollary follows from a nearly trivial derivation.
 
   \begin{corollary}[Counterpoint Corollary]
-    For a triplet of times $t_1 > t_0 > t_{-1}$ we have the following conditional
+    For a times $t > s$ we have the following conditional
     expectation:
     \begin{IEEEeqnarray}{rCl}
-      \operatorname{\mathbb{E}}\left[ \left(Y_{t_1}-Y_{t_0}\right)^n \right\rVert\left. Y_{t_0} - Y_{t_{-1}} \right]
+      \operatorname{\mathbb{E}}\left[ Y_t^n \right\rVert\left. Y_s \right]
       & = &
-      \displaystyle\frac{\operatorname{\mathbb{E}}\left[\left(Y_{t_1} - Y_{t_0}\right)^n\right]}
-      {\operatorname{\mathbb{E}}\left[\left(Y_{t_0} - Y_{t_{-1}}\right)^n\right]}
-      \left(Y_{t_0} - Y_{t_{-1}}\right)^n
+      \displaystyle\frac{\operatorname{\mathbb{E}}\left[Y_t^n\right]}
+      {\operatorname{\mathbb{E}}\left[Y_s^n\right]}
+      Y_s^n
     \end{IEEEeqnarray}
   \end{corollary}
   \begin{proof}
     Factoring and applying the previous lemma:
     \begin{IEEEeqnarray}{rCl}
-      \operatorname{\mathbb{E}}\left[ \left(Y_{t_1}-Y_{t_0}\right)^n \right\rVert\left. Y_{t_0} - Y_{t_{-1}} \right]
+      \operatorname{\mathbb{E}}\left[Y_t^n \right\rVert\left. Y_s \right]
       & = &
-      \operatorname{\mathbb{E}}\left[ X_{t_0}^n \right\rVert\left. Y_{t_0} - Y_{t_{-1}} \right]\operatorname{\mathbb{E}}\left[ Y_{t_1-t_0}^n \right]\\
+      \operatorname{\mathbb{E}}\left[ X_s^n \right\rVert\left. Y_s \right]\operatorname{\mathbb{E}}\left[ Y_{t-s}^n \right]\\
       & = &
-      \frac{\operatorname{\mathbb{E}}\left[ Y_{t_1-t_0}^n \right]\operatorname{\mathbb{E}}\left[X_{t_0}^n\right]}
-      {\operatorname{\mathbb{E}}\left[\left(Y_{t_0}-Y_{t_{-1}}\right)^n\right]}\left(Y_{t_0}-Y_{t_{-1}}\right)^n\\
+      \frac{\operatorname{\mathbb{E}}\left[ Y_{t-s}^n \right]\operatorname{\mathbb{E}}\left[X_s^n\right]}
+      {\operatorname{\mathbb{E}}\left[Y_s^n\right]}Y_s^n\\
       & = &
-      \frac{\operatorname{\mathbb{E}}\left[\left(Y_{t_1} - Y_{t_0}\right)^n\right]}
-      {\operatorname{\mathbb{E}}\left[\left(Y_{t_0} - Y_{t_{-1}}\right)^n\right]}
-      \left(Y_{t_0} - Y_{t_{-1}}\right)^n
+      \frac{\operatorname{\mathbb{E}}\left[Y_t^n\right]}
+      {\operatorname{\mathbb{E}}\left[Y_s^n\right]}
+      Y_s^n
     \end{IEEEeqnarray}
   \end{proof}
 
