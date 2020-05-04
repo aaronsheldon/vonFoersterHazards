@@ -424,29 +424,39 @@
   we consider the covariance of the latency between consecutive events
   $T_{2+G_t},T_{1+G_t}, T_{G_t}$ conditioned on the sentinel event $T_{G_t}=t$:
   \begin{IEEEeqnarray}{rCl}
-    \operatorname{\mathbb{C}ov}\left[ T_{2+G_t} - T_{1+G_t}, T_{1+G_t} - T_{G_t} \right\rVert\left. T_{G_t}=t \right]
+    \IEEEeqnarraymulticol{3}{l}{
+      \operatorname{\mathbb{C}ov}\left[ T_{2+G_t} - T_{1+G_t}, T_{1+G_t} - T_{G_t} \right\rVert\left. T_{G_t}=t \right]
+    }\nonumber\\
+    \qquad
     & = &
-    \text{?}
+    \displaystyle\int_0^\infty\displaystyle\int_0^\infty
+    \operatorname{\mathbb{E}}\left[ e^{-\lambda X_{t+v} Y_u}\right]
+    \operatorname{\mathbb{E}}\left[\lambda X_v e^{-\lambda Y_v}\right]
+    dv du\nonumber\\
+    &   &
+    \qquad- \displaystyle\int_0^\infty \operatorname{\mathbb{E}}\left[\lambda X_t Y_u e^{-\lambda X_t Y_u}\right] du
+    \displaystyle\int_0^\infty \operatorname{\mathbb{E}}\left[ e^{-\lambda X_t Y_u}\right] du
   \end{IEEEeqnarray}
+  where all the stochastic processes are independent except the final acceleration $X_v$
+  and the increment $Y_v$.
 
-  The immediate prediction from these results is that the age of an organism introduces a
-  correlation between the latencies of consecutive events, and that this correlation can be
-  fully removed by conditioning on the age of the organism at the sentinel event. However,
-  to date not a single longitudinal study of a biological system has properly accounted for
-  the Gompertz process of ageing.
-  
   The Gompertz processes introduces an irreducible exponential dependence on age
   \emph{``older organisms are red-shifted with respect to younger organisms''}, analogous to
   the Hubble constant which describes the intrinsic expansion of space-time, that cannot be
   removed or linearized by a coordinate transform, just as no coordinate transform can
-  remove the intrinsic red-shift of space-time. The serious consequence of this observation
-  is that every single longitudinal study that has followed outcomes whose latencies are on
-  the same timescale as the lifespan of the investigated organism has introduced spurious
+  remove the intrinsic red-shift of space-time. We can concretely predict that the age of an
+  organism introduces a correlation between the latencies of consecutive events, and that
+  this correlation can be fully accounted for by conditioning on the age of the organism at
+  the sentinel event. 
+  
+  Our observations of the Gompertz process have a serious consequence. Every single
+  longitudinal experiment that has studied outcomes whose latencies are on the same
+  timescale as the lifespan of the investigated organism has introduced spurious
   correlations into their longitudinal analysis of event latency, which are purely an
-  artefact of the exponential age dependence of the Gompertz process. Fortunately the
-  majority of the studies of biological systems have either been cross sectional or of short
-  enough duration that the hazard of the Gompertz process is approximately constant over the
-  timescale of the followup on the organism.
+  artefact of the failing to account for the exponential age dependence of the Gompertz
+  process. Fortunately, the majority of the studies of biological systems have either been
+  cross-sectional or of short enough duration that the hazard of the Gompertz process is
+  approximately constant over the timescale of the experiment on the organism.
 
   \section{L\'evy}
   Integrated geometric Brownian motion $Y_t$ and its carrier process of geometric Brownian
