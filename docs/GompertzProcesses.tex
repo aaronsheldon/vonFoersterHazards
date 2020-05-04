@@ -35,17 +35,17 @@
   \section{Preliminaries}
   Basic science experiments in biology have ubiquitously observed that organisms respond to
   environmental stresses, including communicable diseases and exposures to toxins, with an
-  acceleration $a$ in their failure time $a h\left(a t\right)$, where $h$ is the bare hazard
-  rate of the failure event. Outside of the controlled setting of a laboratory the
+  acceleration $a$ in their failure time $a h\left(a t\right)$, where $h$ is the unperturbed
+  hazard rate of the failure event. Outside of the controlled setting of a laboratory the
   environmental stresses occur stochastically, resulting in a stochastic sequence of
   accelerations $a_n$ of the organism's metabolic time. The stochastic accelerations can
   either increase the rate of failure $a_n > 1$, an exacerbation of the stresses, or
   decrease the rate of failure $a_n < 1$, an alleviation from the stresses. However, even in
   the controlled setting of a laboratory it is experimentally challenging to directly
-  measure the organism's stochastically accelerated metabolic time of the organism, instead
-  we only have access to the failure times in bare units. Thus a theory of ageing must be
-  one that studies the subordination of the failure time by a stochastically accelerated
-  metabolic time that is stochastically incremented.
+  measure the stochastically accelerated metabolic time of the organism, instead we only
+  have access to the failure events measured at bare time units. Thus a theory of ageing
+  must study the subordination of the failure time by a stochastically accelerated metabolic
+  time.
 
   Over the course of an organism's lifetime it will encounter exacerbations and alleviations
   that stochastically accelerate $a_n,\dots,a_0=1$ metabolic time at times
@@ -53,7 +53,8 @@
   $a_i > 0$ for each stochastic acceleration we can find a finite real valued generator
   $w_n,\dots,w_0=0$ such that $a_i = e^{w_i}$. It follows that the stochastically
   accelerated metabolic time $y_{t_n}$ at time $t_n$ is the sum of the products of the
-  stochastic accelerations up to time $t_{n-1}$ and the elapsed bare time steps $t_i - t_{i-1}$:
+  stochastic accelerations up to time $t_{n-1}$ and the elapsed bare time steps
+  $t_i - t_{i-1}$:
   \begin{IEEEeqnarray}{rCl}
     y_{t_n}
     & = & 
@@ -61,7 +62,7 @@
   \end{IEEEeqnarray}
   Provided no great explosions of acceleration occur in any small time scale, like say when
   an actual explosion occurs, the generators $w_i$ will become infinitesimal on the same
-  order as $t_i - t_{i-1} \rightarrow 0$:
+  order as the bare time steps become infinitesimal $t_i - t_{i-1} \rightarrow 0$:
   \begin{IEEEeqnarray}{rCl}
     \mathcal{O}\left(w_i\right)
     & = & 
@@ -74,15 +75,16 @@
     & = & 
     \int_0^t e^{W_u} du
   \end{IEEEeqnarray}
-  This is essentially the continuous part of the Kolmorgorov's characterization of
-  stochastic processes as being composed of either a finite number of discrete jumps or
-  an infinite number of continuous changes in a span of time. If we assume as a first
-  approximation that the exacerbations and alleviations, and their respective stochastic
-  accelerations, are independent and stationary over time then by the L\'evy-Khintchine
-  characterization the only infinitesimal generator of stochastically accelerated metabolic
-  time that is L\'evy and continuous \emph{``jump free''} is Brownian motion $W_u$. The
-  stochastically accelerated metabolic time is better known as integrated geometric Brownian
-  motion.
+
+  This asymptotic argument is essentially the continuous part of the Kolmorgorov's
+  characterization of stochastic processes as being composed, in bounded time, of either a
+  finite number of discrete jumps or an infinite number of continuous changes. If we assume
+  as a first approximation that the exacerbations and alleviations, and their respective
+  stochastic accelerations, are independent and stationary over time then by the
+  L\'evy-Khintchine characterization the only infinitesimal generator of stochastically
+  accelerated metabolic time that is L\'evy and continuous \emph{``jump free''} is Brownian
+  motion $W_u$. The stochastically accelerated metabolic time is better known as integrated
+  geometric Brownian motion.
 
   \section{Gompertz}
   Motivated by the preceding heuristic derivation we formally define the Gompertz process on
@@ -120,8 +122,8 @@
     & = &
     \lambda Y_t
   \end{IEEEeqnarray}
-  And the dual relationship that conditioning on the Gompertz process estimates the elapsed
-  stochastically accelerated metabolic time:
+  Dual to conditioning integrated geometric Brownian motion, conditioning on the Gompertz
+  process estimates the elapsed stochastically accelerated metabolic time:
   \begin{IEEEeqnarray}{rCl}
     \operatorname{\mathbb{P}}\left[Y_t \le y \right\rVert\left. G_t \right]
     & = & 
@@ -133,7 +135,7 @@
   Reflecting that integrated geometric Brownian motion $Y_t$ is truly measuring the elapsed
   stochastically accelerated metabolic time.
 
-  To start our exploration of the rich subtleties of Gompertz processes we will briefly
+  To start our exploration of the rich subtleties of the Gompertz process we will briefly
   review the properties of integrated geometric Brownian motion which are salient to
   developing our theory. This is by no means a comprehensive compendium. Much of the
   material I will cover has been deeply and thoroughly explored in the quantitative finance
@@ -168,14 +170,14 @@
     & = &
     \frac{e^{\left(\mu + \sigma^2 / 2\right)t} - 1}{\mu + \sigma^2 / 2}
   \end{IEEEeqnarray}
-  Note the in the last equation we have implicitly invoked the Fubini-Tonelli Theorem to
+  Note that in the last equation we have implicitly invoked the Fubini-Tonelli Theorem to
   switch the order of integration, and will broadly continue to use this theorem throughout
   this work.
 
   \begin{lemma}[Acceleration Lemma]
     The expectation of non-negative integer powers $n \ge 0 $ of the carrier process of
     geometric Brownian motion $X_t$ conditioned on integrated geometric Brownian motion 
-    $Y_t$ is given by:
+    $Y_t$ are given by:
     \begin{IEEEeqnarray}{rCl}
       \operatorname{\mathbb{E}}\left[ X_t^n \right\rVert\left. Y_t \right]
       & = &
@@ -184,7 +186,7 @@
     \end{IEEEeqnarray}
   \end{lemma}
   \begin{proof}
-    We proceed with induction on $n$.
+    We proceed by induction on $n$.
     \begin{enumerate}
       \item For $n=0$ clearly $\operatorname{\mathbb{E}}\left[ X_t^0 \right\rVert\left. Y_t\right] = 1$
       \item Now assume that up to $n$ the relation holds.
@@ -195,7 +197,7 @@
         \operatorname{\mathbb{E}}\left[ X_u X_t^n \right\rVert\left. Y_t = y \right]
       \end{IEEEeqnarray}
       \item It follows from the Fubini-Tonelli Theorem and the induction assumption that for
-        $n$ the relation holds
+        $n$ the integral is
         \begin{IEEEeqnarray}{rCl}
           \int_0^t f\left(u, t, y\right) du
           & = &
@@ -419,7 +421,6 @@
   where $Y_t$ is the increment process independent of the acceleration $X_{t_n}$ at the
   start of the increment.
 
-
   Given that the stopping times of consecutive passages of the Gompertz process are Markov
   we consider the covariance of the latency between consecutive events
   $T_{2+G_t},T_{1+G_t}, T_{G_t}$ conditioned on the sentinel event $T_{G_t}=t$:
@@ -431,7 +432,7 @@
     & = &
     \displaystyle\int_0^\infty\displaystyle\int_0^\infty
     \operatorname{\mathbb{E}}\left[ e^{-\lambda X_{t+v} Y_u}\right]
-    \operatorname{\mathbb{E}}\left[\lambda X_v e^{-\lambda Y_v}\right]
+    \operatorname{\mathbb{E}}\left[\lambda v X_v e^{-\lambda X_t Y_v}\right]
     dv du\nonumber\\
     &   &
     \qquad- \displaystyle\int_0^\infty \operatorname{\mathbb{E}}\left[\lambda X_t Y_u e^{-\lambda X_t Y_u}\right] du
@@ -440,14 +441,14 @@
   where all the stochastic processes are independent except the final acceleration $X_v$
   and the increment $Y_v$.
 
-  The Gompertz processes introduces an irreducible exponential dependence on age
-  \emph{``older organisms are red-shifted with respect to younger organisms''}, analogous to
-  the Hubble constant which describes the intrinsic expansion of space-time, that cannot be
-  removed or linearized by a coordinate transform, just as no coordinate transform can
+  The Gompertz process introduces an irreducible exponential dependence on age
+  \emph{``older organisms are red-shifted with respect to younger organisms''} that cannot be
+  removed or linearized by a coordinate transform, analogous to the Hubble constant which
+  describes the intrinsic expansion of space-time and for which no coordinate transform can
   remove the intrinsic red-shift of space-time. We can concretely predict that the age of an
-  organism introduces a correlation between the latencies of consecutive events, and that
-  this correlation can be fully accounted for by conditioning on the age of the organism at
-  the sentinel event. 
+  organism introduces a correlation within the latencies between consecutive events, and
+  that this correlation can be fully accounted for by conditioning on the age of the
+  organism at the sentinel event. 
   
   Our observations of the Gompertz process have a serious consequence. Every single
   longitudinal experiment that has studied outcomes whose latencies are on the same
@@ -655,7 +656,7 @@
       h
       & = &
       \lambda \operatorname{\mathbb{E}}\left[X_t\right]
-      e^{\frac{\sigma^2 / 2}{\mu + \sigma^2 / 2}  \lambda\operatorname{\mathbb{E}}\left[Y_t\right]}
+      e^{\frac{\lambda \sigma^2 / 2}{\mu + \sigma^2 / 2}\operatorname{\mathbb{E}}\left[Y_t\right]}
     \end{IEEEeqnarray}
   \end{proposition}
   \begin{proof}
@@ -666,23 +667,23 @@
 
   \section{Discussion}
   In most circumstances $\lambda$ is the new born infant mortality due to ageing alone, and
-  is less than $1$ in $32000$ person-years. As such the hazard is very close to the original
-  hazard observed by Gompertz. Intuitively, when $\mu \ggg \sigma^2 / 2$ the process becomes
-  approximately deterministic due to the large impact of the drift.
+  is less than $1$ in $32000$ person-years. As such the hazard rate is very close to the
+  original hazard rate observed by Gompertz. Intuitively, when $\mu \ggg \sigma^2 / 2$ the
+  process becomes approximately deterministic due to the large impact of the drift.
 
   Conversely, the central conjecture in the preliminary material is that ageing is driven by
-  stochastic accelerations, hence requiring that the drift vanish $\mu = 0$. In this case
-  the anomalous Gompertz hazard rate simplifies to:
+  stochastic accelerations, requiring that the drift vanish $\mu = 0$. In this case the
+  anomalous Gompertz hazard rate simplifies to:
   \begin{IEEEeqnarray}{rCl}
     h
     & = &
     \lambda e^{t\sigma^2 / 2}
     e^{\lambda \frac{e^{t\sigma^2 / 2} - 1}{\sigma^2 / 2}}
   \end{IEEEeqnarray}
-  We have observed the anomalous Gompertz hazard rate in mortality rates in Alberta in the
-  Hazard Rate Zoo experiment. Specifically when we remove the dominate exponential process
-  of a doubling of mortality every $7$ years from an infant mortality of $1$ in $32000$
-  person-years:
+  We have observed the anomalous Gompertz hazard rate in mortality rates in Alberta while
+  conducting the Hazard Rate Zoo experiment. Specifically when we remove the dominate
+  exponential process of a doubling of mortality every $7$ years from an infant mortality of
+  $1$ in $32000$ person-years:
   \begin{IEEEeqnarray}{rCl}
     h
     & = &
