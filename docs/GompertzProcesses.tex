@@ -395,14 +395,13 @@
   where $Y_s$ is the increment process independent of the acceleration $X_t$ at the start of
   the increment. 
   
-  Remarkably the stopping times of the passages for the Gompertz process are Markov in their
-  absolute values, even though the stochastically accelerated metabolic time of integrated
-  geometric Brownian motion is only Markov in its increments. Specifically knowledge of the
-  age $t_0>0$ at a sentinel event $G_{t_0}$ in the history of the Gompertz process is
-  sufficient to determine the distribution of the latency $t > 0$ to next event
-  $T_{1+n+G_{t_0}}$. To see this consider the subordinated stopping times
-  $T_{n+G_{t_0}}=t_n, \dots , T_{G_{t_0}} = t_0$, the cumulative probability of the latency
-  conditioned of the previous events is:
+  Remarkably the stopping times of the passages for the Gompertz process are Markov, even
+  though the stochastically accelerated metabolic time of integrated geometric Brownian
+  motion is only Markov in its increments. Specifically knowledge of the age $t_0>0$ at a
+  sentinel event $G_{t_0}$ in the history of the Gompertz process is sufficient to determine
+  the distribution of the latency $t > 0$ to next event $T_{1+n+G_{t_0}}$. To see this
+  consider the subordinated stopping times $T_{n+G_{t_0}}=t_n, \dots , T_{G_{t_0}} = t_0$,
+  the cumulative probability of the latency conditioned of the previous events is:
   \begin{IEEEeqnarray}{rCl}
     \IEEEeqnarraymulticol{3}{l}{
       \operatorname{\mathbb{P}}\left[ T_{1 + n + G_t} - T_{n + G_t} \ge t \right\rVert\left. T_{n+G_{t_0}}=t_n, \dots , T_{G_{t_0}} = t_0 \right]
@@ -424,18 +423,18 @@
 
   The immediate prediction from these results is that age of an organism introduces a
   correlation between the latencies of consecutive events, and that this correlation can be
-  fully removed by conditioning on the age of the organism at the sentinel event. However to
-  date not a single longitudinal study of a biological system has properly accounted for the
-  Gompertz process of ageing.
+  fully removed by conditioning on the age of the organism at the sentinel event. However,
+  to date not a single longitudinal study of a biological system has properly accounted for
+  the Gompertz process of ageing.
   
-  Analogous to the Hubble constant which describes the intrinsic expansion of space-time the
-  Gompertz processes introduces an irreducible exponential dependence on age
-  \emph{``older organisms are red-shifted with respect to younger organisms''} that cannot
-  be removed or linearized by a coordinate transform, just as no coordinate transform can
+  The Gompertz processes introduces an irreducible exponential dependence on age
+  \emph{``older organisms are red-shifted with respect to younger organisms''}, analogous to
+  the Hubble constant which describes the intrinsic expansion of space-time, that cannot be
+  removed or linearized by a coordinate transform, just as no coordinate transform can
   remove the intrinsic red-shift of space-time. The serious consequence of this observation
   is that every single longitudinal study that has followed outcomes whose latencies are on
   the same timescale as the lifespan of the investigated organism has introduced spurious
-  correlations into their longitudinal analysis of event latency which are purely an
+  correlations into their longitudinal analysis of event latency, which are purely an
   artefact of the exponential age dependence of the Gompertz process. Fortunately the
   majority of the studies of biological systems have either been cross sectional or of short
   enough duration that the hazard of the Gompertz process is approximately constant over the
@@ -443,7 +442,7 @@
 
   \section{L\'evy}
   Integrated geometric Brownian motion $Y_t$ and its carrier process of geometric Brownian
-  motion $X_t$ can be embedded into the Lie algebra of $2 \times 2$ upper triangular
+  motion $X_t$ can be embedded into the Lie group of $2 \times 2$ upper triangular
   matrices $\mathfrak{h}_2$ by means of the factorization observed earlier, so that the
   increments are independent under matrix multiplication, for times $t > s$:
   \begin{IEEEeqnarray}{rCl}
@@ -461,8 +460,25 @@
       0 & X_s
     \end{bmatrix}
   \end{IEEEeqnarray}
-  where the increment processes of $Y_{t-s}$ and $X_{t-s}$ are independent
-  of the processes $Y_s$ and $X_s$.
+  where the increment processes of $Y_{t-s}$ and $X_{t-s}$ are independent of the processes
+  $Y_s$ and $X_s$. It follows that the infinitesimal generator of the matrix exponential map
+  into the group is the sub-algebra of the Lie algebra of upper triangular matrices
+  $\mathfrak{h}_2$ consisting of first column zero matrices:
+  \begin{IEEEeqnarray}{rCl}
+    \exp
+    \begin{bmatrix}
+      0 & \displaystyle\int_0^t ds + \displaystyle\frac{\sigma}{\mu + \sigma^2 / 2} dW_s\\
+      0 & \displaystyle\int_0^t\left(\mu + \sigma^2 / 2\right) ds + \sigma dW_s
+    \end{bmatrix}
+    & = &
+    \begin{bmatrix}
+      1 & Y_t\\
+      0 & X_t
+    \end{bmatrix}
+  \end{IEEEeqnarray}
+  From which we determine that in $\mathfrak{h}_2$ the process is just standard Brownian
+  motion. As we will see next this raises the prospect of a deep connection between the
+  adjoint derivative of the exponential map and stochastic differential equations.
 
   \section{Fokker-Planck}
   The upper triangular L\'evy process of integrated geometric Brownian motion satisfies the
@@ -475,13 +491,29 @@
     & = &
     \begin{bmatrix}
       0 & X_t\\
-      0 & \left(\mu + \frac{\sigma^2}{2}\right) X_t
+      0 & \left(\mu + \sigma^2 / 2\right) X_t
     \end{bmatrix} dt
     +
     \begin{bmatrix}
       0 & 0\\
       0 & \sigma X_t
-    \end{bmatrix}dW_t
+    \end{bmatrix}dW_t\\\nonumber\\
+    & = &
+    \left(
+      \begin{bmatrix}
+        0 & 1\\
+        0 & \mu + \sigma^2 / 2
+      \end{bmatrix} dt
+      +
+      \begin{bmatrix}
+        0 & 0\\
+        0 & \sigma
+      \end{bmatrix}dW_t
+    \right)
+    \begin{bmatrix}
+      1 & Y_t\\
+      0 & X_t
+    \end{bmatrix}
   \end{IEEEeqnarray}
   It follows from Fokker-Planck that the probability density of the joint process 
   $p=\operatorname{\mathbb{P}}\left[Y_t=y,X_t=x\right]$ satisfies
