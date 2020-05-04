@@ -419,9 +419,17 @@
   where $Y_t$ is the increment process independent of the acceleration $X_{t_n}$ at the
   start of the increment.
 
-  TODO conditional correlation
 
-  The immediate prediction from these results is that age of an organism introduces a
+  Given that the stopping times of consecutive passages of the Gompertz process are Markov
+  we consider the covariance of the latency between consecutive events
+  $T_{2+G_t},T_{1+G_t}, T_{G_t}$ conditioned on the sentinel event $T_{G_t}=t$:
+  \begin{IEEEeqnarray}{rCl}
+    \operatorname{\mathbb{C}ov}\left[ T_{2+G_t} - T_{1+G_t}, T_{1+G_t} - T_{G_t} \right\rVert\left. T_{G_t}=t \right]
+    & = &
+    \text{?}
+  \end{IEEEeqnarray}
+
+  The immediate prediction from these results is that the age of an organism introduces a
   correlation between the latencies of consecutive events, and that this correlation can be
   fully removed by conditioning on the age of the organism at the sentinel event. However,
   to date not a single longitudinal study of a biological system has properly accounted for
