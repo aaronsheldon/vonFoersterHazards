@@ -57,9 +57,9 @@ version = "0.7.7"
 
 [[ColorTypes]]
 deps = ["FixedPointNumbers", "Random"]
-git-tree-sha1 = "f746d4fc892fdf683b5c22064c8e99b2f5b990e7"
+git-tree-sha1 = "c73d9cfc2a9d8433dc77f5bff4bddf46b1d78c20"
 uuid = "3da002f7-5984-5a60-b8a6-cbb66c0b333f"
-version = "0.10.2"
+version = "0.10.3"
 
 [[Colors]]
 deps = ["ColorTypes", "FixedPointNumbers", "InteractiveUtils", "Reexport"]
@@ -360,10 +360,9 @@ uuid = "429524aa-4258-5aef-a3af-852621145aeb"
 version = "0.20.1"
 
 [[OrderedCollections]]
-deps = ["Random", "Serialization", "Test"]
-git-tree-sha1 = "c4c13474d23c60d20a67b217f1d7f22a40edf8f1"
+git-tree-sha1 = "12ce190210d278e12644bcadf5b21cbdcf225cd3"
 uuid = "bac558e1-5e72-5ebc-8fee-abe8a469f55d"
-version = "1.1.0"
+version = "1.2.0"
 
 [[PDMats]]
 deps = ["Arpack", "LinearAlgebra", "SparseArrays", "SuiteSparse", "Test"]
