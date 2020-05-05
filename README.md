@@ -1,12 +1,12 @@
 von Foerster Hazards
 ====================
 
-In this project I implement a model of age dependent communicable diseases using a mysterious and magical alchemy of von Foerster dynamics, Gompertz processes - biologically endogenous ageing modeled by Poisson processes subordinated by integrated geometric Brownian motion, Makeham processes - biologically exogenous casualties of serialized interactions, accelerated failure time models, phase type distributions, and the Lie algebra of hazard rates, while incanting the theory of stochastic processes.
+In this project I implement a forward evolution integrator by matrix exponentiation of a model of age dependent communicable diseases using a mysterious and magical alchemy of von Foerster dynamics, Gompertz processes - biologically endogenous ageing modeled by Poisson processes subordinated by integrated geometric Brownian motion, Makeham processes - biologically exogenous casualties of serialized interactions, accelerated failure time models, phase type distributions, and the Lie algebra of hazard rates, while incanting the theory of stochastic processes.
 
 Land Acknowledgement
 --------------------
 
-The author has had the good fortune to have found a home near the mountains on the traditional territories of the [Treaty 7](https://www.treaty7.org/) people, and is blessed to have as good neighbors the peoples of the [Tsuut'ina Nation](https://tsuutinanation.com/).
+I have the good fortune to have found a home near the mountains on the traditional territories of the [Treaty 7][17] people, and I am blessed to have as good neighbors the peoples of the [Tsuut'ina Nation][18].
 
 Citing
 ------
@@ -56,3 +56,5 @@ Notwithstanding any [licenses][00], this material is intended for general inform
 [14]: https://www.mathworks.com/matlabcentral/profile/authors/869469-aaron-sheldon
 [15]: https://en.wikipedia.org/wiki/Deep_learning
 [16]: https://www.amazon.ca/Thinking-Physicist-Physics-Problems-Undergraduates/dp/0852745133
+[17]: https://www.treaty7.org/
+[18]: https://tsuutinanation.com/

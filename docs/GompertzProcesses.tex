@@ -188,7 +188,8 @@
   \begin{proof}
     We proceed by induction on $n$.
     \begin{enumerate}
-      \item For $n=0$ clearly $\operatorname{\mathbb{E}}\left[ X_t^0 \right\rVert\left. Y_t\right] = 1$
+      \item For $n=0$ clearly
+      $\operatorname{\mathbb{E}}\left[ X_t^0 \right\rVert\left. Y_t\right] = 1$
       \item Now assume that up to $n$ the relation holds.
       \item For $u < t$ consider the integrable function
       \begin{IEEEeqnarray}{rCl}
@@ -235,8 +236,7 @@
   A simple corollary follows from a nearly trivial derivation.
 
   \begin{corollary}[Counterpoint Corollary]
-    For a times $t > s$ we have the following conditional
-    expectation:
+    For a times $t > s$ we have the following conditional expectation:
     \begin{IEEEeqnarray}{rCl}
       \operatorname{\mathbb{E}}\left[ Y_t^n \right\rVert\left. Y_s \right]
       & = &
@@ -288,9 +288,34 @@
     \end{IEEEeqnarray}
   \end{proof}
 
-  With the preceding lemma in hand we have the sufficient tools required to estimate all the
-  usual statistics involving powers of $Y_t$, including the expectation, variance, and
-  covariances.
+  The recursion-convolution lemma relates the moments of integrated geometric Brownian
+  motion through a linear operator, and like all good linear operators this relationship
+  deserves a uniqueness constraint.
+
+  \begin{corollary}[Uniqueness Corollary]
+    If two sequences of functions $f_t^{\left(n\right)}$ and $g_t^{\left(n\right)}$ of time
+    $t$ satisfy the recursion-convolution relation and 
+    $f_t^{\left(0\right)}=g_t^{\left(0\right)}=1$ then
+    $f_t^{\left(n\right)}=g_t^{\left(n\right)}$ for all $n$.
+  \end{corollary}
+  \begin{proof}
+    We proceed with induction on $n$
+    \begin{enumerate}
+      \item By assumption for $n=0$ functions are equal.
+      \item Now assume that up to $n$ the functions are equal.
+      \item Taking the difference between the functions at $n+1$ we have
+      \begin{IEEEeqnarray}{rCl}
+        f_t^{\left(n+1\right)} - g_t^{\left(n+1\right)}
+        & = &
+        \displaystyle\int_0^t \operatorname{\mathbb{E}}\left[X_u^n\right] \left(f_{t-u}^{\left(n\right)} - g_{t-u}^{\left(n\right)}\right) du\\
+        & = & 0
+      \end{IEEEeqnarray}
+    \end{enumerate}
+  \end{proof}
+
+  With the recursion-convolution lemma in hand we have the sufficient tools required to
+  estimate all the usual statistics involving powers of $Y_t$, including the expectation,
+  variance, and covariances.
 
   \section{Martingale}
   By our counterpoint corollary the amortized integrated geometric Brownian motion:
@@ -495,6 +520,24 @@
     \begin{bmatrix}
       1 & Y_t\\
       0 & X_t
+    \end{bmatrix}
+  \end{IEEEeqnarray}
+  This Lie sub-algebra has the basis commutator:
+  \begin{IEEEeqnarray}{rCl}
+    \left[
+      \begin{bmatrix}
+        0 & 1\\
+        0 & 0
+      \end{bmatrix}_,
+      \begin{bmatrix}
+        0 & 0\\
+        0 & 1
+      \end{bmatrix}
+    \right]
+    & = &
+    \begin{bmatrix}
+      0 & 1\\
+      0 & 0
     \end{bmatrix}
   \end{IEEEeqnarray}
   As we will see next this raises the prospect of a deep connection between the adjoint
