@@ -343,7 +343,7 @@ assumes the inputs are well formed, there are no bounds or sanity checks.
 """
 function covariance(C, P, n)
     U = (P.*n')*P'
-    I = [1:stride(U, 2):length(U)...]
+    I = [1:1+stride(U, 2):length(U)...]
     U[I] .= (P*n) .- U[I]
     P*C*P' .+ U
 end

@@ -42,9 +42,9 @@ const processontology = ( head = [ "Process"              "Source Noun" "Source 
                                    "Background Mortality" "Person"      "Discharged"       "Person"      "Ageing Fatality";
                                    "Infected Mortality"   "Person"      "Infected"         "Person"      "Infected Fatality"; 
                                    "Infected Mortality"   "Person"      "Hospitalized"     "Person"      "Hospital Fatality"; 
-                                   "Admission"            "Person"      "Infected"         "Person"      "Hospitalized"; 
-                                   "Discharge & Recovery" "Person"      "Infected"         "Person"      "Recovered"; 
-                                   "Discharge & Recovery" "Person"      "Hospitalized"     "Person"      "Discharged";
+                                   "Infected Admission"   "Person"      "Infected"         "Person"      "Hospitalized"; 
+                                   "Discharge Recovery"   "Person"      "Infected"         "Person"      "Recovered"; 
+                                   "Discharge Recovery"   "Person"      "Hospitalized"     "Person"      "Discharged";
                                    "Infection"            "Person"      "Susceptible"      "Person"      "Infected"; 
                                    "Bed Allocate"         "Acute Bed"   "Available"        "Acute Bed"   "Occupied"; 
                                    "Bed Release"          "Acute Bed"   "Occupied"         "Acute Bed"   "Refractory";
@@ -124,7 +124,47 @@ The hazard rate matrix is spectrally decomposed into 8 age-Eigen function matric
 each mapping 11 states to 11 states.
 """
 function hazardrate(p::population{Int64, Vector{Int64}, Matrix{Int64}, Array{Float64, 3}})
-    zeros(Float64, 8, 11,11)
+    h = zeros(Float64, 8, 11,11)
+    
+    # Background Mortality
+    h[1, 6 , 1] -= 1.0
+    h[1, 6 , 4] -= 1.0
+    h[1, 6 , 5] -= 1.0
+    h[1, 1 , 1] -= h[1, 6 , 1]
+    h[1, 4 , 4] -= h[1, 6 , 4]
+    h[1, 5 , 5] -= h[1, 6 , 5]
+    
+    # Infected Mortality
+    h[2, 8, 2] -= 1.0
+    h[2, 8, 3] -= 1.0
+    h[2, 2, 2] -= h[2, 8, 2]
+    h[2, 3, 3] -= h[2, 8, 3]
+    
+    # Infected Admission
+    h[3, 3, 2] -= sum(p.strata[:, 9])
+    h[3, 2, 2] -= h[3, 3, 2]
+    
+    # Discharge Recovery
+    h[4, 4, 2] -= 1.0
+    h[4, 5, 3] -= 1.0
+    h[4, 2, 2] -= h[4, 4, 2]
+    h[4, 3, 3] -= h[4, 5, 3]
+    
+    # Infection
+    h[5, 2, 1] -= log(sum(p.strata[:, [1, 2, 4, 5]]) / sum(p.strata[:, [1, 4, 5]]))
+    h[5, 1, 1] -= h[5, 2, 1]
+    
+    # Allocation
+    h[6, 10, 9] -= sum(scatterrate.(a, 3) .* p.strata[:, 2])
+    h[6, 9, 9] -= h[6, 10, 9]
+    
+    # Release
+    h[7, 11, 10] -= sum(scatterrate.(a, [2, 4]) .* p.strata[:, 3]) / sum(p.strata[:, 3])
+    h[7, 10, 10] -= h[7, 10, 10]
+    
+    # Recovery
+    h[8, 9, 11] -= 1.0
+    h[8, 11, 11] -= h[8, 9, 11]
 end
 
 """
@@ -133,17 +173,37 @@ end
 The scattering rate decomposes the hazard rate into 8 age scattering cross sections.
 """
 function scatterrate(a::Int64)
-    zeros(Float64, 8)
+    s = ones(Float64, 8)
+    
+    # Background Mortality
+    s[1] *= 2.0.^(a / 7.0) / 32000.0
+    
+    # Infected Mortality
+    s[2] *= 1.3 * 2.0.^(1.3 * a / 7.0) / 32000.0
+    
+    # Infected Admission
+    s[3] *= 1.3 * 2.0^(1.3 * a / 14.0) / 320.0
+    
+    # Discharge Recovery
+    s[4] *= 1.3 * 2.0^(-1.3 * a / 49.0) / 16.0
+    
+    # Infection
+    s[5] *= 0.1 / (1.0 + 2.0^((a - 16.0) / 2.0))
+    
+    # Recovery
+    s[8] *= 2.0
 end
+scatterrate(a::Int64, i) = sum(scatterrate(a)[i])
 
 """
     birthrate(p)
 
 The birth rate is constant and zero for all states except the first, susceptible, which
-contains the daily average births.
+contains the daily average 150 births.
 """
 function birthrate(p::population{Int64, Vector{Int64}, Matrix{Int64}, Array{Float64, 3}})
-    zeros(Int64, 11)
+    b = zeros(Int64, 11)
+    b[1] = 150
 end
 
 """
