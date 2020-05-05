@@ -243,12 +243,12 @@ function Base.iterate(E::abstractevolve, S)
             c.age + E.size,                                                         #
             conservesum!(randomtruncate.(P * c.stratum), c.stratum, c.conserving),  #
             covariance(c.covariance, P, c.stratum),                                 #
-            S[2].conserving                                                         #
+            c.conserving                                                            #
         )                                                                           #
     end                                                                             #
 # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
                                                                                     #
-# # # Main loop compute the transitions within each cohort. # # # # # # # # # # # # #
+# # # SIMD main loop, compute the transitions within each cohort. # # # # # # # # # #
     S[2] .= transitioncohort.(S[2])                                                 #
 # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
 
@@ -337,7 +337,7 @@ end
     covariance(C, P, n)
 
 Update of the covariances C from the transition probabilities P and the previous
-state n. Each column of P is assumed to represent the exit  probabilities from a
+state n. Each column of P is assumed to represent the exit probabilities from a
 single state and thus should add to 1 with all entries non-negative. Note this
 assumes the inputs are well formed, there are no bounds or sanity checks.
 """
