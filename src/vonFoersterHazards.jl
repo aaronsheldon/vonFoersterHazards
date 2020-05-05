@@ -228,29 +228,32 @@ function Base.iterate(E::abstractevolve)
 end
 function Base.iterate(E::abstractevolve, S)
     (S[1] <= E.count) || return nothing
-        
+    
     # One time computation of the exogenous birth rate
     b = birthrate(S[2])
 
     # One time computation of the exogenous hazard rates
     H = hazardrate(S[2])
 
-    # Curried transition function
-    function t(c)
-        P = exp(-E.size * sum(scatterrate(c.age) .* H, dims=1)[1, :, :])
-        cohort(
-            c.elapsed + E.size,
-            c.age + E.size,
-            conservesum!(randomtruncate.(P * c.stratum), c.stratum, c.conserving),
-            covariance(c.covariance, P, c.stratum)
-        )
-    end
+# # # Curried transition function to update the cohort. # # # # # # # # # # # # # # #
+    function transitioncohort(c)                                                    #
+        P = exp(-E.size * sum(scatterrate(c.age) .* H, dims=1)[1, :, :])            #
+        cohort(                                                                     #
+            c.elapsed + E.size,                                                     #
+            c.age + E.size,                                                         #
+            conservesum!(randomtruncate.(P * c.stratum), c.stratum, c.conserving),  #
+            covariance(c.covariance, P, c.stratum),                                 #
+            S[2].conserving                                                         #
+        )                                                                           #
+    end                                                                             #
+# # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
+                                                                                    #
+# # # Main loop compute the transitions within each cohort. # # # # # # # # # # # # #
+    S[2] .= transitioncohort.(S[2])                                                 #
+# # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
 
-    # Compute the transitions within each cohort
-    S[2] .= t.(S[2])
-
-    # Youngest cohort is less than gestation time old, add births to youngest cohort
-    if S[1].ages[end] < E.gestation
+    # Pass the pointers, youngest cohort is less than gestation time old, keep the cohorts
+    if S[2].ages[end] < E.gestation
         R = population(
             S[2] + E.size,
             S[2].ages,
@@ -258,20 +261,21 @@ function Base.iterate(E::abstractevolve, S)
             S[2].covariances,
             S[2].conserving
         )
-        R.cohorts[end, :] .= R.cohorts[end, :] .+ b'
 
-    # Youngest cohort is more than gestation time old, generate a new youngest cohort
+    # Pass the pointers, youngest cohort is more than gestation time old, add a cohort
     else
         R = population(
             S[2] + E.size,
-            S[2].ages,
-            [S[2].strata; b'],
+            [S[2].ages; zero(eltype(S[2].ages))],
+            [S[2].strata; zeros(eltype(S[2].strata), 1, size(S[2].strata, 2))],
             [S[2].covariances; zeros(eltype(S[2].covariances), 1, size(S[2].covariances, 2), size(S[2].covariances, 3))],
             S[2].conserving
         )
-        push!(R.ages, 0)
     end
-
+    
+    # Add births to the youngest cohort
+    R.strata[end, :] .= R.strata[end, :] .+ b'
+    
     # Send
     (R, (1 + S[1], R))
 end

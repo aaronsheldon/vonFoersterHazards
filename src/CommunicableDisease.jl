@@ -59,9 +59,9 @@ const parameterontology = ( head = [ "Decomposition" "Process"              "Met
                                      "Endogenous"    "Infection"            "Acceleration"     "Dimensionless";
                                      "Exogenous"     "Infection"            "Contact Rate"     "Contacts per Person Day";
                                      "Exogenous"     "Infection"            "Supression Ratio" "Dimensionless";
-                                     "Endogenous"    "Acute Bed"            "Refraction Rate"  "Availabilities per Bed Day"; ] )
+                                     "Endogenous"    "Acute Bed"            "Refraction Rate"  "Availabilities per Bed Day" ] )
 
-const parameterestimates = ( head = [ "Value" ], 
+const parameterestimates = ( head = [     "Value" ], 
                              body = [ 1.0/32000.0;
                                               7.0;
                                         1.0/320.0;
@@ -73,7 +73,18 @@ const parameterestimates = ( head = [ "Value" ],
                                               1.3;
                                          1.0/10.0;
                                           1.0/3.0;
-                                              2.0; ] )
+                                              2.0 ] )
+
+const configurationontology = ( head = [ "Name"             "Description"                        "Units" ], 
+                                body = [ "Time Step"        "Eapsed time of a single iteration." "Days";
+                                         "Step Count"       "Total iterations to evolve."        "Dimensionless";
+                                         "Cohort Gestation" "Elapsed time to add a new cohort."  "Days" ] )
+
+const configurationvalues = ( head = [ "Value" ],
+                              body = [       1;
+                                           730;
+                                           365 ] )
+
 """
     markdowntable(t)
 
@@ -89,9 +100,41 @@ function markdowntable(t)
     display("text/markdown", s)
 end
 
-function hazardrate end
-function scatterrate end
-function birthrate end
+"""
+    hazardrate(p)
+
+The hazard rate matrix is spectrally decomposed into 6 age-Eigen function matrices,
+each mapping 11 states to 11 states.
+"""
+function hazardrate(p::population{Int64, Vector{Int64}, Matrix{Int64}, Array{Float64, 3}})
+    zeros(Float64, 6, 11,11)
+end
+
+"""
+    scatterrate(a)
+
+The scattering rate decomposes the hazard rate into 6 age scattering cross sections.
+"""
+function scatterrate(a::Int64)
+    zeros(Float64, 6)
+end
+
+"""
+    birthrate(p)
+
+The birth rate is constant and zero for all states except the first, susceptible, which
+contains the daily average births.
+"""
+function birthrate(p::population{Int64, Vector{Int64}, Matrix{Int64}, Array{Float64, 3}})
+    zeros(Int64, 11)
+end
+
+"""
+    runengine
+
+Run the simulation. At each step coerce the returned population into a dimensional
+vector store and write to disk.
+"""
 function runengine end
 
 end
