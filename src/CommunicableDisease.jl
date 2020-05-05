@@ -102,6 +102,8 @@ const configurationvalues = ( head = [ "Value" ],
                                            730;
                                            365 ] )
 
+const conserving = BitArray([0 0 0 0 0 1 0 0])
+
 """
     markdowntable(t)
 
@@ -154,17 +156,19 @@ function hazardrate(p::population{Int64, Vector{Int64}, Matrix{Int64}, Array{Flo
     h[5, 2, 1] -= log(sum(p.strata[:, [1, 2, 4, 5]]) / sum(p.strata[:, [1, 4, 5]]))
     h[5, 1, 1] -= h[5, 2, 1]
     
-    # Allocation
+    # Bed Allocation
     h[6, 10, 9] -= sum(scatterrate.(a, 3) .* p.strata[:, 2])
     h[6, 9, 9] -= h[6, 10, 9]
     
-    # Release
-    h[7, 11, 10] -= sum(scatterrate.(a, [2, 4]) .* p.strata[:, 3]) / sum(p.strata[:, 3])
+    # Bed Release
+    h[7, 11, 10] -= sum(scatterrate.(a, Ref([2, 4])) .* p.strata[:, 3]) / sum(p.strata[:, 3])
     h[7, 10, 10] -= h[7, 10, 10]
     
-    # Recovery
+    # Bed Recovery
     h[8, 9, 11] -= 1.0
     h[8, 11, 11] -= h[8, 9, 11]
+    
+    return h
 end
 
 """
@@ -190,8 +194,10 @@ function scatterrate(a::Int64)
     # Infection
     s[5] *= 0.1 / (1.0 + 2.0^((a - 16.0) / 2.0))
     
-    # Recovery
+    # Bed Recovery
     s[8] *= 2.0
+    
+    return s
 end
 scatterrate(a::Int64, i) = sum(scatterrate(a)[i])
 
@@ -204,6 +210,7 @@ contains the daily average 150 births.
 function birthrate(p::population{Int64, Vector{Int64}, Matrix{Int64}, Array{Float64, 3}})
     b = zeros(Int64, 11)
     b[1] = 150
+    return b
 end
 
 """
