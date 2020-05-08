@@ -62,7 +62,7 @@ cohort(a, s) = cohort(
     a,
     s,
     zeros(Float64, size(s, 1), size(s, 1)),
-    BitArray(zeros(size(s, 1)))
+    BitArray([zeros(size(s, 1) - 1); 1.0])
 )
 
 """
@@ -99,7 +99,7 @@ population(a, s) = population(
     a,
     s,
     zeros(Float64, size(s, 1), size(s, 2), size(s, 2)),
-    BitArray(zeros(size(s, 2)))
+    BitArray([zeros(size(s, 2) - 1); 1.0])
 )
 Base.eltype(::Type{A}) where {
     Q<:Real, 
@@ -315,22 +315,24 @@ number to a sample from the uniform distribution on [0,1). If the fraction is
 greater than the random sample return the ceiling otherwise return the floor.
 """
 function randomtruncate(x)
-    y = convert(Int64, trunc(x))
-    y + convert(Int64, rand() < (x-y))
+    y = trunc(Int64, x)
+    y + sign(y) * convert(Int64, rand() < abs(x-y))
 end
 
 """
-    conservesum!(A, a, c)
+    conservesum!(a, b, c)
 
-In place enforcement that the subset sums of A equals the subset sums of a, where
-the boundary of the subsets are set by c. Note this assumes the inputs are well formed,
-there are no bounds or sanity checks.
+In place conservation of the subset sums of a, with respect to the subset sums of b,
+for the subset end boundaries defined by c. Note this assumes the inputs are well
+formed, there are no bounds or sanity checks.
 """
-function conservesum!(A, a, c)
-    d = a - sum(A)
-    I = sortperm(A, rev=(d<0))
-    A[I] .= A[I] .+ [sign(d) .* ones(Int64, abs(d)) ; zeros(Int64, length(A)-abs(d))]
-    A
+function conservesum!(a, b, c)
+    p = ceil(Int64, length(a) / sum(c))
+    d = zeros(Int64, length(a))
+    d[c] = cumsum(b)[c] - cumsum(a)[c]
+    I = sortperm(a, rev=(d<0))
+    a[I] .= a[I] .+ [sign(d) .* ones(Int64, abs(d)) ; zeros(Int64, length(a)-abs(d))]
+    return a
 end
 
 """

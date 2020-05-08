@@ -88,7 +88,7 @@ const parameterestimates = ( head = [     "Value" ],
                                               2.0;
                                              16.0;
                                               1.3;
-                                         1.0/10.0;
+                                              0.1;
                                           1.0/3.0;
                                               2.0 ] )
 
@@ -180,19 +180,19 @@ function scatterrate(a::Int64)
     s = ones(Float64, 8)
     
     # Background Mortality
-    s[1] *= 2.0.^(a / 7.0) / 32000.0
+    s[1] *= 2.0.^(a / (365.25 * 7.0)) / (365.25 * 32000.0)
     
     # Infected Mortality
-    s[2] *= 1.3 * 2.0.^(1.3 * a / 7.0) / 32000.0
+    s[2] *= 1.3 * 2.0.^(1.3 * a / (365.25 * 7.0)) / (365.25 * 32000.0)
     
     # Infected Admission
-    s[3] *= 1.3 * 2.0^(1.3 * a / 14.0) / 320.0
+    s[3] *= 1.3 * 2.0^(1.3 * a / (365.25 * 14.0)) / (365.25 * 320.0)
     
     # Discharge Recovery
-    s[4] *= 1.3 * 2.0^(-1.3 * a / 49.0) / 16.0
+    s[4] *= 1.3 * 2.0^(-1.3 * a / (365.25 * 49.0)) / 16.0
     
     # Infection
-    s[5] *= 0.1 / (1.0 + 2.0^((a - 16.0) / 2.0))
+    s[5] *= 0.1 / (1.0 + 2.0^((a - (365.25 * 16.0)) / (365.25 * 2.0)))
     
     # Bed Recovery
     s[8] *= 2.0
@@ -209,7 +209,7 @@ contains the daily average 150 births.
 """
 function birthrate(p::population{Int64, Vector{Int64}, Matrix{Int64}, Array{Float64, 3}})
     b = zeros(Int64, 11)
-    b[1] = 150
+    b[1] += 150
     return b
 end
 

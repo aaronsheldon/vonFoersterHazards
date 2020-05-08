@@ -634,11 +634,10 @@
   \end{IEEEeqnarray}
   satisfies the partial differential Eigen equation:
   \begin{IEEEeqnarray}{rCl}
-    \frac{\operatorname{\mathbb{E}}\left[Y_t\right]}{\operatorname{\mathbb{E}}\left[X_t\right]}
-    \frac{\partial h}{\partial t} - \lambda\frac{\partial h}{\partial \lambda}
+    \left(\frac{\partial}{\partial t} \frac{\operatorname{\mathbb{E}}\left[Y_t\right]}{\operatorname{\mathbb{E}}\left[X_t\right]} \right)h 
+    + \frac{\operatorname{\mathbb{E}}\left[Y_t\right]}{\operatorname{\mathbb{E}}\left[X_t\right]}\frac{\partial h}{\partial t}
     & = &
-    \left(\frac{\operatorname{\mathbb{E}}\left[Y_t\right]}{\operatorname{\mathbb{E}}\left[X_t\right]}\right)^2
-    \left(\frac{\partial}{\partial t}\frac{\operatorname{\mathbb{E}}\left[X_t\right]}{\operatorname{\mathbb{E}}\left[Y_t\right]}\right) h
+    \lambda\frac{\partial h}{\partial \lambda}
   \end{IEEEeqnarray}
   Which by trial solution of separation of variables has the general solution:
   \begin{IEEEeqnarray}{rCl}

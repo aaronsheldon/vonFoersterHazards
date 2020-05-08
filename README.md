@@ -46,13 +46,13 @@ Notwithstanding any [licenses][00], this material is intended for general inform
 [04]: https://en.wikipedia.org/wiki/Stochastic_process
 [05]: https://en.wikipedia.org/wiki/Lie_algebra
 [06]: https://www.jstor.org/stable/2988567
-[07]: https://www.ubishops.ca/
+[07]: https://www.ubishops.ca/academic-programs/faculty-of-arts-and-science/natural-sciences-and-mathematics/mathematics/
 [08]: https://github.com/aaronsheldon/markov-lie-frechet/blob/master/project-main.pdf
-[09]: https://ucalgary.ca/
-[10]: https://www.albertahealthservices.ca/
+[09]: https://science.ucalgary.ca/mathematics-statistics
+[10]: https://www.albertahealthservices.ca/research/research.aspx
 [11]: https://github.com/aaronsheldon
 [12]: https://community.tableau.com/people/aaron.sheldon
-[13]: https://public.tableau.com/profile/aaron.sheldon
+[13]: https://public.tableau.com/profile/aaronsheldon
 [14]: https://www.mathworks.com/matlabcentral/profile/authors/869469-aaron-sheldon
 [15]: https://en.wikipedia.org/wiki/Deep_learning
 [16]: https://www.amazon.ca/Thinking-Physicist-Physics-Problems-Undergraduates/dp/0852745133
