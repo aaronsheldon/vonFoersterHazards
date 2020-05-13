@@ -9,7 +9,7 @@ is that SOURCES are columns and TRAGETS are rows.
 """
 module CommunicableDisease
 
-using vonFoersterHazards
+using vonFoersterHazards, NCDatasets
 
 export stateontology,
        processontology,
@@ -102,7 +102,7 @@ const configurationvalues = ( head = [ "Value" ],
                                            730;
                                            365 ] )
 
-const conserving = BitArray([0 0 0 0 0 1 0 0])
+const conserving = BitArray([0, 0, 0, 0, 1, 0, 0, 1])
 
 """
     markdowntable(t)

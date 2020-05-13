@@ -313,10 +313,11 @@ function hazardrate(P::abstractpopulation) end
 Randomly return the floor or the ceiling by comparing the fractional part of the
 number to a sample from the uniform distribution on [0,1). If the fraction is
 greater than the random sample return the ceiling otherwise return the floor.
+Essentially this is an alias table on the decimal part of the input.
 """
 function randomtruncate(x)
     y = trunc(Int64, x)
-    y + sign(y) * convert(Int64, rand() < abs(x-y))
+    y + sign(y) * Int64(rand() < abs(x-y))
 end
 
 """
@@ -327,11 +328,29 @@ for the subset end boundaries defined by c. Note this assumes the inputs are wel
 formed, there are no bounds or sanity checks.
 """
 function conservesum!(a, b, c)
-    p = ceil(Int64, length(a) / sum(c))
-    d = zeros(Int64, length(a))
-    d[c] = cumsum(b)[c] - cumsum(a)[c]
-    I = sortperm(a, rev=(d<0))
-    a[I] .= a[I] .+ [sign(d) .* ones(Int64, abs(d)) ; zeros(Int64, length(a)-abs(d))]
+    
+    # Starts of subsets, c defines the ends
+    d = BitArray([true; c[1:end-1]])    
+    
+    # Curried subset sum function
+    function s(x)
+        t = cumsum(x)[c]
+        if length(t) > 1
+            t[2:end] .-= t[1:end-1]
+            t[2:end] .-= t[1:end-1]
+        end
+        s = zero.(x)
+        s[d] .+= t
+        s = cumsum(s)
+    end
+    
+    # subset sums of a and b
+    sa = s(a)
+    sb = s(b)
+    
+    # Block wise permutation indices
+    i = convert(Vector{Int64}, sortslices([cumsum(d) a.*(-1).^(sa.>sb) 1:length(a)] dims = 1)[:, 3])
+    
     return a
 end
 

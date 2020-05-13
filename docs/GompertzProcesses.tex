@@ -25,10 +25,10 @@
   \maketitle
 
   \begin{abstract}
-    Ageing is a accelerating failure process that is universal to all biological systems.
+    Ageing is process of accelerating failures that is universal to all biological systems.
     Motivated by considering infinitesimal stochastic accelerations of time, we hypothesize
     a general explanation for the emergent determinism of ageing processes in the theory of
-    Gompertz processes: Poisson processes subordinated by integrated Geometric Brownian
+    Gompertz processes: Poisson processes subordinated by integrated geometric Brownian
     motion.
   \end{abstract}
 
@@ -37,13 +37,13 @@
   environmental stresses, including communicable diseases and exposures to toxins, with an
   acceleration $a$ in their failure time $a h\left(a t\right)$, where $h\left(t\right)$ is
   the unperturbed hazard rate of the failure event. Outside of the controlled setting of a
-  laboratory the environmental stresses occur stochastically, resulting in a stochastic
+  laboratory, the environmental stresses occur stochastically resulting in a stochastic
   sequence of accelerations $a_n$ of the organism's metabolic time. The stochastic
   accelerations can either increase the rate of failure $a_n > 1$, an exacerbation of the
   stresses, or decrease the rate of failure $a_n < 1$, an alleviation from the stresses.
   However, even in the controlled setting of a laboratory it is experimentally challenging
   to directly measure the stochastically accelerated metabolic time of the organism, instead
-  we only have access to the failure events measured at bare time units. Thus a theory of
+  we only have access to the failure events measured in bare time units. Thus, a theory of
   ageing must study the subordination of the failure time by a stochastically accelerated
   metabolic time.
 
@@ -75,9 +75,8 @@
     & = & 
     \int_0^t e^{W_u} du
   \end{IEEEeqnarray}
-
-  This asymptotic argument is essentially the continuous part of the Kolmorgorov's
-  characterization of stochastic processes as being composed, in bounded time, of either a
+  This asymptotic argument is essentially the continuous part of Kolmorgorov's
+  characterization of stochastic processes as being of composed, in bounded time, either a
   finite number of discrete jumps or an infinite number of continuous changes. If we assume
   as a first approximation that the exacerbations and alleviations, and their respective
   stochastic accelerations, are independent and stationary over time then by the
@@ -122,7 +121,7 @@
     & = &
     \lambda Y_t
   \end{IEEEeqnarray}
-  Dual to conditioning integrated geometric Brownian motion, conditioning on the Gompertz
+  Dual to conditioning on integrated geometric Brownian motion, conditioning on the Gompertz
   process estimates the elapsed stochastically accelerated metabolic time:
   \begin{IEEEeqnarray}{rCl}
     \operatorname{\mathbb{P}}\left[Y_t \le y \right\rVert\left. G_t \right]
@@ -135,20 +134,21 @@
   Reflecting that integrated geometric Brownian motion $Y_t$ is truly measuring the elapsed
   stochastically accelerated metabolic time.
 
+  \section{Accelerated Time}
   To start our exploration of the rich subtleties of the Gompertz process we will briefly
   review the properties of integrated geometric Brownian motion which are salient to
   developing our theory. This is by no means a comprehensive compendium. Much of the
   material I will cover has been deeply and thoroughly explored in the quantitative finance
-  literature in the theory of pricing Asian options, and the stochastic processes syllabus
-  on subordinated Poisson processes, usually in the context of deriving the characteristic
-  function of the subordinating process.
+  literature in the theory of pricing Asian options, and in the graduate syllabus of
+  stochastic processes covering subordinated Poisson processes, usually in the context of
+  deriving the characteristic function of the subordinating process.
   
   Our first observation is that the increments of $Y_t$ can be factored by its carrier
   process $X_t$, for times $t > s$:
   \begin{IEEEeqnarray}{rCl}
-    \operatorname{\mathbb{P}}\left[Y_t - Y_s\right]
+    Y_t - Y_s
     & = &
-    \operatorname{\mathbb{P}}\left[X_s\right] \operatorname{\mathbb{P}}\left[Y_{t-s}\right]
+    X_s Y_{t-s}
   \end{IEEEeqnarray}
   where the process $X_s$ is independent of the process $Y_{t-s}$. Phenomenologically the
   increments of $Y_t - Y_s$ are equivalent to a process that starts with acceleration $X_s$.
@@ -172,119 +172,57 @@
   \end{IEEEeqnarray}
   Note that in the last equation we have implicitly invoked the Fubini-Tonelli Theorem to
   switch the order of integration, and will broadly continue to use this theorem throughout
-  this work.
+  this work to quickly compute terms such as the covariance between $Y_t$ and $X_t$:
+  \begin{IEEEeqnarray}{rCl}
+    \operatorname{\mathbb{C}ov}\left[ X_t, Y_t \right]
+    & = &
+    \frac{\operatorname{\mathbb{V}ar}\left[ X_t \right]}
+    {\mu+3 \sigma^2 / 2}
+    - \operatorname{\mathbb{E}}\left[ X_t \right]\operatorname{\mathbb{E}}\left[ Y_t \right]
+  \end{IEEEeqnarray}
 
-  \begin{lemma}[Acceleration Lemma]
-    The expectation of non-negative integer powers $n \ge 0 $ of the carrier process of
-    geometric Brownian motion $X_t$ conditioned on integrated geometric Brownian motion 
-    $Y_t$ are given by:
-    \begin{IEEEeqnarray}{rCl}
-      \operatorname{\mathbb{E}}\left[ X_t^n \right\rVert\left. Y_t \right]
-      & = &
-      \frac{\operatorname{\mathbb{E}}\left[X_t^n\right]}
-      {\operatorname{\mathbb{E}}\left[Y_t^n\right]}Y_t^n
-    \end{IEEEeqnarray}
-  \end{lemma}
-  \begin{proof}
-    We proceed by induction on $n$.
-    \begin{enumerate}
-      \item For $n=0$ clearly
-      $\operatorname{\mathbb{E}}\left[ X_t^0 \right\rVert\left. Y_t\right] = 1$
-      \item Now assume that up to $n$ the relation holds.
-      \item For $u < t$ consider the integrable function
-      \begin{IEEEeqnarray}{rCl}
-        f\left(u, t, y\right)
-        & = &
-        \operatorname{\mathbb{E}}\left[ X_u X_t^n \right\rVert\left. Y_t = y \right]
-      \end{IEEEeqnarray}
-      \item It follows from the Fubini-Tonelli Theorem and the induction assumption that for
-        $n$ the integral is
-        \begin{IEEEeqnarray}{rCl}
-          \int_0^t f\left(u, t, y\right) du
-          & = &
-          y^{n+1} \frac{\operatorname{\mathbb{E}}\left[X_t^n\right]}
-          {\operatorname{\mathbb{E}}\left[Y_t^n\right]}
-        \end{IEEEeqnarray}
-      \item Thus by the Fundamental Theorem of Calculus the integrand has the decomposition
-        $f\left(u, t, y\right) = y^{n+1} f\left(u, t\right)$
-      \item By the Law of Conditional Expectations we have
-        \begin{IEEEeqnarray}{rCl}
-          \operatorname{\mathbb{E}}\left[ X_u X_t^n\right]
-          & = &
-          \operatorname{\mathbb{E}}\left[\operatorname{\mathbb{E}}\left[ X_u X_t^n \right\rVert\left. Y_t \right]\right]\\
-          & = &
-          f\left(u, t\right) \operatorname{\mathbb{E}}\left[ Y_t^{n+1}\right]
-        \end{IEEEeqnarray}
-      \item Which immediately yields the decomposed integrand as
-        \begin{IEEEeqnarray}{rCl}
-          f\left(u,t\right)
-          & = &\frac{\operatorname{\mathbb{E}}\left[X_u X_t^n\right]}
-          {\operatorname{\mathbb{E}}\left[Y_t^{n+1}\right]}
-        \end{IEEEeqnarray}
-      \item Finally taking $u=t$ yields the desired result
-        \begin{IEEEeqnarray}{rCl}
-          \operatorname{\mathbb{E}}\left[ X_t^{n+1} \right\rVert\left. Y_t \right]
-          & = &
-          f\left(s,t,t\right)Y_t^{n+1}\\
-          & = &
-          \frac{\operatorname{\mathbb{E}}\left[X_t^{n+1}\right]}
-          {\operatorname{\mathbb{E}}\left[Y_t^{n+1}\right]}Y_t^{n+1}
-        \end{IEEEeqnarray}
-    \end{enumerate}
-  \end{proof}
+  While conditioning the future on the past generates a $\sigma$-finite measure space, by
+  the application of It\^o's calculus to the independent increments of the carrier Brownian
+  motion process $W_t$, the same cannot be said for the bridged conditioning of the past of
+  $X_s$ on the future of $Y_t$. Given times $s<t$ the conditional probability
+  $\operatorname{\mathbb{P}}\left[ X_s \right\rVert\left. Y_t \right]$ is not
+  $\sigma$-finite, and as such we cannot apply the Fubini-Tonelli theorem to integrate
+  processes conditioned on the future. The crux of the failure is that bridge conditioning
+  $X_s$ on it's future integral $Y_t$ introduces a reciprocal constraint between the size
+  of the excursions of $X_s$ and the duration of the excursions of $X_s$, because by the
+  construction of the integral the area under the excursion of $X_s$ must be less than it's
+  future integral $Y_t$.
 
-  A simple corollary follows from a nearly trivial derivation.
-
-  \begin{corollary}[Counterpoint Corollary]
-    For a times $t > s$ we have the following conditional expectation:
-    \begin{IEEEeqnarray}{rCl}
-      \operatorname{\mathbb{E}}\left[ Y_t^n \right\rVert\left. Y_s \right]
-      & = &
-      \displaystyle\frac{\operatorname{\mathbb{E}}\left[Y_t^n\right]}
-      {\operatorname{\mathbb{E}}\left[Y_s^n\right]}
-      Y_s^n
-    \end{IEEEeqnarray}
-  \end{corollary}
-  \begin{proof}
-    Factoring and applying the previous lemma:
-    \begin{IEEEeqnarray}{rCl}
-      \operatorname{\mathbb{E}}\left[Y_t^n \right\rVert\left. Y_s \right]
-      & = &
-      \operatorname{\mathbb{E}}\left[ X_s^n \right\rVert\left. Y_s \right]\operatorname{\mathbb{E}}\left[ Y_{t-s}^n \right]\\
-      & = &
-      \frac{\operatorname{\mathbb{E}}\left[ Y_{t-s}^n \right]\operatorname{\mathbb{E}}\left[X_s^n\right]}
-      {\operatorname{\mathbb{E}}\left[Y_s^n\right]}Y_s^n\\
-      & = &
-      \frac{\operatorname{\mathbb{E}}\left[Y_t^n\right]}
-      {\operatorname{\mathbb{E}}\left[Y_s^n\right]}
-      Y_s^n
-    \end{IEEEeqnarray}
-  \end{proof}
-
-  Even with the factorization observation we are still in need of a means of reducing the
-  expectation of the powers $Y_t^n$. A small lemma suffices to provide the means of finding
-  powers:
+  Returning from our digression into excursions, even with the factorization observation we
+  are still in need of a means of reducing the expectation of the powers $Y_t^n$. A small
+  lemma suffices to provide the means of finding powers:
 
   \begin{lemma}[Recursion-Convolution Lemma]
-    The expectation of non-negative integer powers $n \ge 0 $ of integrated geometric
-    Brownian motion $Y_t$ is given by:
+    The expectation of non-negative integer powers $m, n \ge 0 $ of geometric Brownian 
+    motion $X_t$ and integrated geometric Brownian motion $Y_t$ is given by:
     \begin{IEEEeqnarray}{rCl}
-      \operatorname{\mathbb{E}}\left[ Y_t^n \right]
+      \operatorname{\mathbb{E}}\left[X_t^m Y_t^n \right]
       & = &
-      n \int_0^t \operatorname{\mathbb{E}}\left[X_u^n\right] \operatorname{\mathbb{E}}\left[ Y_{t-u}^{n-1} \right] du
+      n \int_0^t
+      \operatorname{\mathbb{E}}\left[X_{t-u}^{m+n}\right]
+      \operatorname{\mathbb{E}}\left[ X_u^m \right]
+      \operatorname{\mathbb{E}}\left[ Y_u^{n-1} \right] du
     \end{IEEEeqnarray}
   \end{lemma}
   \begin{proof}
-    Expanding the expectant as a multi-variable integral we have, applying th Fubini-Tonelli
-    Theorem we have, and then factoring we have:
+    Expanding the expectation as a multi-variable integral, applying the Fubini-Tonelli
+    Theorem, factoring, and a final change of variables we have:
     \begin{IEEEeqnarray}{rCl}
-      \operatorname{\mathbb{E}}\left[ Y_t^n \right]
+      \operatorname{\mathbb{E}}\left[X_t^m  Y_t^n \right]
       & = &
-      \int_0^t \dots \int_0^t \operatorname{\mathbb{E}}\left[ X_t^n \right] du_1 \dots du_n\\
+      \operatorname{\mathbb{E}}\left[ \int_0^t \dots \int_0^t X_t^m X_{u_1} \cdots X_{u_n} du_1 \dots du_n \right]\\
       & = &
-      \binom{n}{1} \int_0^t \operatorname{\mathbb{E}}\left[ X_u \left(Y_t - Y_u\right)^{n-1} \right] du\\
+      \binom{n}{1} \operatorname{\mathbb{E}}\left[ \int_0^t X_t^m X_u \left(Y_t - Y_u\right)^{n-1} du \right]\\
       & = &
-      n \int_0^t \operatorname{\mathbb{E}}\left[ X_u^n\right] \operatorname{\mathbb{E}}\left[Y_{t-u}^{n-1} \right] du
+      n \int_0^t
+      \operatorname{\mathbb{E}}\left[X_{t-u}^{m+n}\right]
+      \operatorname{\mathbb{E}}\left[ X_u^m \right]
+      \operatorname{\mathbb{E}}\left[ Y_u^{n-1} \right] du
     \end{IEEEeqnarray}
   \end{proof}
 
@@ -307,148 +245,124 @@
       \begin{IEEEeqnarray}{rCl}
         f_t^{\left(n+1\right)} - g_t^{\left(n+1\right)}
         & = &
-        \displaystyle\int_0^t \operatorname{\mathbb{E}}\left[X_u^n\right] \left(f_{t-u}^{\left(n\right)} - g_{t-u}^{\left(n\right)}\right) du\\
+        \displaystyle\int_0^t
+        \operatorname{\mathbb{E}}\left[X_u^{m+n}\right]
+        \operatorname{\mathbb{E}}\left[ X_{t-u}^m \right]
+        \left(f_{t-u}^{\left(n\right)} - g_{t-u}^{\left(n\right)}\right) du\\
         & = & 0
       \end{IEEEeqnarray}
     \end{enumerate}
   \end{proof}
 
+  Convolution equations are dual to differential equations, and as such the products of
+  powers of $X_t$ and $Y_t$ satisfy the recursive differential equation:
+  \begin{IEEEeqnarray}{rCl}
+    \frac{d}{dt}\operatorname{\mathbb{E}}\left[ X_t^m Y_t^n \right]
+    & = &
+    n
+    \operatorname{\mathbb{E}}\left[ X_t^m \right]
+    \operatorname{\mathbb{E}}\left[ Y_t^{n-1} \right]\nonumber\\
+    &   &
+    \qquad + \left(\left(m+n\right)\mu \left(m+n\right)^2\sigma^2 /2 \right)
+    \operatorname{\mathbb{E}}\left[ X_t^m Y_t^n \right]
+  \end{IEEEeqnarray}
+
   With the recursion-convolution lemma in hand we have the sufficient tools required to
   estimate all the usual statistics involving powers of $Y_t$, including the expectation,
-  variance, and covariances.
+  variance, and covariances. For example a straightforward, if rather tedious integration
+  gives the expected value of the square of integrated geometric Brownian motion:
+  \begin{IEEEeqnarray}{rCl}
+    \operatorname{\mathbb{E}}\left[ Y_t^2 \right]
+    & = &
+    \frac{\operatorname{\mathbb{V}ar}\left[ X_t \right]}
+    {\left(\mu + \sigma^2\right)\left(\mu + 3\sigma^2 /2 \right)}-
+    \frac{\operatorname{\mathbb{E}}\left[ Y_t \right]}
+    {\left(\mu + \sigma^2\right)}
+  \end{IEEEeqnarray}
+  Which by differentiation yields the expectation of the product of $X_t$ and $Y_t$:
+  \begin{IEEEeqnarray}{rCl}
+    \operatorname{\mathbb{E}}\left[ X_t Y_t \right]
+    & = &
+    \frac{\operatorname{\mathbb{V}ar}\left[ X_t \right]}
+    {\mu + 3\sigma^2 /2 }
+  \end{IEEEeqnarray}
+  Arriving round trip at a formula that exactly agrees with the previously derived
+  covariance.
 
-  \section{Martingale}
-  By our counterpoint corollary the amortized integrated geometric Brownian motion:
-  \begin{IEEEeqnarray}{rCl}
-    \hat{Y}_t
-    & = &
-    \displaystyle\frac
-    {Y_t}
-    {\operatorname{\mathbb{E}}\left[ Y_t \right]}
-  \end{IEEEeqnarray}  
-  forms a martingale, so that for times $t > s$:
-  \begin{IEEEeqnarray}{rCl}
-    \operatorname{\mathbb{E}}\left[ \hat{Y}_t \right\rVert\left. \hat{Y}_s \right]
-    & = &
-    \hat{Y}_s
-  \end{IEEEeqnarray}
-  We can deduce that the amortized Gompertz process:
-  \begin{IEEEeqnarray}{rCl}
-    \hat{G}_t
-    & = &
-    \displaystyle\frac
-    {G_t}
-    {\operatorname{\mathbb{E}}\left[ Y_t \right]}
-  \end{IEEEeqnarray}
-  is a martingale, so that for times $t  > s$:
-  \begin{IEEEeqnarray}{rCl}
-    \operatorname{\mathbb{E}}\left[ \hat{G}_t \right\rVert\left. \hat{G}_s \right]
-    & = &
-    \hat{G}_s
-  \end{IEEEeqnarray}
-  This allows us to leverage optional stopping time theorems to evaluate expectations of 
-  stopped versions of Gompertz processes.
-
-  \section{Markov}
-  Even though amortized integrated geometric Brownian motion $\hat{Y}_t$ is a martingale,
-  integrated geometric Brownian motion $Y_t$ is a 2 step Markov process, and thus the
-  increments $Y_t - Y_s$, with $t > s$ are Markov. To verify this consider the sequence of
-  bare times $0=t_0 < \dots < t_{n+1}=t$, and accelerated times $0=y_0 < \dots < y_{n+1}=y$,
-  working through the conditional probability we have:
-  \begin{IEEEeqnarray}{rCl}
-    \IEEEeqnarraymulticol{3}{l}{
-      \operatorname{\mathbb{P}}\left[ Y_{t_{n+1}} - Y_{t_n} = y_{n+1} - y_n \right\rVert\left. Y_{t_n} - Y_{t_{n-1}} = y_n - y_{n-1}, \dots , Y_{t_1} - Y_{t_0} = y_1 - y_0 \right]
-    }\nonumber\\
-    & \qquad\qquad\qquad = &
-    \int_0^\infty \int_0^\infty\operatorname{\mathbb{P}}\left[ X_{t_n - t_{n-1}} = \frac{u}{v}\frac{y_{n+1} - y_n}{y_n - y_{n-1}} \right]\nonumber\\
-    & \qquad\qquad\qquad   &
-    \qquad\qquad\qquad\qquad\cdot\operatorname{\mathbb{P}}\left[ Y_{t_n - t_{n-1}} = u \right]\nonumber\\
-    & \qquad\qquad\qquad   &
-    \qquad\qquad\qquad\qquad\qquad\cdot\operatorname{\mathbb{P}}\left[ Y_{t_{n+1} - t_n} = v \right] du dv\\
-    & \qquad\qquad\qquad = &
-    \operatorname{\mathbb{P}}\left[ Y_{t_{n+1}} - Y_{t_n} = y_{n+1} - y_n \right\rVert\left.  Y_{t_n} - Y_{t_{n-1}} = y_n - y_{n-1} \right]
-  \end{IEEEeqnarray}
-  We can conveniently derive from the martingale the conditional expectation of the
-  increment for a triple of times $t_1 > t_0 > t_{-1}$:
-  \begin{IEEEeqnarray}{rCl}
-    \operatorname{\mathbb{E}}\left[ Y_{t_1} - Y_{t_0} \right\rVert\left. Y_{t_0} - Y_{t_{-1}} \right]
-    & = &
-    \frac{\operatorname{\mathbb{E}}\left[ Y_{t_1} - Y_{t_0}\right]}
-    {\operatorname{\mathbb{E}}\left[Y_{t_0} - Y_{t_{-1}} \right]}
-    \left(Y_{t_0} - Y_{t_{-1}}\right)
-  \end{IEEEeqnarray}
-  In practice we cannot directly measure the stochastically accelerated metabolic time $Y_t$
-  instead we have access to the stopping times $T_n$ of the passages $G_{T_n} = n$ of the
-  Gompertz process.
-  
-  To study the Markov properties of the stopping times of the passages of the Gompertz
-  process we revisit the recovery of the Poisson process from the Gompertz process by
-  conditioning on the history of the sample path of integrated geometric Brownian motion.
-  By differentiating the subordinated cumulative distribution of a single stopping time we
-  have the conditional probability distribution:
+  \section{Stopping Times}
+  In the usual manner we can construct the stopping times $T_n$ of the passages of the
+  Gompertz process $G_s$. As before, we condition the the stopping time on the history of
+  stochastic accelerations to recover the familiar forms of the Poisson process; by
+  differentiating the subordinated cumulative distribution of a single stopping:
   \begin{IEEEeqnarray}{rCl}
     \operatorname{\mathbb{P}}\left[ T_n = t \right\rVert\left. Y_{T_n} \right]
     & = &
-    \frac{\operatorname{\mathbb{E}}\left[ X_t \right]}{\operatorname{\mathbb{E}}\left[ Y_t \right]}
-    \frac{\left(\lambda Y_t\right)^n}{\left(n-1\right)!}
-    e^{-\lambda Y_t}
+    \operatorname{\mathbb{E}}\left[ X_t \right\rVert\left. Y_t \right]
+    \frac{\lambda^n Y_t^{\left(n-1\right)}e^{-\lambda Y_t}}
+    {\left(n-1\right)!}
+  \end{IEEEeqnarray}
+  Through the dual relationship of conditioning on the stopping times we can recover an
+  estimate of the underlying stochastically accelerated metabolic time:
+  \begin{IEEEeqnarray}{rCl}
+    \operatorname{\mathbb{P}}\left[ Y_{T_n} \right\rVert\left. T_n = t \right]
+    & = &
+    \frac{\operatorname{\mathbb{E}}\left[ X_t Y_t^{n-1} e^{-\lambda Y_t} \right\rVert\left. Y_t \right]}
+    {\operatorname{\mathbb{E}}\left[ X_t Y_t^{n-1} e^{-\lambda Y_t} \right]}
+    \operatorname{\mathbb{P}}\left[ Y_t \right]\\\nonumber\\
+    \operatorname{\mathbb{P}}\left[ X_{T_n} \right\rVert\left. T_n = t \right]
+    & = &
+    \frac{\operatorname{\mathbb{E}}\left[ X_t Y_t^{n-1} e^{-\lambda Y_t} \right\rVert\left. X_t \right]}
+    {\operatorname{\mathbb{E}}\left[ X_t Y_t^{n-1} e^{-\lambda Y_t} \right]}
+    \operatorname{\mathbb{P}}\left[ X_t \right]
+  \end{IEEEeqnarray}
+  From this re-weighting of the probabilities we can immediately deduce the elegant
+  expectations conditioned on the stopping time:
+  \begin{IEEEeqnarray}{rCl}
+    \operatorname{\mathbb{E}}\left[ Y_{T_n}^m \right\rVert\left. T_n = t \right]
+    & = &
+    \frac{\left(n+m-1\right)!}{\lambda^m \left(n-1\right)!}
+    \frac{ \operatorname{\mathbb{P}}\left[ T_{n+m} = t \right]}
+    { \operatorname{\mathbb{P}}\left[ T_n=t \right]}\\\nonumber\\
+    \operatorname{\mathbb{E}}\left[ X_{T_n}^m \right\rVert\left. T_n = t \right]
+    & = &
+    \frac{\operatorname{\mathbb{E}}\left[ X_t^{m+1} Y_t^{n-1} e^{-\lambda Y_t} \right]}
+    {\operatorname{\mathbb{E}}\left[ X_t Y_t^{n-1} e^{-\lambda Y_t} \right]}
   \end{IEEEeqnarray}
   Finding a closed form for the distribution of the stopping times of the passages of the
   Gompertz process will require a deeper understanding of the characteristic function of
   integrated geometric Brownian motion, which we will develop later. In the meantime there
   are many fruits to be plucked from a study of stopping times of the passages of the
   Gompertz process.
-
+ 
   The central statistic of study in the longitudinal analysis of biological systems is the
-  latency $T_{1+G_t} - T_{G_t} =T_{1+G_t} -t$ between consecutive stopping times of the
-  passages of the Gompertz process. Due to immortal time bias
-  \emph{``we cannot see indefinitely into the past''} we have subordinated the stopping
-  times $T_{n+G_t}$ of the passages of the Gompertz process by the increments of the
-  Gompertz process $n+G_t$ from a sentinel event $G_t$. In practice observational studies,
-  particularly in clinical research and epidemiology, are only able to observe consecutive
-  passages of the Gompertz process from a fixed sentinel event without the knowledge of how
-  many events have occurred before the sentinel event.
-  
+  latency $T_{1+G_t} - T_{G_t}$ between consecutive stopping times of the passages of the
+  Gompertz process. We have subordinated the stopping times $T_{n+G_t}$ of the passages of
+  the Gompertz process by the increments of the Gompertz process $n+G_t$ from a sentinel
+  event $G_t$ due to immortal time bias \emph{``we cannot see indefinitely into the past''}.
+  In practice observational studies, particularly in clinical research and epidemiology, are
+  only able to observe consecutive passages of the Gompertz process from a fixed sentinel
+  event without the knowledge of how many events have occurred before the sentinel event.
+   
   From the preceding probability density we can immediately deduce the tail probability and
   hence the expectation of the latency $s>0$ conditioned on a sentinel event at time $t>0$:
   \begin{IEEEeqnarray}{rCl}
     \operatorname{\mathbb{P}}\left[ T_{1+G_t} - T_{G_t} \ge s \right\rVert\left. T_{G_t}=t \right]
     & = &
-    \operatorname{\mathbb{E}}\left[ e^{-\lambda X_t Y_s } \right]\\\nonumber\\
-    \operatorname{\mathbb{E}}\left[T_{1+G_t} - T_{G_t}  \right\rVert\left. T_{G_t}=t \right]
+    \frac{\operatorname{\mathbb{E}}\left[X_t Y_t^{G_t-1}\right] \operatorname{\mathbb{E}}\left[ e^{-\lambda Y_{t+s} } \right]}
+    {\operatorname{\mathbb{E}}\left[X_t Y_t^{G_t-1} e^{-\lambda Y_t } \right]}\\\nonumber\\
+    \operatorname{\mathbb{E}}\left[ T_{1+G_t} - T_{G_t} \right\rVert\left. T_{G_t}=t \right]
     & = &
-    \int_0^\infty \operatorname{\mathbb{E}}\left[ e^{-\lambda X_t Y_s} \right] ds
+    \frac{\operatorname{\mathbb{E}}\left[X_t Y_t^{G_t-1} \right]}
+    {\lambda \operatorname{\mathbb{E}}\left[X_t Y_t^{G_t-1} e^{-\lambda Y_t } \right]}
+    \int_t^\infty \operatorname{\mathbb{E}}\left[e^{-\lambda Y_u} \right]du
   \end{IEEEeqnarray}
-  where $Y_s$ is the increment process independent of the acceleration $X_t$ at the start of
-  the increment. 
-  
-  Remarkably the stopping times of the passages for the Gompertz process are Markov, even
-  though the stochastically accelerated metabolic time of integrated geometric Brownian
-  motion is only Markov in its increments. Specifically knowledge of the age $t_0>0$ at a
-  sentinel event $G_{t_0}$ in the history of the Gompertz process is sufficient to determine
-  the distribution of the latency $t > 0$ to next event $T_{1+n+G_{t_0}}$. To see this
-  consider the subordinated stopping times $T_{n+G_{t_0}}=t_n, \dots , T_{G_{t_0}} = t_0$,
-  the cumulative probability of the latency conditioned of the previous events is:
-  \begin{IEEEeqnarray}{rCl}
-    \IEEEeqnarraymulticol{3}{l}{
-      \operatorname{\mathbb{P}}\left[ T_{1 + n + G_t} - T_{n + G_t} \ge t \right\rVert\left. T_{n+G_{t_0}}=t_n, \dots , T_{G_{t_0}} = t_0 \right]
-    }\nonumber\\
-    \qquad
-    & = &
-    \operatorname{\mathbb{E}}\left[ e^{-\lambda \left(Y_{t + t_n} - Y_{t_n}\right)} \right\rVert\left. T_{n+G_{t_0}}=t_n, \dots , T_{G_{t_0}} = t_0 \right]\\
-    \qquad
-    & = &
-    \operatorname{\mathbb{E}}\left[ e^{-\lambda X_{t_n} Y_t}\right]\\
-    \qquad
-    & = &
-    \operatorname{\mathbb{P}}\left[ T_{1 + G_{t_n}} - T_{G_{t_n}} \ge t \right\rVert\left. T_{G_{t_n}}=t_n \right]
-  \end{IEEEeqnarray}
-  where $Y_t$ is the increment process independent of the acceleration $X_{t_n}$ at the
-  start of the increment.
+  Clearly if we have available to us the additional information of the full history of event
+  counts $G_t$ this difficult expectation becomes much easier as we can elide the
+  marginalization over all cardinalities of events.
 
-  Given that the stopping times of consecutive passages of the Gompertz process are Markov
-  we consider the covariance of the latency between consecutive events
-  $T_{2+G_t},T_{1+G_t}, T_{G_t}$ conditioned on the sentinel event $T_{G_t}=t$:
+  Developing this line of reasoning further, consider the covariance of the latency between
+  consecutive events $T_{2+G_t},T_{1+G_t}, T_{G_t}$ conditioned on the sentinel event
+  $T_{G_t}=t$:
   \begin{IEEEeqnarray}{rCl}
     \IEEEeqnarraymulticol{3}{l}{
       \operatorname{\mathbb{C}ov}\left[ T_{2+G_t} - T_{1+G_t}, T_{1+G_t} - T_{G_t} \right\rVert\left. T_{G_t}=t \right]
@@ -483,6 +397,50 @@
   process. Fortunately, the majority of the studies of biological systems have either been
   cross-sectional or of short enough duration that the hazard of the Gompertz process is
   approximately constant over the timescale of the experiment on the organism.
+
+  \section{Markov}
+  Integrated geometric Brownian motion $Y_t$ is a 2 step Markov process, and thus the
+  increments $Y_t - Y_s$, with $t > s$ are Markov. To verify this consider the sequence of
+  bare times $0=t_0 < \dots < t_{n+1}=t$, and accelerated times $0=y_0 < \dots < y_{n+1}=y$,
+  working through the conditional probability we have:
+  \begin{IEEEeqnarray}{rCl}
+    \IEEEeqnarraymulticol{3}{l}{
+      \operatorname{\mathbb{P}}\left[ Y_{t_{n+1}} - Y_{t_n} = y_{n+1} - y_n \right\rVert\left. Y_{t_n} = y_n, \dots , Y_{t_0} = y_0 \right]
+    }\nonumber\\
+    & \qquad = &
+    \operatorname{\mathbb{P}}\left[X_{t_n-t_{n-1}} Y_{t_{n+1}-t_n} = \frac{y_{n+1}-y_n}{y_n-y_{n-1}} Y_{t_n-t_{n-1}}\right]\\
+    & \qquad = &
+    \operatorname{\mathbb{P}}\left[ Y_{t_{n+1}} - Y_{t_n} = y_{n+1} - y_n \right\rVert\left.  Y_{t_n} - Y_{t_{n-1}} = y_n - y_{n-1} \right]
+  \end{IEEEeqnarray}
+  where the process $Y_{t_{n+1}-t_n}$ is independent of the processes $X_{t_n-t_{n-1}}$ and
+  $Y_{t_n-t_{n-1}}$. In practice we cannot directly measure the stochastically accelerated
+  metabolic time $Y_t$ instead we have access to the stopping times $T_n$ of the passages
+  $G_{T_n} = n$ of the Gompertz process.
+  
+  Remarkably the stopping times of the passages for the Gompertz process are Markov, even
+  though the stochastically accelerated metabolic time of integrated geometric Brownian
+  motion is only Markov in its increments. Specifically knowledge of the age $t_n>0$ at a
+  sentinel event $G_{t_n}$ in the history of the Gompertz process is sufficient to determine
+  the distribution of the latency $t > 0$ to next event $T_{1+G_{t_n}}$. To see this
+  consider the subordinated stopping times $T_{n+G_{t_0}}=t_n, \dots , T_{G_{t_0}} = t_0$,
+  the cumulative probability of the latency conditioned of the previous events is:
+  \begin{IEEEeqnarray}{rCl}
+    \IEEEeqnarraymulticol{3}{l}{
+      \operatorname{\mathbb{P}}\left[ T_{1 + n + G_t} - T_{n + G_t} \ge t \right\rVert\left. T_{n+G_{t_0}}=t_n, \dots , T_{G_{t_0}} = t_0 \right]
+    }\nonumber\\
+    \qquad
+    & = &
+    \operatorname{\mathbb{E}}\left[ e^{-\lambda \left(Y_{t + t_n} - Y_{t_n}\right)} \right\rVert\left. T_{n+G_{t_0}}=t_n, \dots , T_{G_{t_0}} = t_0 \right]\\
+    \qquad
+    & = &
+    \frac{\operatorname{\mathbb{E}}\left[X_{t_n} Y_{t_n}^{G_{t_n}-1}\right] \operatorname{\mathbb{E}}\left[ e^{-\lambda Y_{t + t_n}} \right]}
+    {\operatorname{\mathbb{E}}\left[X_{t_n} Y_{t_n}^{G_{t_n}-1} e^{-\lambda Y_{t_n}} \right]}\\
+    \qquad
+    & = &
+    \operatorname{\mathbb{P}}\left[ T_{1 + G_{t_n}} - T_{G_{t_n}} \ge t \right\rVert\left. T_{G_{t_n}}=t_n \right]
+  \end{IEEEeqnarray}
+  where $Y_t$ is the increment process independent of the acceleration $X_{t_n}$ at the
+  start of the increment.
 
   \section{L\'evy}
   Integrated geometric Brownian motion $Y_t$ and its carrier process of geometric Brownian
