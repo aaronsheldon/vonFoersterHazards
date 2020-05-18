@@ -18,10 +18,12 @@
 \renewcommand{\IEEEproofindentspace}{0em}
 \renewcommand{\IEEEQED}{\IEEEQEDopen}
 
+% Bibliographic elements
+\title{Gompertz Processes: A Theory of Ageing}
+\author{Aaron Geoffrey Sheldon}
+\date{\today}
+
 \begin{document}
-  \title{Gompertz Processes: A Theory of Ageing}
-  \author{Aaron Geoffrey Sheldon}
-  \date{\today}
   \maketitle
 
   \begin{abstract}
@@ -151,9 +153,10 @@
     X_s Y_{t-s}
   \end{IEEEeqnarray}
   where the process $X_s$ is independent of the process $Y_{t-s}$. Phenomenologically the
-  increments of $Y_t - Y_s$ are equivalent to a process that starts with acceleration $X_s$.
-  Analogous to the Fundamental Theorem of Arithmetic this factorization allows us to reach
-  many useful inferences; for example we can immediately observe that for times $t > s$:
+  increments of $Y_t - Y_s$ are equivalent to a process $Y_{t-s}$ that starts with
+  acceleration $X_s$. Analogous to the Fundamental Theorem of Arithmetic this factorization
+  allows us to reach many useful inferences; for example we can immediately observe that for
+  times $t > s$:
   \begin{IEEEeqnarray}{rCl}
     \operatorname{\mathbb{E}}\left[ \left(Y_t - Y_s\right)^n \right\rVert\left. X_s \right]
     & = &
@@ -193,6 +196,16 @@
   construction of the integral the area under the excursion of $X_s$ must be less than it's
   future integral $Y_t$.
 
+  \section{Engelbert-Schmidt}
+  At outset of this research project contemplation of the bridged conditioning
+  $\operatorname{\mathbb{P}}\left[ X_s \right\rVert\left. Y_t \right]$ of a continuous
+  stochastic process $X_t$ on it's integral $Y_t$ lead me to have deep reservations that
+  the central concepts of my investigations we not well formed. As such we will undertake
+  a certain amount of measure theoretic \emph{``worrying''} and \emph{``hand wringing''}.
+  For my own pedantic edification we will informally derive the central result of the
+  Engelbert-Schmidt Zero-One Law.
+
+  \section{Identities}
   Returning from our digression into excursions, even with the factorization observation we
   are still in need of a means of reducing the expectation of the powers $Y_t^n$. A small
   lemma suffices to provide the means of finding powers:
@@ -445,7 +458,7 @@
   \section{L\'evy}
   Integrated geometric Brownian motion $Y_t$ and its carrier process of geometric Brownian
   motion $X_t$ can be embedded into the Lie group of $2 \times 2$ upper triangular
-  matrices $\mathfrak{h}_2$ by means of the factorization observed earlier, so that the
+  matrices $h_2$ by means of the factorization observed earlier, so that the
   increments are independent under matrix multiplication, for times $t > s$:
   \begin{IEEEeqnarray}{rCl}
     \begin{bmatrix}
@@ -480,7 +493,8 @@
       0 & X_t
     \end{bmatrix}
   \end{IEEEeqnarray}
-  This Lie sub-algebra has the basis commutator:
+  A word of caution about the generators in $\mathfrak{h}_2$, because the basis elements of
+  the Lie sub-algebra do not commute:
   \begin{IEEEeqnarray}{rCl}
     \left[
       \begin{bmatrix}
@@ -498,8 +512,9 @@
       0 & 0
     \end{bmatrix}
   \end{IEEEeqnarray}
-  As we will see next this raises the prospect of a deep connection between the adjoint
-  derivative of the exponential map and stochastic differential equations.
+  the generator of the product of two increments in $H_2$ is not the sum of the generators
+  of each increment. As we will see next this raises the prospect of a deep connection
+  between the adjoint derivative of the exponential map and stochastic differential equations.
 
   \section{Fokker-Planck}
   The upper triangular L\'evy process of integrated geometric Brownian motion satisfies the
