@@ -4,6 +4,7 @@
 \usepackage{amsmath}
 \usepackage{amssymb}
 \usepackage{amsthm}
+\usepackage{mathrsfs}
 \usepackage{IEEEtrantools}
 \usepackage{mathrsfs}
 \usepackage{longtable}
@@ -28,7 +29,7 @@
 
   \begin{abstract}
     Ageing is process of accelerating failures that is universal to all biological systems.
-    Motivated by considering infinitesimal stochastic accelerations of time, we hypothesize
+    Motivated by considering infinitesimal stochastic accelerations of time, I hypothesize
     a general explanation for the emergent determinism of ageing processes in the theory of
     Gompertz processes: Poisson processes subordinated by integrated geometric Brownian
     motion.
@@ -39,19 +40,19 @@
   environmental stresses, including communicable diseases and exposures to toxins, with an
   acceleration $a$ in their failure time $a h\left(a t\right)$, where $h\left(t\right)$ is
   the unperturbed hazard rate of the failure event. Outside of the controlled setting of a
-  laboratory, the environmental stresses occur stochastically resulting in a stochastic
-  sequence of accelerations $a_n$ of the organism's metabolic time. The stochastic
+  laboratory, the environmental stresses are random resulting in a stochastic sequence of
+  accelerations $a_n$ of the organism's metabolic time at actual times $t_n$. The stochastic
   accelerations can either increase the rate of failure $a_n > 1$, an exacerbation of the
   stresses, or decrease the rate of failure $a_n < 1$, an alleviation from the stresses.
   However, even in the controlled setting of a laboratory it is experimentally challenging
   to directly measure the stochastically accelerated metabolic time of the organism, instead
   we only have access to the failure events measured in bare time units. Thus, a theory of
-  ageing must study the subordination of the failure time by a stochastically accelerated
+  ageing must study the subordination of failure times by a stochastically accelerated
   metabolic time.
 
   Over the course of an organism's lifetime it will encounter exacerbations and alleviations
   that stochastically accelerate $a_n,\dots,a_0=1$ metabolic time at times
-  $t_n,\dots,t_0=0$. Furthermore, because the stochastic accelerations are all positive
+  $t_n>\dots>t_0=0$. Furthermore, because the stochastic accelerations are all positive
   $a_i > 0$ for each stochastic acceleration we can find a finite real valued generator
   $w_n,\dots,w_0=0$ such that $a_i = e^{w_i}$. It follows that the stochastically
   accelerated metabolic time $y_{t_n}$ at time $t_n$ is the sum of the products of the
@@ -63,29 +64,31 @@
     \displaystyle \sum_{i=1}^{n}e^{\sum_{j=0}^{i-1} w_j} \left(t_i - t_{i-1}\right)
   \end{IEEEeqnarray}
   Provided no great explosions of acceleration occur in any small time scale, like say when
-  an actual explosion occurs, the generators $w_i$ will become infinitesimal on the same
-  order as the bare time steps become infinitesimal $t_i - t_{i-1} \rightarrow 0$:
+  an actual explosion occurs, the generators will become infinitesimal $w_i \rightarrow 0$
+  on the same order as the bare time steps become infinitesimal
+  $t_i - t_{i-1} \rightarrow 0$:
   \begin{IEEEeqnarray}{rCl}
     \mathcal{O}\left(w_i\right)
     & = & 
     \mathcal{O}\left(t_i - t_{i-1}\right)
   \end{IEEEeqnarray}
   The sum of products then becomes a stochastic process $Y_t$ that is an integral of
-  a random geometric infinitesimal generator process $e^{W_u}$:
+  a random geometric infinitesimal generator process $e^{W_t}$:
   \begin{IEEEeqnarray}{rCl}
     Y_t
     & = & 
     \int_0^t e^{W_u} du
   \end{IEEEeqnarray}
   This asymptotic argument is essentially the continuous part of Kolmorgorov's
-  characterization of stochastic processes as being of composed, in bounded time, either a
-  finite number of discrete jumps or an infinite number of continuous changes. If we assume
-  as a first approximation that the exacerbations and alleviations, and their respective
-  stochastic accelerations, are independent and stationary over time then by the
-  L\'evy-Khintchine characterization the only infinitesimal generator of stochastically
-  accelerated metabolic time that is L\'evy and continuous \emph{``jump free''} is Brownian
-  motion $W_u$. The stochastically accelerated metabolic time is better known as integrated
-  geometric Brownian motion.
+  characterization of stochastic processes as being composed of, in bounded time, either a
+  finite number of discrete jumps or an infinite number of continuous changes.
+  
+  If we reasonably assume as a first approximation that the exacerbations and alleviations,
+  and their respective stochastic accelerations, are independent and stationary over time
+  then by the L\'evy-Khintchine characterization the only infinitesimal generator of
+  stochastically accelerated metabolic time that is L\'evy and continuous
+  \emph{``jump free''} is Brownian motion $W_t$. The stochastically accelerated metabolic
+  time $Y_t$ is better known as integrated geometric Brownian motion.
 
   \section{Gompertz}
   Motivated by the preceding heuristic derivation we formally define the Gompertz process on
@@ -136,7 +139,7 @@
   Reflecting that integrated geometric Brownian motion $Y_t$ is truly measuring the elapsed
   stochastically accelerated metabolic time.
 
-  \section{Accelerated Time}
+  \section{Factorization}
   To start our exploration of the rich subtleties of the Gompertz process we will briefly
   review the properties of integrated geometric Brownian motion which are salient to
   developing our theory. This is by no means a comprehensive compendium. Much of the
@@ -154,15 +157,17 @@
   \end{IEEEeqnarray}
   where the process $X_s$ is independent of the process $Y_{t-s}$. Phenomenologically the
   increments of $Y_t - Y_s$ are equivalent to a process $Y_{t-s}$ that starts with
-  acceleration $X_s$. Analogous to the Fundamental Theorem of Arithmetic this factorization
-  allows us to reach many useful inferences; for example we can immediately observe that for
+  acceleration $X_s$.
+  
+  Analogous to the Fundamental Theorem of Arithmetic this factorization
+  allows us to reach many useful inferences. For example we can immediately observe that for
   times $t > s$:
   \begin{IEEEeqnarray}{rCl}
     \operatorname{\mathbb{E}}\left[ \left(Y_t - Y_s\right)^n \right\rVert\left. X_s \right]
     & = &
     X_s^n \operatorname{\mathbb{E}}\left[ Y_{t-s}^n \right]
   \end{IEEEeqnarray}
-  We will liberally exploit this technique of arbitraging the stochastically accelerated
+  I will liberally exploit this technique of arbitraging the stochastically accelerated
   metabolic time $Y_t$ against the accumulated stochastic accelerations $X_t$ to reduce
   expectations down to the well known standard terms for $X_t$ and $Y_t$:
   \begin{IEEEeqnarray}{rCl}
@@ -173,9 +178,9 @@
     & = &
     \frac{e^{\left(\mu + \sigma^2 / 2\right)t} - 1}{\mu + \sigma^2 / 2}
   \end{IEEEeqnarray}
-  Note that in the last equation we have implicitly invoked the Fubini-Tonelli Theorem to
+  Note that in the last equation I have implicitly invoked the Fubini-Tonelli Theorem to
   switch the order of integration, and will broadly continue to use this theorem throughout
-  this work to quickly compute terms such as the covariance between $Y_t$ and $X_t$:
+  this work to evaluate expectations, such as the covariance between $Y_t$ and $X_t$:
   \begin{IEEEeqnarray}{rCl}
     \operatorname{\mathbb{C}ov}\left[ X_t, Y_t \right]
     & = &
@@ -184,31 +189,129 @@
     - \operatorname{\mathbb{E}}\left[ X_t \right]\operatorname{\mathbb{E}}\left[ Y_t \right]
   \end{IEEEeqnarray}
 
-  While conditioning the future on the past generates a $\sigma$-finite measure space, by
-  the application of It\^o's calculus to the independent increments of the carrier Brownian
-  motion process $W_t$, the same cannot be said for the bridged conditioning of the past of
-  $X_s$ on the future of $Y_t$. Given times $s<t$ the conditional probability
-  $\operatorname{\mathbb{P}}\left[ X_s \right\rVert\left. Y_t \right]$ is not
-  $\sigma$-finite, and as such we cannot apply the Fubini-Tonelli theorem to integrate
-  processes conditioned on the future. The crux of the failure is that bridge conditioning
-  $X_s$ on it's future integral $Y_t$ introduces a reciprocal constraint between the size
-  of the excursions of $X_s$ and the duration of the excursions of $X_s$, because by the
-  construction of the integral the area under the excursion of $X_s$ must be less than it's
-  future integral $Y_t$.
+  By the application of It\^o calculus to the independent future increments of the carrier
+  Brownian motion process $W_t$, conditioning the future on the past generates a measure
+  space that is the product of two $\sigma$-finite measure spaces. We cannot say the same
+  for the bridged conditioning of the past of $X_s$ on the future of $Y_t$. The conditional
+  probability of $\operatorname{\mathbb{P}}\left[ X_s \right\rVert\left. Y_t \right]$ for
+  times $s<t$ irreducibly mixes the time $s$ and accelerations $X_s$, so that the measure
+  space of the conditional probability is not the product measure space of two
+  $\sigma$-finite measure spaces. As such we cannot apply the Fubini-Tonelli theorem to
+  integrate processes conditioned on the future of the integral. The crux of the failure is
+  that the bridged conditioning $X_s$ on it's future integral $Y_t$ introduces a reciprocal
+  constraint between the size of the excursions of $X_s$ and the duration of the excursions
+  of $X_s$, because by the construction of the integral the area under the excursion of
+  $X_s$ must be less than it's future integral $Y_t$.
 
   \section{Engelbert-Schmidt}
   At outset of this research project contemplation of the bridged conditioning
   $\operatorname{\mathbb{P}}\left[ X_s \right\rVert\left. Y_t \right]$ of a continuous
   stochastic process $X_t$ on it's integral $Y_t$ lead me to have deep reservations that
-  the central concepts of my investigations we not well formed. As such we will undertake
-  a certain amount of measure theoretic \emph{``worrying''} and \emph{``hand wringing''}.
-  For my own pedantic edification we will informally derive the central result of the
-  Engelbert-Schmidt Zero-One Law.
+  the central concepts of my investigations were not well formed. Specifically, from the
+  factorization:
+  \begin{IEEEeqnarray}{rCl}
+    \operatorname{\mathbb{P}}\left[ X_s \le x \right\rVert\left. Y_t \le y \right]
+    & = &
+    \int_0^x \int_0^y
+    \frac{
+      \operatorname{\mathbb{P}}\left[ X_s = u, Y_s = v \right]
+      \operatorname{\mathbb{P}}\left[ Y_{t-s} \le \frac{y-v}{u} \right]
+    }
+    {\operatorname{\mathbb{P}}\left[ Y_t \le y \right]}
+    dv du
+  \end{IEEEeqnarray}
+  we can see that $\operatorname{\mathbb{P}}\left[ X_s \right\rVert\left. Y_t \right]$ being
+  well formed hinges on $\operatorname{\mathbb{P}}\left[ X_t , Y_t \right]$ being well
+  formed. As such I will undertake a certain amount of measure theoretic \emph{``worrying''}
+  and \emph{``hand wringing''} to establish that sets of the joint processes of $X_t$ and
+  $Y_t$ are adapted to the filtration $\mathscr{F}_t$ of the carrier Brownian motion $W_t$.
+  Largely for my own pedantic edification I will informally derive the central result of the
+  Engelbert-Schmidt Zero-One Law, namely that the integral of $X_t$ specifies
+  $\mathscr{F}_t$ measurable sets, from elementary first principles.
+
+  Consider the sets of successively closer mean value theorem approximations of $Y_t$ the
+  integral of $X_t$, a continuous stochastic process, constrained to $Y_t>y$, with the
+  Riemann sum indexed by $n \ge 2$:
+  \begin{IEEEeqnarray}{rCl}
+    A_n
+    & = &
+    \left\lbrace \frac{1}{n-1} \sum_{m=0}^{n-2} X_{\frac{n}{m}t} \vee X_{\frac{n+1}{m}t} > \frac{y}{t} \right\rbrace
+  \end{IEEEeqnarray}
+  I have approximated the area using the maximum of consecutive evaluations of $X_t$ to
+  ensure all the stragglers of $Y_t$ that just barely cross $y$ near $t$ are captured in the
+  sets. To consider the joint probability of $X_t > x$ and $Y_t > y$ we further constrain
+  the approximations $A_n$:
+  \begin{IEEEeqnarray}{rCl}
+    B_n
+    & = &
+    \left\lbrace \frac{1}{n-1} \sum_{m=0}^{n-2} X_{\frac{n}{m}t} \vee X_{\frac{n+1}{m}t} > \frac{y}{t}, X_{\frac{n-1}{n}t} > \frac{n-1}{n}x \right\rbrace
+  \end{IEEEeqnarray}
+  The sets push the constrained approximations of $Y_t$ into the future so that the stopped
+  indicator processes of:
+  \begin{IEEEeqnarray}{rCl}
+    A_{s \uparrow t}
+    & = &
+    \begin{cases}
+      \operatorname{\mathbb{I}}\left[A_{\left\lceil \frac{t}{t-s} \right\rceil}\right] & s < t,\\
+      \operatorname{\mathbb{I}}\left[A_\infty \right] & \text{else}
+    \end{cases}\\
+    B_{s \uparrow t}
+    & = &
+    \begin{cases}
+      \operatorname{\mathbb{I}}\left[B_{\left\lceil \frac{t}{t-s} \right\rceil}\right] & s < t,\\
+      \operatorname{\mathbb{I}}\left[B_\infty \right] & \text{else}
+    \end{cases}\\
+  \end{IEEEeqnarray}
+  are adapted to the filtration $\mathscr{F}_s \subset \mathscr{F}_t$ of the carrier
+  Brownian motion $W_s$ before $W_t$. Liberally invoking the continuity of $X_t$ and the
+  strict increase of it's sums we define the integral process $Y_t>y$ by requiring that the
+  approximations eventually hold in the limit inferior sense:
+  \begin{IEEEeqnarray}{rCl}
+    \liminf A_n
+    & = &
+    \left\lbrace X_t \in A_n \text{ eventually } \forall n \right\rbrace\\
+    & = &
+    \left\lbrace \int_0^t X_u du > y \right\rbrace\\
+    \liminf B_n
+    & = &
+    \left\lbrace X_t \in B_n \text{ eventually } \forall n \right\rbrace\\
+    & = &
+    \left\lbrace X_t > x, \int_0^t X_u du > y \right\rbrace
+  \end{IEEEeqnarray}
+  The limit superior and limit inferior of the sets differ only by a negligible set in 
+  $\mathscr{F}_t$:
+  \begin{IEEEeqnarray}{rCl}
+    \limsup A_n - \liminf A_n
+    & = &
+    \left\lbrace X_t = \frac{y}{t}, \int_0^t X_u du = y \right\rbrace\\
+    & \subset &
+    \left\lbrace X_t = \frac{y}{t} \right\rbrace\\
+    \limsup B_n - \liminf B_n
+    & = &
+    \begin{cases}
+      \left\lbrace X_t = \frac{y}{t}, \int_0^t X_u du = y \right\rbrace & x = \frac{y}{t},\\
+      \emptyset & \text{else}
+    \end{cases}\\
+    & \subset &
+    \left\lbrace X_t = \frac{y}{t} \right\rbrace\\
+  \end{IEEEeqnarray}
+  Although the limit inferiors are strict subsets of the limit superiors they are
+  nonetheless equivalent in probability in $\mathscr{F}_t$. Note that point sets have
+  negligible measure because we are implicitly working within an integral of the actual
+  probability measure and not the Radon-Nikodym probability density. For clarity I have used
+  Riemann sums; if one were tackle this argument rigorously they would need to replace the
+  indexing with positive integers with a net of finite partitions of time. Through
+  the countable construction of the limit inferiors we reach the future constraints by
+  carefully pruning the paths in the of present $\mathscr{F}_s \subset \mathscr{F}_t$
+  without ever actually peaking into the future of $\mathscr{F}_t$ to condition on a
+  future event. Thus the marginal probability $\operatorname{\mathbb{P}}\left[Y_t \right]$
+  and joint probability $\operatorname{\mathbb{P}}\left[ X_t , Y_t \right]$ exist and are
+  finite.
 
   \section{Identities}
-  Returning from our digression into excursions, even with the factorization observation we
-  are still in need of a means of reducing the expectation of the powers $Y_t^n$. A small
-  lemma suffices to provide the means of finding powers:
+  Returning from our digression, even with the factorization observation we are still in
+  need of a means of reducing the expectation of the powers $Y_t^n$. A small lemma suffices
+  to provide the means of finding powers:
 
   \begin{lemma}[Recursion-Convolution Lemma]
     The expectation of non-negative integer powers $m, n \ge 0 $ of geometric Brownian 
@@ -458,7 +561,7 @@
   \section{L\'evy}
   Integrated geometric Brownian motion $Y_t$ and its carrier process of geometric Brownian
   motion $X_t$ can be embedded into the Lie group of $2 \times 2$ upper triangular
-  matrices $h_2$ by means of the factorization observed earlier, so that the
+  matrices $H_2$ by means of the factorization observed earlier, so that the
   increments are independent under matrix multiplication, for times $t > s$:
   \begin{IEEEeqnarray}{rCl}
     \begin{bmatrix}
@@ -513,8 +616,8 @@
     \end{bmatrix}
   \end{IEEEeqnarray}
   the generator of the product of two increments in $H_2$ is not the sum of the generators
-  of each increment. As we will see next this raises the prospect of a deep connection
-  between the adjoint derivative of the exponential map and stochastic differential equations.
+  of each increment. As we will see this raises the prospect of a deep connection between
+  the adjoint derivative of the exponential map and stochastic differential equations.
 
   \section{Fokker-Planck}
   The upper triangular L\'evy process of integrated geometric Brownian motion satisfies the
@@ -551,9 +654,9 @@
       0 & X_t
     \end{bmatrix}
   \end{IEEEeqnarray}
-  It follows from Fokker-Planck that the probability density of the joint process 
-  $p=\operatorname{\mathbb{P}}\left[Y_t=y,X_t=x\right]$ satisfies
-  the partial differential equation:
+  It follows from Fokker-Planck that the Radon-Nikodym probability density of the joint
+  process $p=\operatorname{\mathbb{P}}\left[Y_t=y,X_t=x\right]$ satisfies the partial
+  differential equation:
   \begin{IEEEeqnarray}{rCl}
     \frac{\partial p}{\partial t}
     & = &
@@ -570,8 +673,8 @@
     & = &
     \left(-\mu + \frac{\sigma^2}{2}\right) p
   \end{IEEEeqnarray}
-  Marginalizing over the probability of $X_t$ and applying the acceleration lemma
-  yields the first order partial differential equation for the distribution of $Y_t$:
+  Marginalizing over the probability of $X_t$ and applying the acceleration lemma yields
+  the first order partial differential equation for the distribution of $Y_t$:
   \begin{IEEEeqnarray}{rCl}
     \frac{\operatorname{\mathbb{E}}\left[ Y_t \right]}
     {\operatorname{\mathbb{E}}\left[ X_t \right]}
