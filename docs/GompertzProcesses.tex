@@ -382,7 +382,7 @@
   \begin{corollary}[Uniqueness Corollary]
     If two sequences of functions $f_t^{\left(n\right)}$ and $g_t^{\left(n\right)}$ of time
     $t$ satisfy the recursion-convolution relation and 
-    $f_t^{\left(0\right)}=g_t^{\left(0\right)}=1$ then
+    $f_t^{\left(0\right)}=g_t^{\left(0\right)}$ then
     $f_t^{\left(n\right)}=g_t^{\left(n\right)}$ for all $n$.
   \end{corollary}
   \begin{proof}
@@ -395,9 +395,9 @@
         f_t^{\left(n+1\right)} - g_t^{\left(n+1\right)}
         & = &
         \displaystyle\int_0^t
-        \operatorname{\mathbb{E}}\left[X_u^{m+n}\right]
-        \operatorname{\mathbb{E}}\left[ X_{t-u}^m \right]
-        \left(f_{t-u}^{\left(n\right)} - g_{t-u}^{\left(n\right)}\right) du\\
+        \operatorname{\mathbb{E}}\left[X_{t-u}^{m+n}\right]
+        \operatorname{\mathbb{E}}\left[ X_u^m \right]
+        \left(f_u^{\left(n\right)} - g_u^{\left(n\right)}\right) du\\
         & = & 0
       \end{IEEEeqnarray}
     \end{enumerate}
@@ -439,10 +439,12 @@
   covariance.
 
   \section{Stopping Times}
-  In the usual manner we can construct the stopping times $T_n$ of the passages of the
-  Gompertz process $G_t$. As before, we condition the the stopping time on the history of
-  stochastic accelerations to recover the familiar forms of the Poisson process, by
-  differentiating the subordinated cumulative distribution of a single stopping time:
+  In practice we cannot directly measure the stochastically accelerated metabolic time $Y_t$
+  instead we have access to the stopping times $T_n$ of the passages $G_{T_n} = n$ of the
+  Gompertz process, which we construct in the usual manner. As before, we condition the the
+  stopping time on the history of stochastic accelerations to recover the familiar forms of 
+  the Poisson process, by differentiating the subordinated cumulative distribution of a
+  single stopping time:
   \begin{IEEEeqnarray}{rCl}
     \operatorname{\mathbb{P}}\left[ T_n = t \right\rVert\left. Y_{T_n} \right]
     & = &
@@ -561,12 +563,10 @@
     & \qquad = &
     \operatorname{\mathbb{P}}\left[ Y_{t_{n+1}} - Y_{t_n} = y_{n+1} - y_n \right\rVert\left.  Y_{t_n} - Y_{t_{n-1}} = y_n - y_{n-1} \right]
   \end{IEEEeqnarray}
-  where the process $Y_{t_{n+1}-t_n}$ is independent of the processes $X_{t_n-t_{n-1}}$ and
-  $Y_{t_n-t_{n-1}}$. In practice we cannot directly measure the stochastically accelerated
-  metabolic time $Y_t$ instead we have access to the stopping times $T_n$ of the passages
-  $G_{T_n} = n$ of the Gompertz process.
-  
-  Remarkably the stopping times of the passages for the Gompertz process are Markov, even
+  for process $Y_{t_{n+1}-t_n}$ independent of the processes $X_{t_n-t_{n-1}}$ and
+  $Y_{t_n-t_{n-1}}$.
+
+  Remarkably the stopping times of the passages of the Gompertz process are Markov, even
   though the stochastically accelerated metabolic time of integrated geometric Brownian
   motion is only Markov in its increments. Specifically knowledge of the age $t_n>0$ at a
   sentinel event $G_{t_n}$ in the history of the Gompertz process is sufficient to determine
@@ -575,7 +575,7 @@
   the cumulative probability of the latency conditioned of the previous events is:
   \begin{IEEEeqnarray}{rCl}
     \IEEEeqnarraymulticol{3}{l}{
-      \operatorname{\mathbb{P}}\left[ T_{1 + n + G_t} - T_{n + G_t} \ge t \right\rVert\left. T_{n+G_{t_0}}=t_n, \dots , T_{G_{t_0}} = t_0 \right]
+      \operatorname{\mathbb{P}}\left[ T_{1 + n + G_{t_0}} - T_{n + G_{t_0}} \ge t \right\rVert\left. T_{n+G_{t_0}}=t_n, \dots , T_{G_{t_0}} = t_0 \right]
     }\nonumber\\
     \qquad
     & = &
