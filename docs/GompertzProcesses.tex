@@ -117,9 +117,10 @@
   strictly increasing stochastically accelerated metabolic time up to time $t$.
 
   From the definition of the Gompertz process $G_t$ conditioning on the history of a sample
-  path of integrated geometric Brownian motion $Y_t$ yields a conditional Poisson process:
+  path of integrated geometric Brownian motion $Y_t$ yields a conditional Poisson process,
+  where $\operatorname{d\mathbb{P}}$ represents the Radon-Nikodym density:
   \begin{IEEEeqnarray}{rCl}
-    \operatorname{\mathbb{P}}\left[G_t = n \right\rVert\left. Y_t \right]
+    \operatorname{d\mathbb{P}}\left[G_t = n \right\rVert\left. Y_t \right]
     & = & 
     \frac{\left(\lambda Y_t\right)^n}{n!} e^{-\lambda Y_t}\\\nonumber\\
     \operatorname{\mathbb{E}}\left[G_t \right\rVert\left. Y_t \right]
@@ -195,13 +196,19 @@
   \begin{IEEEeqnarray}{rCl}
     \operatorname{\mathbb{P}}\left[ X_t \right\rVert\left. Y_t \right]
     & = &
-    \lim_{n \rightarrow \infty} \frac{1}{n!}
-    \underset{\frac{t}{n} \sum\prod u_i = Y_t}{\int \cdots \int}
-    \operatorname{\mathbb{P}}\left[ X_\frac{t}{n} = u_1 \right] \cdots\nonumber\\
-    &   &
-    \qquad\qquad\qquad\qquad \cdots
-    \operatorname{\mathbb{P}}\left[ X_\frac{t}{n} = u_n \right]
-    du_1 \cdots du_n
+    \lim_{n \rightarrow \infty}
+    \begin{array}{cl}
+      \displaystyle{\frac{1}{n!} \int \cdots \int}
+      &
+      \operatorname{d\mathbb{P}}\left[ X_\frac{t}{n} = u_1 \right] \cdots\\
+      \begin{array}{c}
+        \frac{t}{n} \sum\prod u_i = Y_t,
+        \\
+        \prod u_i = X_t
+      \end{array}
+      &
+      \qquad \cdots \operatorname{d\mathbb{P}}\left[ X_\frac{t}{n} = u_n \right]du_1 \cdots du_n
+    \end{array}
   \end{IEEEeqnarray}
   The conditional probability irreducibly mixes the time $s<t$ and accelerations $X_s$, so
   that the measure space of the conditional probability is not the product measure space of
@@ -213,17 +220,17 @@
   less than the integral $Y_t$.
 
   \section{Engelbert-Schmidt}
-  At outset of this research project contemplation of the bridged conditioning for $s<t$
+  At outset of this research project contemplation of the bridged conditioning
   $\operatorname{\mathbb{P}}\left[ X_s \right\rVert\left. Y_t \right]$ of a continuous
-  stochastic process $X_t>0$ on it's integral $Y_t$ lead me to have deep reservations that
-  the central concepts of my investigations were not well formed. Specifically, from the
-  factorization:
+  stochastic process $X_s>0$ on it's future integral $Y_t$ for times $s<t$ lead me to have
+  deep reservations that the central concepts of my investigations were not well formed.
+  Specifically, from the factorization:
   \begin{IEEEeqnarray}{rCl}
     \operatorname{\mathbb{P}}\left[ X_s \le x \right\rVert\left. Y_t \le y \right]
     & = &
     \int_0^x \int_0^y
     \frac{
-      \operatorname{\mathbb{P}}\left[ X_s = u, Y_s = v \right]
+      \operatorname{d\mathbb{P}}\left[ X_s = u, Y_s = v \right]
       \operatorname{\mathbb{P}}\left[ Y_{t-s} \le \frac{y-v}{u} \right]
     }
     {\operatorname{\mathbb{P}}\left[ Y_t \le y \right]}
@@ -446,7 +453,7 @@
   the Poisson process, by differentiating the subordinated cumulative distribution of a
   single stopping time:
   \begin{IEEEeqnarray}{rCl}
-    \operatorname{\mathbb{P}}\left[ T_n = t \right\rVert\left. Y_{T_n} \right]
+    \operatorname{d\mathbb{P}}\left[ T_n = t \right\rVert\left. Y_{T_n} \right]
     & = &
     \operatorname{\mathbb{E}}\left[ X_t \right\rVert\left. Y_t \right]
     \frac{\lambda^n Y_t^{\left(n-1\right)}e^{-\lambda Y_t}}
@@ -472,8 +479,8 @@
     \operatorname{\mathbb{E}}\left[ Y_{T_n}^m \right\rVert\left. T_n = t \right]
     & = &
     \frac{\left(n+m-1\right)!}{\lambda^m \left(n-1\right)!}
-    \frac{ \operatorname{\mathbb{P}}\left[ T_{n+m} = t \right]}
-    { \operatorname{\mathbb{P}}\left[ T_n=t \right]}\\\nonumber\\
+    \frac{ \operatorname{d\mathbb{P}}\left[ T_{n+m} = t \right]}
+    { \operatorname{d\mathbb{P}}\left[ T_n=t \right]}\\\nonumber\\
     \operatorname{\mathbb{E}}\left[ X_{T_n}^m \right\rVert\left. T_n = t \right]
     & = &
     \frac{\operatorname{\mathbb{E}}\left[ X_t^{m+1} Y_t^{n-1} e^{-\lambda Y_t} \right]}
@@ -556,12 +563,12 @@
   working through the conditional probability we have:
   \begin{IEEEeqnarray}{rCl}
     \IEEEeqnarraymulticol{3}{l}{
-      \operatorname{\mathbb{P}}\left[ Y_{t_{n+1}} - Y_{t_n} = y_{n+1} - y_n \right\rVert\left. Y_{t_n} = y_n, \dots , Y_{t_0} = y_0 \right]
+      \operatorname{\mathbb{P}}\left[ Y_{t_{n+1}} - Y_{t_n} \ge y_{n+1} - y_n \right\rVert\left. Y_{t_n} = y_n, \dots , Y_{t_0} = y_0 \right]
     }\nonumber\\
     & \qquad = &
-    \operatorname{\mathbb{P}}\left[X_{t_n-t_{n-1}} Y_{t_{n+1}-t_n} = \frac{y_{n+1}-y_n}{y_n-y_{n-1}} Y_{t_n-t_{n-1}}\right]\\
+    \operatorname{\mathbb{P}}\left[X_{t_n-t_{n-1}} Y_{t_{n+1}-t_n} \ge \frac{y_{n+1}-y_n}{y_n-y_{n-1}} Y_{t_n-t_{n-1}}\right]\\
     & \qquad = &
-    \operatorname{\mathbb{P}}\left[ Y_{t_{n+1}} - Y_{t_n} = y_{n+1} - y_n \right\rVert\left.  Y_{t_n} - Y_{t_{n-1}} = y_n - y_{n-1} \right]
+    \operatorname{\mathbb{P}}\left[ Y_{t_{n+1}} - Y_{t_n} \ge y_{n+1} - y_n \right\rVert\left.  Y_{t_n} - Y_{t_{n-1}} = y_n - y_{n-1} \right]
   \end{IEEEeqnarray}
   for process $Y_{t_{n+1}-t_n}$ independent of the processes $X_{t_n-t_{n-1}}$ and
   $Y_{t_n-t_{n-1}}$.
@@ -688,7 +695,7 @@
     \end{bmatrix}
   \end{IEEEeqnarray}
   It follows from Fokker-Planck that the Radon-Nikodym probability density of the joint
-  process $p=\operatorname{\mathbb{P}}\left[Y_t=y,X_t=x\right]$ satisfies the partial
+  process $p=\operatorname{d\mathbb{P}}\left[Y_t=y,X_t=x\right]$ satisfies the partial
   differential equation:
   \begin{IEEEeqnarray}{rCl}
     \frac{\partial p}{\partial t}
@@ -739,7 +746,7 @@
   \begin{IEEEeqnarray}{rCl}
     h
     & = &
-    \operatorname{\mathbb{P}}\left[ T_1 = t\right\rVert\left. T_1 \ge t\right]
+    \operatorname{d\mathbb{P}}\left[ T_1 = t\right\rVert\left. T_1 \ge t\right]
   \end{IEEEeqnarray}
   satisfies the partial differential Eigen equation:
   \begin{IEEEeqnarray}{rCl}
