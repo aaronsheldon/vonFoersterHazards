@@ -321,6 +321,20 @@ function randomtruncate(x)
 end
 
 """
+    conservesum!(a, b)
+
+In place conservation of the sum of a, with respect to b. Note this assumes
+the inputs are well formed, there are no bounds or sanity checks.
+"""
+function conservesum!(a, b)
+    (b == 0) && return zeros(eltype(a), length(a))
+    c = b - sum(a)
+    i = sortperm(a, rev=(c<0))
+    a[i] .= a[i] .+ [sign(c) .* ones(eltype(a), abs(c)) ; zeros(eltype(a), length(a)-abs(c))]
+    a
+end
+
+"""
     conservesum!(a, b, c)
 
 In place conservation of the subset sums of a, with respect to the subset sums of b,
@@ -328,30 +342,13 @@ for the subset end boundaries defined by c. Note this assumes the inputs are wel
 formed, there are no bounds or sanity checks.
 """
 function conservesum!(a, b, c)
-    
-    # Starts of subsets, c defines the ends
-    d = BitArray([true; c[1:end-1]])    
-    
-    # Curried subset sum function
-    function s(x)
-        t = cumsum(x)[c]
-        if length(t) > 1
-            t[2:end] .-= t[1:end-1]
-            t[2:end] .-= t[1:end-1]
-        end
-        s = zero.(x)
-        s[d] .+= t
-        s = cumsum(s)
+    d = 1:length(c)
+    u = d[c]
+    l = [1; 1 .+ u[1:end-1]]
+    for i in 1:sum(c)
+        a[l[i]:u[i]] .= conservesum!(a[l[i]:u[i]], sum(b[l[i]:u[i]]))
     end
-    
-    # subset sums of a and b
-    sa = s(a)
-    sb = s(b)
-    
-    # Block wise permutation indices
-    i = convert(Vector{Int64}, sortslices([cumsum(d) a.*(-1).^(sa.>sb) 1:length(a)] dims = 1)[:, 3])
-    
-    return a
+    a
 end
 
 """
