@@ -235,23 +235,25 @@ function Base.iterate(E::abstractevolve, S)
     # One time computation of the exogenous hazard rates
     H = hazardrate(S[2])
 
-# # # Curried transition function to update the cohort. # # # # # # # # # # # # # # #
-    function transitioncohort(c)                                                    #
-        P = exp(-E.size * sum(scatterrate(c.age) .* H, dims=1)[1, :, :])            #
-        cohort(                                                                     #
-            c.elapsed + E.size,                                                     #
-            c.age + E.size,                                                         #
-            conservesum!(randomtruncate.(P * c.stratum), c.stratum, c.conserving),  #
-            covariance(c.covariance, P, c.stratum),                                 #
-            c.conserving                                                            #
-        )                                                                           #
-    end                                                                             #
-# # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
-                                                                                    #
-# # # SIMD main loop, compute the transitions within each cohort. # # # # # # # # # #
-    S[2] .= transitioncohort.(S[2])                                                 #
-# # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
-
+# # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
+# # # Curried transition function to update the cohort. # # # # # # # # # # # # # # # #
+    function transitioncohort(c)                                                    # #
+        P = exp(-E.size * sum(scatterrate(c.age) .* H, dims=1)[1, :, :])            # #
+        cohort(                                                                     # #
+            c.elapsed + E.size,                                                     # #
+            c.age + E.size,                                                         # #
+            conservesum!(randomtruncate.(P * c.stratum), c.stratum, c.conserving),  # #
+            covariance(c.covariance, P, c.stratum),                                 # #
+            c.conserving                                                            # #
+        )                                                                           # #
+    end                                                                             # #
+# # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
+                                                                                      #
+# # # SIMD main loop, compute the transitions within each cohort. # # # # # # # # # # #
+    S[2] .= transitioncohort.(S[2])                                                 # #
+# # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
+# # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
+    
     # Pass the pointers, youngest cohort is less than gestation time old, keep the cohorts
     if S[2].ages[end] < E.gestation
         R = population(

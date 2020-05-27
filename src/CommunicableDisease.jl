@@ -6,6 +6,14 @@ communicable diseases outlined in the notebook. This module can be
 used to infer the counterfactual utilization under a variety of
 hospital capacities. Remember that our transition matrix convention
 is that SOURCES are columns and TRAGETS are rows.
+
+To do: 
+- fix parameter units to rates per day.
+- open baseline demographics for initialization.
+- inoculate with 1 infected per age year between 25 and 49.
+- open NC data set for writing.
+- main loop, dimensionalize output and store to NC data set.
+- close NC data set.
 """
 module CommunicableDisease
 
@@ -102,7 +110,7 @@ const configurationvalues = ( head = [ "Value" ],
                                            730;
                                            365 ] )
 
-const conserving = BitArray([0, 0, 0, 0, 1, 0, 0, 1])
+const conserving = BitArray([0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 1])
 
 """
     markdowntable(t)
