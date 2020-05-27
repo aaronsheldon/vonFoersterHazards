@@ -160,9 +160,9 @@
   increments of $Y_t - Y_s$ are equivalent to a process $Y_{t-s}$ that starts with
   acceleration $X_s$.
   
-  Analogous to the Fundamental Theorem of Arithmetic this factorization
-  allows us to reach many useful inferences. For example we can immediately observe that for
-  times $t > s$:
+  Analogous to the Fundamental Theorem of Arithmetic carrier factorization provides for
+  immediate shallow inferences. For example we can immediately observe that for times
+  $t > s$:
   \begin{IEEEeqnarray}{rCl}
     \operatorname{\mathbb{E}}\left[ \left(Y_t - Y_s\right)^n \right\rVert\left. X_s \right]
     & = &
@@ -190,9 +190,32 @@
     - \operatorname{\mathbb{E}}\left[ X_t \right]\operatorname{\mathbb{E}}\left[ Y_t \right]
   \end{IEEEeqnarray}
 
-  By the application of It\^o calculus conditioning on $X_t$ generates a measure space that
-  is the product of two $\sigma$-finite measure spaces. We cannot say the same for
-  conditioning on $Y_t$. To illustrate the difficulty consider the conditional probability:
+  Carrier factorization implies that $Y_{t+\Delta t}$ can be recovered through
+  marginalization over $Y_t$ and $Y_{\Delta t}$. Applying this observation to the definition
+  of the derivative we obtain the hazard rate relationship:
+  \begin{IEEEeqnarray}{rCl}
+    \frac{d}{dt}
+    \operatorname{\mathbb{E}}\left[ X_t \right\rVert\left. Y_t \ge y \right]
+    & = &
+    \left(\mu + \sigma^2/2\right)
+    \operatorname{\mathbb{E}}\left[ X_t \right\rVert\left. Y_t \ge y \right]\nonumber\\
+    &   &
+    \qquad + \operatorname{\mathbb{E}}\left[ X_t \right\rVert\left. Y_t = y \right]
+    \operatorname{d\mathbb{H}}\left[ Y_t = y \right]
+  \end{IEEEeqnarray}
+  where $\operatorname{d\mathbb{H}}\left[ Y_t = y \right] = \operatorname{d\mathbb{P}}\left[ Y_t = y \right\rVert\left. Y_t \ge y \right]$
+  is the hazard rate of the value of $Y_t$. From the integral of this differential equation
+  evaluated at $Y_t=0$ we deduce the boundary condition:
+  \begin{IEEEeqnarray}{rCl}
+    \operatorname{d\mathbb{P}}\left[ X_t = x, Y_t = 0 \right]
+    & = &
+    \frac{\delta\left(x\right)}{t}
+  \end{IEEEeqnarray}
+
+  There are limits to what can be learned for carrier factorization alone. By the
+  application of It\^o calculus conditioning on $X_t$ generates a measure space that is the
+  product of two $\sigma$-finite measure spaces. We cannot say the same for conditioning on
+  $Y_t$. To illustrate the difficulty consider the conditional probability:
   \begin{IEEEeqnarray}{rCl}
     \operatorname{\mathbb{P}}\left[ X_t \right\rVert\left. Y_t \right]
     & = &
@@ -255,28 +278,26 @@
   \end{IEEEeqnarray}
   The heart of the result is to show that the limit can be countably constructed from
   measurable sets in $\mathscr{F}_s \subset \mathscr{F}_t$ the filtration of $X_t$. As such,
-  consider the sets of successively closer mean value theorem approximations of the lower
+  consider the sets of successively closer Lorentz factor approximations of the lower
   bounded integral $Y_t>y$, with the Riemann sum indexed by integers $n \ge 2$:
   \begin{IEEEeqnarray}{rCl}
     A_n
     & = &
     \left\lbrace
-      \frac{1}{n-1}
       \sum_{m=0}^{n-2} X_{\frac{n}{m}t} \vee X_{\frac{n+1}{m}t}
-      > \frac{y}{t}
+      > \left(n-\sqrt{2n-1}\right)\frac{y}{t}
     \right\rbrace
   \end{IEEEeqnarray}
   I have approximated the area using the maximum of consecutive evaluations of $X_t$ to
   ensure all the stragglers of $Y_t$ that just barely cross $y$ near $t$ are captured in the
-  sets. To additionally define the joint probability of $X_t > x$ and $Y_t > y$ we further
-  constrain the approximations $A_n$:
+  sets. To define the joint probability of $X_t > x$ and $Y_t > y$ we the approximations
+  along the direction $x$:
   \begin{IEEEeqnarray}{rCl}
     B_n
     & = &
     \left\lbrace
-      \frac{1}{n-1}
       \sum_{m=0}^{n-2} X_{\frac{n}{m}t} \vee X_{\frac{n+1}{m}t}
-      > \left(\frac{n-1}{n}\frac{y}{t} - x\right) \vee 0
+      > \left(n\frac{y}{t} - x\right) \vee 0
     \right\rbrace
   \end{IEEEeqnarray}
   The sets push the approximations of $Y_t$ into the future so that the stopped indicator
@@ -304,12 +325,12 @@
     & = &
     \left\lbrace X_t \in A_n \text{ eventually } \forall n \right\rbrace\\
     & = &
-    \left\lbrace \int_0^t X_u du > y \right\rbrace\\
+    \left\lbrace X_t < \infty, \int_0^t X_u du > y \right\rbrace\\
     \liminf B_n
     & = &
     \left\lbrace X_t \in B_n \text{ eventually } \forall n \right\rbrace\\
     & = &
-    \left\lbrace X_t > x, \int_0^t X_u du > y \right\rbrace
+    \left\lbrace X_t < x, \int_0^t X_u du > y \right\rbrace
   \end{IEEEeqnarray}
   The danger is that the containing limit superior asymptotically induces oscillations in
   $Y_t$ of increasing frequency and decreasing magnitude so that $X_t$ becomes
@@ -320,9 +341,9 @@
   \begin{IEEEeqnarray}{rCl}
     \limsup A_n - \liminf A_n
     & = &
-    \left\lbrace X_t = \frac{y}{t}, \int_0^t X_u du = y \right\rbrace\\
+    \left\lbrace X_t \rightarrow \infty, \int_0^t X_u du = y \right\rbrace\\
     & \subset &
-    \left\lbrace X_t = \frac{y}{t} \right\rbrace\\
+    \left\lbrace  X_t \rightarrow \infty \right\rbrace\\
     \limsup B_n - \liminf B_n
     & = &
     \left\lbrace X_t = x, \int_0^t X_u du = y \right\rbrace\\
@@ -700,39 +721,19 @@
   \begin{IEEEeqnarray}{rCl}
     \frac{\partial p}{\partial t}
     & = &
-    - \frac{\partial}{\partial x} \left(\mu + \frac{\sigma^2}{2}\right)xp
     - \frac{\partial}{\partial y} x p
+    - \frac{\partial}{\partial x} \left(\mu + \frac{\sigma^2}{2}\right)xp
     + \frac{\partial^2}{\partial x^2} \frac{\sigma^2}{2}x^2 p
   \end{IEEEeqnarray}
   We can restate this as an Eigen evolution equation:
   \begin{IEEEeqnarray}{rCl}
     \frac{\partial p}{\partial t}
-    + \left(\mu + \frac{3}{2}\sigma^2\right) x \frac{\partial p}{\partial x}
     + x \frac{\partial p}{\partial y}
+    + \left(\mu + \frac{3}{2}\sigma^2\right) x \frac{\partial p}{\partial x}
     - \frac{\sigma^2}{2}x^2 \frac{\partial^2 p}{\partial x^2}
     & = &
     \left(-\mu + \frac{\sigma^2}{2}\right) p
   \end{IEEEeqnarray}
-  Marginalizing over the probability of $X_t$ and applying the acceleration lemma yields
-  the first order partial differential equation for the distribution of $Y_t$:
-  \begin{IEEEeqnarray}{rCl}
-    \frac{\operatorname{\mathbb{E}}\left[ Y_t \right]}
-    {\operatorname{\mathbb{E}}\left[ X_t \right]}
-    \frac{\partial p}{\partial t}
-    - y\frac{\partial p}{\partial y}
-    & = &
-    p
-  \end{IEEEeqnarray}
-  Which by trial solution of separation of variables has the general solution:
-  \begin{IEEEeqnarray}{rCl}
-    p
-    & = &
-    \operatorname{\mathbb{E}}\left[ Y_t \right]
-    f_{\mu, \sigma}\left(y \operatorname{\mathbb{E}}\left[ Y_t \right]\right)
-  \end{IEEEeqnarray}
-  for any analytic $f_{\mu, \sigma}$ dependent on the drift and diffusion of the carrier
-  process $X_t$. Note that we are offloading the dimensional analysis into the analytic
-  function.
 
   \section{Hazard Rate}
   Consider the first passage stopping time $T_1$ of the Gompertz process $G_t$, its tail
@@ -742,30 +743,28 @@
     & = &
     \operatorname{\mathbb{E}}\left[ e^{-\lambda Y_t} \right]
   \end{IEEEeqnarray}
-  Thus the hazard rate $h$ of $T_1$:
+  and in turn yields the hazard rate of $T_1$:
   \begin{IEEEeqnarray}{rCl}
-    h
+    \operatorname{d\mathbb{H}}\left[ T_1 = t\right]
     & = &
-    \operatorname{d\mathbb{P}}\left[ T_1 = t\right\rVert\left. T_1 \ge t\right]
+    \frac{\lambda \operatorname{\mathbb{E}}\left[X_t e^{-\lambda Y_t} \right]}
+    {\operatorname{\mathbb{E}}\left[e^{-\lambda Y_t} \right]}
   \end{IEEEeqnarray}
-  satisfies the partial differential Eigen equation:
+  From the application of change of variables of integration:
   \begin{IEEEeqnarray}{rCl}
-    \left(\frac{\partial}{\partial t} \frac{\operatorname{\mathbb{E}}\left[Y_t\right]}{\operatorname{\mathbb{E}}\left[X_t\right]} \right)h 
-    + \frac{\operatorname{\mathbb{E}}\left[Y_t\right]}{\operatorname{\mathbb{E}}\left[X_t\right]}\frac{\partial h}{\partial t}
+    \lambda Y_t
     & = &
-    \lambda\frac{\partial h}{\partial \lambda}
+    \int_0^{\lambda t} e^{\frac{\mu}{\lambda} s + \frac{\sigma}{\sqrt{\lambda}} W_s} ds 
   \end{IEEEeqnarray}
-  Which by trial solution of separation of variables has the general solution:
+  we have the following simplification of the hazard rate:
   \begin{IEEEeqnarray}{rCl}
-    h
+    \operatorname{d\mathbb{H}}_{\mu, \sigma, \lambda}\left[ T_1 = t\right]
     & = &
-    \lambda^2 \operatorname{\mathbb{E}}\left[X_t\right]
-    \operatorname{\mathbb{E}}\left[Y_t\right]
-    g_{\mu, \sigma}\left( \lambda \operatorname{\mathbb{E}}\left[Y_t\right] \right)
+    \lambda\operatorname{d\mathbb{H}}_{\frac{\mu}{\lambda}, \frac{\sigma}{\sqrt{\lambda}}, 1}\left[ T_1 = \lambda t\right]
   \end{IEEEeqnarray}
-  for any analytic $g_{\mu, \sigma}$ dependent on the drift and diffusion of
-  the carrier process $X_t$. Taking the limit to deterministic subordination yields the
-  constraints on $g_{\mu, \sigma}$:
+  Which we can take as the definition of the hazard rate for every value of $\lambda$. As
+  such we need only determine $\operatorname{\mathbb{E}}\left[ e^{-Y_t} \right]$. Taking the
+  limit to deterministic subordination yields the constraints on the hazard rate:
   \begin{longtable}{lll}
     \caption{Sequential Boundary Conditions}\\
     \multicolumn{1}{l}{Boundary} & \multicolumn{1}{l}{Condition} & \multicolumn{1}{l}{Removes}\\
@@ -779,39 +778,15 @@
     \endfoot
     \caption*{Sequential boundary conditions on the hazard rate $h$ derived from the limits to deterministic subordination.}
     \endlastfoot\\
-    $\sigma=0$    & $h=\lambda e^{\mu t}$ & diffusion\\\\
-    $\mu=0$       & $h=\lambda$           & then drift\\\\
-    $\lambda = 0$ & $h=0$                 & finally jumps
+    $\sigma=0$    & $\operatorname{d\mathbb{H}}=\lambda e^{\mu t}$ & diffusion\\\\
+    $\mu=0$       & $\operatorname{d\mathbb{H}}=\lambda$           & then drift\\\\
+    $\lambda = 0$ & $\operatorname{d\mathbb{H}}=0$                 & finally jumps
   \end{longtable}
-  From the boundary conditions we can immediately deduce that in the deterministic limit of
-  $\sigma \rightarrow 0$ we have:
-  \begin{IEEEeqnarray}{rCl}
-    g_{\mu, \sigma}\left(x\right)
-    & \xrightarrow{\sigma = 0} &
-    \frac{1}{x}
-  \end{IEEEeqnarray}
-  However this alone cannot be the solution as it results in the characteristic function in
-  $\lambda$ of a purely deterministic $Y_t$. Equating the general solution for the hazard
-  rate to the Laplace of the Fokker-Planck solution yields the implicit equation in
-  $f_{\mu,\sigma}$ and $g_{\mu,\sigma}$:
-  \begin{IEEEeqnarray}{rCl}
-    \displaystyle-\frac{\partial}{\partial t} \ln
-    \int_0^\infty
-    e^\frac{\lambda u}{\operatorname{\mathbb{E}}\left[Y_t\right]}
-    f_{\mu,\sigma}\left(u\right)
-    du
-    & = &
-    \lambda^2
-    \operatorname{\mathbb{E}}\left[X_t\right]
-    \operatorname{\mathbb{E}}\left[Y_t\right]
-    g_{\mu, \sigma}\left( \lambda \operatorname{\mathbb{E}}\left[Y_t\right] \right)
-  \end{IEEEeqnarray} 
   Dimensional analysis provides an inference for a solution, which remains an open problem:
   \begin{proposition}[Gompertz Anomaly]
-    The analytic function $g_{\mu, \sigma}$ is simply the exponential divided by its
-    argument, so that the hazard rate $h$ is given by:
+    The hazard rate is given by:
     \begin{IEEEeqnarray}{rCl}
-      h
+      \operatorname{d\mathbb{H}}
       & = &
       \lambda \operatorname{\mathbb{E}}\left[X_t\right]
       e^{\frac{\lambda \sigma^2 / 2}{\mu + \sigma^2 / 2}\operatorname{\mathbb{E}}\left[Y_t\right]}
