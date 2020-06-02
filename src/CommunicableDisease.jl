@@ -165,11 +165,11 @@ function hazardrate(p::population{Int64, Vector{Int64}, Matrix{Int64}, Array{Flo
     h[5, 1, 1] -= h[5, 2, 1]
     
     # Bed Allocation
-    h[6, 10, 9] -= sum(scatterrate.(a, 3) .* p.strata[:, 2])
+    h[6, 10, 9] -= sum(scatterrate.(p.ages, 3) .* p.strata[:, 2])
     h[6, 9, 9] -= h[6, 10, 9]
     
     # Bed Release
-    h[7, 11, 10] -= sum(scatterrate.(a, Ref([2, 4])) .* p.strata[:, 3]) / sum(p.strata[:, 3])
+    h[7, 11, 10] -= sum(scatterrate.(p.ages, Ref([2, 4])) .* p.strata[:, 3]) / sum(p.strata[:, 3])
     h[7, 10, 10] -= h[7, 10, 10]
     
     # Bed Recovery

@@ -2,9 +2,10 @@
     vonFoersterHazards
 
 Engine and utilities to forward propagate the von Foerster evolution
-from the hazard rate, birth rate, and initial demographics. Remember
-that our transition matrix convention is that SOURCES are columns 
-and TARGETS are rows.
+equation from the hazard rate, birth rate, and initial demographics.
+The engine integrates the Noether current through matrix exponentiation
+in the Lie algebra of the symmetry. Remember that our transition matrix
+convention is that SOURCES are columns and TARGETS are rows.
 """
 module vonFoersterHazards
 
