@@ -160,7 +160,7 @@ end
 
 Iterable container for the population evolution engine. Computes count steps of
 duration size from starting population initial, generating a new cohort after
-every gestation has elapsed
+every gestation has elapsed.
 """
 struct evolve{R, S, T} <: abstractevolve{R, S, T}
     initial::R
@@ -195,10 +195,10 @@ function Base.iterate(E::abstractevolve)
     (E.count > 0) ||
         throw(DomainError(E.gestation, "count must be positive."))
 
-    (issorted(E.initial.ages, rev=true)) ||
-        throw(DomainError(E.initial.ages, "ages must be sorted in descending order."))
+    (issorted(E.initial.ages)) ||
+        throw(DomainError(E.initial.ages, "ages must be sorted in ascending order."))
 
-    (0 <= E.initial.ages[end]) ||
+    (0 <= E.initial.ages[1]) ||
         throw(DomainError(E.initial.ages, "ages must be non-negative."))
 
     (0 <= minimum(E.initial.strata)) ||
@@ -269,15 +269,15 @@ function Base.iterate(E::abstractevolve, S)
     else
         R = population(
             S[2] + E.size,
-            [S[2].ages; zero(eltype(S[2].ages))],
-            [S[2].strata; zeros(eltype(S[2].strata), 1, size(S[2].strata, 2))],
-            [S[2].covariances; zeros(eltype(S[2].covariances), 1, size(S[2].covariances, 2), size(S[2].covariances, 3))],
+            [zero(eltype(S[2].ages)); S[2].ages],
+            [zeros(eltype(S[2].strata), 1, size(S[2].strata, 2)); S[2].strata],
+            [zeros(eltype(S[2].covariances), 1, size(S[2].covariances, 2), size(S[2].covariances, 3)); S[2].covariances],
             S[2].conserving
         )
     end
     
     # Add births to the youngest cohort
-    R.strata[end, :] .= R.strata[end, :] .+ b'
+    R.strata[1, :] .= R.strata[1, :] .+ b'
     
     # Send
     (R, (1 + S[1], R))
@@ -365,7 +365,7 @@ assumes the inputs are well formed, there are no bounds or sanity checks.
 function covariance(C, P, n)
     U = (P.*n')*P'
     I = [1:1+stride(U, 2):length(U)...]
-    U[I] .= (P*n) .- U[I]
+    U[I] .= (P*n) .- (2 .* U[I])
     P*C*P' .+ U
 end
 
