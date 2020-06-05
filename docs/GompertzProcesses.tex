@@ -18,6 +18,7 @@
 \theoremstyle{definition}\newtheorem{definition}{Definition}
 \renewcommand{\IEEEproofindentspace}{0em}
 \renewcommand{\IEEEQED}{\IEEEQEDopen}
+\DeclareRobustCommand{\stirling}{\genfrac\{\}{0pt}{}}
 
 % Bibliographic elements
 \title{Gompertz Processes: A Theory of Ageing}
@@ -123,21 +124,25 @@
     \operatorname{d\mathbb{P}}\left[G_t = n \right\rVert\left. Y_t \right]
     & = & 
     \frac{\left(\lambda Y_t\right)^n}{n!} e^{-\lambda Y_t}\\\nonumber\\
-    \operatorname{\mathbb{E}}\left[G_t \right\rVert\left. Y_t \right]
+    \operatorname{\mathbb{E}}\left[G_t^n \right\rVert\left. Y_t \right]
     & = &
-    \lambda Y_t
+    \sum_{k=0}^n \stirling{n}{k} \left(\lambda Y_t\right)^k
   \end{IEEEeqnarray}
-  Dual to conditioning on integrated geometric Brownian motion, conditioning on the Gompertz
-  process estimates the elapsed stochastically accelerated metabolic time:
+  Where the sum in the expectation is over Stirling's numbers of the second kind. Applying
+  Bayes' theorem we can condition on the Gompertz process to estimate the elapsed
+  stochastically accelerated metabolic time:
   \begin{IEEEeqnarray}{rCl}
-    \operatorname{\mathbb{P}}\left[Y_t \le y \right\rVert\left. G_t \right]
-    & = & 
-    \displaystyle\int_0^{\lambda y} \frac{u^{G_t - 1} e^{-u}}{\left(G_t - 1\right)!} du\\\nonumber\\
-    \operatorname{\mathbb{E}}\left[Y_t \right\rVert\left. G_t \right]
+    \operatorname{d\mathbb{P}}\left[Y_t \right\rVert\left. G_t =n \right]
     & = &
-    \frac{G_t}{\lambda}
+    \frac{Y_t^n e^{-\lambda Y_t}}
+    {\operatorname{\mathbb{E}}\left[Y_t^n e^{-\lambda Y_t} \right]}
+    \operatorname{d\mathbb{P}}\left[Y_t \right]\\\nonumber\\
+    \operatorname{\mathbb{E}}\left[Y_t^m \right\rVert\left. G_t = n \right]
+    & = &
+    \frac{\operatorname{\mathbb{E}}\left[Y_t^{n+m} e^{-\lambda Y_t} \right]}
+    {\operatorname{\mathbb{E}}\left[Y_t^n e^{-\lambda Y_t} \right]}
   \end{IEEEeqnarray}
-  Reflecting that integrated geometric Brownian motion $Y_t$ is truly measuring the elapsed
+  Reflecting that integrated geometric Brownian motion $Y_t$ measures the elapsed
   stochastically accelerated metabolic time.
 
   \section{Factorization}
@@ -212,7 +217,7 @@
     \frac{\delta\left(x\right)}{t}
   \end{IEEEeqnarray}
 
-  There are limits to what can be learned for carrier factorization alone. By the
+  There are limits to what can be learned from carrier factorization alone. By the
   application of It\^o calculus conditioning on $X_t$ generates a measure space that is the
   product of two $\sigma$-finite measure spaces. We cannot say the same for conditioning on
   $Y_t$. To illustrate the difficulty consider the conditional probability:
@@ -277,8 +282,8 @@
     \operatorname{\mathbb{P}}\left[ Y_t = \lim_{\pi \subset \left[0,t\right)} \sum_{t_i \in \pi} X_{t_i} \Delta t_i, \dots \right]
   \end{IEEEeqnarray}
   The heart of the result is to show that the limit can be countably constructed from
-  measurable sets in $\mathscr{F}_s \subset \mathscr{F}_t$ the filtration of $X_t$. As such,
-  consider the sets of successively closer Lorentz factor approximations of the lower
+  measurable sets in $\mathscr{F}_s \subset \mathscr{F}_t$, the filtration of $X_t$. As
+  such, consider the sets of successively closer Lorentz factor approximations of the lower
   bounded integral $Y_t>y$, with the Riemann sum indexed by integers $n \ge 2$:
   \begin{IEEEeqnarray}{rCl}
     A_n
@@ -290,8 +295,8 @@
   \end{IEEEeqnarray}
   I have approximated the area using the maximum of consecutive evaluations of $X_t$ to
   ensure all the stragglers of $Y_t$ that just barely cross $y$ near $t$ are captured in the
-  sets. To define the joint probability of $X_t > x$ and $Y_t > y$ we the approximations
-  along the direction $x$:
+  sets. To define the joint probability of $X_t > x$ and $Y_t > y$ we constrain the
+  approximations along the direction $x$:
   \begin{IEEEeqnarray}{rCl}
     B_n
     & = &
@@ -300,8 +305,8 @@
       > \left(n\frac{y}{t} - x\right) \vee 0
     \right\rbrace
   \end{IEEEeqnarray}
-  The sets push the approximations of $Y_t$ into the future so that the stopped indicator
-  processes of:
+  The sets push the approximations of $Y_{\frac{n-1}{n}t}$ into the future $Y_t$ so that the
+  stopped indicator processes of:
   \begin{IEEEeqnarray}{rCl}
     A_{s \uparrow t}
     & = &
@@ -334,7 +339,7 @@
   \end{IEEEeqnarray}
   The danger is that the containing limit superior asymptotically induces oscillations in
   $Y_t$ of increasing frequency and decreasing magnitude so that $X_t$ becomes
-  \emph{``fuzzy''} at $t$, and thus fail to be a set in the filtration $\mathscr{F}_t$.
+  \emph{``fuzzy''} at $t$, and thus fails to be a set in the filtration $\mathscr{F}_t$.
   Essentially we are faced with the risk of a path integral formulation of the Heisenberg
   uncertainty principle. However, the limit superior and limit inferior differ only by
   negligible sets in $\mathscr{F}_t$:
@@ -362,12 +367,13 @@
   probability measure and not the Radon-Nikodym probability density.
   
   For clarity I have used Riemann sums. If one were to tackle this argument rigorously they
-  would work with a countable net of finite partitions of time. Nonetheless through the
-  countable construction of the limit inferiors we reach the future constraints by carefully
-  pruning the paths in the of present $\mathscr{F}_s \subset \mathscr{F}_t$, without ever
-  actually peaking into the future of $\mathscr{F}_t$ to condition on a future event. Thus
-  the marginal probability $\operatorname{\mathbb{P}}\left[Y_t \right]$ and joint
-  probability $\operatorname{\mathbb{P}}\left[ X_t , Y_t \right]$ exist and are finite.
+  would be required to work with a countable net of finite partitions of time. Nonetheless
+  through the countable construction of the limit inferiors we reach the future constraints
+  by carefully pruning the paths in the of present $\mathscr{F}_s \subset \mathscr{F}_t$,
+  without ever actually peaking into the future of $\mathscr{F}_t$ to condition on a future
+  event. Thus the marginal probability $\operatorname{\mathbb{P}}\left[Y_t \right]$ and
+  joint probability $\operatorname{\mathbb{P}}\left[ X_t , Y_t \right]$ exist and are
+  finite.
 
   \section{Identities}
   Returning from our digression, even with the factorization observation we are still in
@@ -382,8 +388,7 @@
       & = &
       n \int_0^t
       \operatorname{\mathbb{E}}\left[X_{t-u}^{m+n}\right]
-      \operatorname{\mathbb{E}}\left[ X_u^m \right]
-      \operatorname{\mathbb{E}}\left[ Y_u^{n-1} \right] du
+      \operatorname{\mathbb{E}}\left[ X_u^m Y_u^{n-1} \right] du
     \end{IEEEeqnarray}
   \end{lemma}
   \begin{proof}
@@ -398,8 +403,7 @@
       & = &
       n \int_0^t
       \operatorname{\mathbb{E}}\left[X_{t-u}^{m+n}\right]
-      \operatorname{\mathbb{E}}\left[ X_u^m \right]
-      \operatorname{\mathbb{E}}\left[ Y_u^{n-1} \right] du
+      \operatorname{\mathbb{E}}\left[ X_u^m Y_u^{n-1} \right] du
     \end{IEEEeqnarray}
   \end{proof}
 
@@ -424,7 +428,6 @@
         & = &
         \displaystyle\int_0^t
         \operatorname{\mathbb{E}}\left[X_{t-u}^{m+n}\right]
-        \operatorname{\mathbb{E}}\left[ X_u^m \right]
         \left(f_u^{\left(n\right)} - g_u^{\left(n\right)}\right) du\\
         & = & 0
       \end{IEEEeqnarray}
@@ -437,8 +440,7 @@
     \frac{d}{dt}\operatorname{\mathbb{E}}\left[ X_t^m Y_t^n \right]
     & = &
     n
-    \operatorname{\mathbb{E}}\left[ X_t^m \right]
-    \operatorname{\mathbb{E}}\left[ Y_t^{n-1} \right]\nonumber\\
+    \operatorname{\mathbb{E}}\left[ X_t^m Y_t^{n-1} \right]\nonumber\\
     &   &
     \qquad + \left(\left(m+n\right)\mu + \left(m+n\right)^2\sigma^2 /2 \right)
     \operatorname{\mathbb{E}}\left[ X_t^m Y_t^n \right]
@@ -480,19 +482,19 @@
     \frac{\lambda^n Y_t^{\left(n-1\right)}e^{-\lambda Y_t}}
     {\left(n-1\right)!}
   \end{IEEEeqnarray}
-  Through the dual relationship of conditioning on the stopping times we can recover an
-  estimate of the underlying stochastically accelerated metabolic time:
+  Applying Bayes' Theorem we can condition on the stopping times to estimate the underlying
+  stochastically accelerated metabolic time:
   \begin{IEEEeqnarray}{rCl}
-    \operatorname{\mathbb{P}}\left[ Y_{T_n} \right\rVert\left. T_n = t \right]
+    \operatorname{d\mathbb{P}}\left[ Y_{T_n} \right\rVert\left. T_n = t \right]
     & = &
     \frac{\operatorname{\mathbb{E}}\left[ X_t Y_t^{n-1} e^{-\lambda Y_t} \right\rVert\left. Y_t \right]}
     {\operatorname{\mathbb{E}}\left[ X_t Y_t^{n-1} e^{-\lambda Y_t} \right]}
-    \operatorname{\mathbb{P}}\left[ Y_t \right]\\\nonumber\\
-    \operatorname{\mathbb{P}}\left[ X_{T_n} \right\rVert\left. T_n = t \right]
+    \operatorname{d\mathbb{P}}\left[ Y_t \right]\\\nonumber\\
+    \operatorname{d\mathbb{P}}\left[ X_{T_n} \right\rVert\left. T_n = t \right]
     & = &
     \frac{\operatorname{\mathbb{E}}\left[ X_t Y_t^{n-1} e^{-\lambda Y_t} \right\rVert\left. X_t \right]}
     {\operatorname{\mathbb{E}}\left[ X_t Y_t^{n-1} e^{-\lambda Y_t} \right]}
-    \operatorname{\mathbb{P}}\left[ X_t \right]
+    \operatorname{d\mathbb{P}}\left[ X_t \right]
   \end{IEEEeqnarray}
   From this re-weighting of the probabilities we can immediately deduce the elegant
   expectations conditioned on the stopping time:
@@ -607,17 +609,12 @@
     }\nonumber\\
     \qquad
     & = &
-    \operatorname{\mathbb{E}}\left[ e^{-\lambda \left(Y_{t + t_n} - Y_{t_n}\right)} \right\rVert\left. T_{n+G_{t_0}}=t_n, \dots , T_{G_{t_0}} = t_0 \right]\\
-    \qquad
-    & = &
     \frac{\operatorname{\mathbb{E}}\left[X_{t_n} Y_{t_n}^{G_{t_n}-1}\right] \operatorname{\mathbb{E}}\left[ e^{-\lambda Y_{t + t_n}} \right]}
     {\operatorname{\mathbb{E}}\left[X_{t_n} Y_{t_n}^{G_{t_n}-1} e^{-\lambda Y_{t_n}} \right]}\\
     \qquad
     & = &
     \operatorname{\mathbb{P}}\left[ T_{1 + G_{t_n}} - T_{G_{t_n}} \ge t \right\rVert\left. T_{G_{t_n}}=t_n \right]
   \end{IEEEeqnarray}
-  where $Y_t$ is the increment process independent of the acceleration $X_{t_n}$ at the
-  start of the increment.
 
   \section{L\'evy}
   Integrated geometric Brownian motion $Y_t$ and its carrier process of geometric Brownian
@@ -756,7 +753,7 @@
     & = &
     \int_0^{\lambda t} e^{\frac{\mu}{\lambda} s + \frac{\sigma}{\sqrt{\lambda}} W_s} ds 
   \end{IEEEeqnarray}
-  we have the following simplification of the hazard rate:
+  we have the following rescaling of the hazard rate:
   \begin{IEEEeqnarray}{rCl}
     \operatorname{d\mathbb{H}}_{\mu, \sigma, \lambda}\left[ T_1 = t\right]
     & = &
