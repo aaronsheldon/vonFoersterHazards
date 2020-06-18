@@ -123,7 +123,8 @@
   \begin{IEEEeqnarray}{rCl}
     \operatorname{d\mathbb{P}}\left[G_t = n \right\rVert\left. Y_t \right]
     & = & 
-    \frac{\left(\lambda Y_t\right)^n}{n!} e^{-\lambda Y_t}\\\nonumber\\
+    \frac{\left(\lambda Y_t\right)^n}{n!} e^{-\lambda Y_t}\\
+    \nonumber\\
     \operatorname{\mathbb{E}}\left[G_t^n \right\rVert\left. Y_t \right]
     & = &
     \sum_{k=0}^n \stirling{n}{k} \left(\lambda Y_t\right)^k
@@ -136,7 +137,8 @@
     & = &
     \frac{Y_t^n e^{-\lambda Y_t}}
     {\operatorname{\mathbb{E}}\left[Y_t^n e^{-\lambda Y_t} \right]}
-    \operatorname{d\mathbb{P}}\left[Y_t \right]\\\nonumber\\
+    \operatorname{d\mathbb{P}}\left[Y_t \right]\\
+    \nonumber\\
     \operatorname{\mathbb{E}}\left[Y_t^m \right\rVert\left. G_t = n \right]
     & = &
     \frac{\operatorname{\mathbb{E}}\left[Y_t^{n+m} e^{-\lambda Y_t} \right]}
@@ -155,7 +157,7 @@
   deriving the characteristic function of the subordinating process.
   
   Our first observation is that the increments of $Y_t$ can be factored by its carrier
-  process $X_t$, for times $t > s$:
+  process $X_t$, for times $t > s$ we have in law:
   \begin{IEEEeqnarray}{rCl}
     Y_t - Y_s
     & = &
@@ -179,7 +181,8 @@
   \begin{IEEEeqnarray}{rCl}
     \operatorname{\mathbb{E}}\left[ X_t^n \right]
     & = &
-    e^{\left(n \mu + n^2 \sigma^2 / 2\right)t}\\\nonumber\\
+    e^{\left(n \mu + n^2 \sigma^2 / 2\right)t}\\
+    \nonumber\\
     \operatorname{\mathbb{E}}\left[ Y_t \right]
     & = &
     \frac{e^{\left(\mu + \sigma^2 / 2\right)t} - 1}{\mu + \sigma^2 / 2}
@@ -270,10 +273,10 @@
   and \emph{``hand wringing''} to establish that sets of the joint processes of $X_t$ and
   $Y_t$ are adapted to the filtration $\mathscr{F}_t$ of the carrier Brownian motion $W_t$.
   Largely for my own pedantic edification I will informally derive the central result of the
-  Engelbert-Schmidt Zero-One Law, from elementary first principles; namely that the integral
+  Engelbert-Schmidt zero-one law, from elementary first principles; namely that the integral
   of $X_t$ specifies $\mathscr{F}_t$ measurable sets.
 
-  The concern of the Engelbert-Schmidt Zero-One Law is that probability measures of the
+  The concern of the Engelbert-Schmidt zero-one law is that probability measures of the
   integral $Y_t$ of a continuous stochastic process $X_t$ are implicitly probability
   measures of the limit of sets of $X_s$ with $s<t$:
   \begin{IEEEeqnarray}{rCl}
@@ -311,14 +314,18 @@
     A_{s \uparrow t}
     & = &
     \begin{cases}
-      \operatorname{\mathbb{I}}\left[A_{\left\lceil \frac{t}{t-s} \right\rceil}\right] & s < t,\\
-      0 & \text{else}
+      \operatorname{\mathbb{I}}\left[A_{\left\lceil \frac{t}{t-s} \right\rceil}\right]
+      & s < t,\\
+      0
+      & \text{else}
     \end{cases}\\
     B_{s \uparrow t}
     & = &
     \begin{cases}
-      \operatorname{\mathbb{I}}\left[B_{\left\lceil \frac{t}{t-s} \right\rceil}\right] & s < t,\\
-      0 & \text{else}
+      \operatorname{\mathbb{I}}\left[B_{\left\lceil \frac{t}{t-s} \right\rceil}\right]
+      & s < t,\\
+      0
+      & \text{else}
     \end{cases}\\
   \end{IEEEeqnarray}
   are adapted to the filtration $\mathscr{F}_s \subset \mathscr{F}_t$ of the carrier
@@ -476,38 +483,62 @@
   the Poisson process, by differentiating the subordinated cumulative distribution of a
   single stopping time:
   \begin{IEEEeqnarray}{rCl}
-    \operatorname{d\mathbb{P}}\left[ T_n = t \right\rVert\left. Y_{T_n} \right]
+    \operatorname{d\mathbb{P}}\left[ T_n = t \right\rVert\left. X_{T_n}, Y_{T_n} \right]
     & = &
-    \operatorname{\mathbb{E}}\left[ X_t \right\rVert\left. Y_t \right]
-    \frac{\lambda^n Y_t^{\left(n-1\right)}e^{-\lambda Y_t}}
-    {\left(n-1\right)!}
+    \begin{cases}
+      \delta\left(t\right)
+      & n = 0,\\
+      \displaystyle\frac{\lambda^n X_t Y_t^{\left(n-1\right)}e^{-\lambda Y_t}}
+      {\left(n-1\right)!}
+      & \text{otherwise}
+    \end{cases}
   \end{IEEEeqnarray}
   Applying Bayes' Theorem we can condition on the stopping times to estimate the underlying
   stochastically accelerated metabolic time:
   \begin{IEEEeqnarray}{rCl}
-    \operatorname{d\mathbb{P}}\left[ Y_{T_n} \right\rVert\left. T_n = t \right]
+    \operatorname{d\mathbb{P}}\left[ X_{T_n}, Y_{T_n} \right\rVert\left. T_n = t \right]
     & = &
-    \frac{\operatorname{\mathbb{E}}\left[ X_t Y_t^{n-1} e^{-\lambda Y_t} \right\rVert\left. Y_t \right]}
-    {\operatorname{\mathbb{E}}\left[ X_t Y_t^{n-1} e^{-\lambda Y_t} \right]}
-    \operatorname{d\mathbb{P}}\left[ Y_t \right]\\\nonumber\\
-    \operatorname{d\mathbb{P}}\left[ X_{T_n} \right\rVert\left. T_n = t \right]
-    & = &
-    \frac{\operatorname{\mathbb{E}}\left[ X_t Y_t^{n-1} e^{-\lambda Y_t} \right\rVert\left. X_t \right]}
-    {\operatorname{\mathbb{E}}\left[ X_t Y_t^{n-1} e^{-\lambda Y_t} \right]}
-    \operatorname{d\mathbb{P}}\left[ X_t \right]
+    \begin{cases}
+      \delta\left(X_t\right)\delta\left(Y_t\right)
+      & n = 0,\\
+      \displaystyle\frac{X_t Y_t^{n-1} e^{-\lambda Y_t}}
+      {\operatorname{\mathbb{E}}\left[ X_t Y_t^{n-1} e^{-\lambda Y_t} \right]}
+      \operatorname{d\mathbb{P}}\left[ X_t,Y_t \right]
+      & \text{otherwise}
+    \end{cases}
   \end{IEEEeqnarray}
   From this re-weighting of the probabilities we can immediately deduce the elegant
   expectations conditioned on the stopping time:
   \begin{IEEEeqnarray}{rCl}
     \operatorname{\mathbb{E}}\left[ Y_{T_n}^m \right\rVert\left. T_n = t \right]
     & = &
-    \frac{\left(n+m-1\right)!}{\lambda^m \left(n-1\right)!}
-    \frac{ \operatorname{d\mathbb{P}}\left[ T_{n+m} = t \right]}
-    { \operatorname{d\mathbb{P}}\left[ T_n=t \right]}\\\nonumber\\
+    \begin{cases}
+      0
+      & n=0,\\
+      \displaystyle\frac{\left(n+m-1\right)!}{\lambda^m \left(n-1\right)!}
+      \frac{ \operatorname{d\mathbb{P}}\left[ T_{n+m} = t \right]}
+      { \operatorname{d\mathbb{P}}\left[ T_n=t \right]}
+      & \text{otherwise}
+    \end{cases}\\
+    \nonumber\\
+    \operatorname{\mathbb{E}}\left[ Y_{T_n}^m \right]
+    & = &
+    \begin{cases}
+      0
+      & n=0,\\
+      \displaystyle\frac{\left(n+m-1\right)!}{\lambda^m \left(n-1\right)!}
+      & \text{otherwise}
+    \end{cases}\\
+    \nonumber\\
     \operatorname{\mathbb{E}}\left[ X_{T_n}^m \right\rVert\left. T_n = t \right]
     & = &
-    \frac{\operatorname{\mathbb{E}}\left[ X_t^{m+1} Y_t^{n-1} e^{-\lambda Y_t} \right]}
-    {\operatorname{\mathbb{E}}\left[ X_t Y_t^{n-1} e^{-\lambda Y_t} \right]}
+    \begin{cases}
+      0
+      & n=0,\\
+      \displaystyle\frac{\operatorname{\mathbb{E}}\left[ X_t^{m+1} Y_t^{n-1} e^{-\lambda Y_t} \right]}
+      {\operatorname{\mathbb{E}}\left[ X_t Y_t^{n-1} e^{-\lambda Y_t} \right]}
+      & \text{otherwise}
+    \end{cases}
   \end{IEEEeqnarray}
   Finding a closed form for the distribution of the stopping times of the passages of the
   Gompertz process will require a deeper understanding of the characteristic function of
@@ -525,17 +556,38 @@
   event without the knowledge of how many events have occurred before the sentinel event.
    
   From the preceding probability density we can immediately deduce the tail probability and
-  hence the expectation of the latency $s>0$ conditioned on a sentinel event at time $t>0$:
+  hence the expectation of the latency $s>0$ conditioned on a sentinel event at time
+  $t \ge 0$:
   \begin{IEEEeqnarray}{rCl}
-    \operatorname{\mathbb{P}}\left[ T_{1+G_t} - T_{G_t} \ge s \right\rVert\left. T_{G_t}=t \right]
-    & = &
-    \frac{\operatorname{\mathbb{E}}\left[X_t Y_t^{G_t-1}\right] \operatorname{\mathbb{E}}\left[ e^{-\lambda Y_{t+s} } \right]}
-    {\operatorname{\mathbb{E}}\left[X_t Y_t^{G_t-1} e^{-\lambda Y_t } \right]}\\\nonumber\\
-    \operatorname{\mathbb{E}}\left[ T_{1+G_t} - T_{G_t} \right\rVert\left. T_{G_t}=t \right]
-    & = &
-    \frac{\operatorname{\mathbb{E}}\left[X_t Y_t^{G_t-1} \right]}
-    {\lambda \operatorname{\mathbb{E}}\left[X_t Y_t^{G_t-1} e^{-\lambda Y_t } \right]}
-    \int_t^\infty \operatorname{\mathbb{E}}\left[e^{-\lambda Y_u} \right]du
+    \IEEEeqnarraymulticol{3}{l}{
+      \operatorname{\mathbb{P}}\left[ T_{1+G_t} - T_{G_t} \ge s \right\rVert\left. T_{G_t}=t \right]
+    } \nonumber\\
+    \qquad & = &
+    \begin{cases}
+      \operatorname{\mathbb{E}}\left[e^{-\lambda Y_s } \right]
+      & t = 0,\\
+      \displaystyle\sum_{n=1}^\infty \frac{\lambda^n}{n!}
+      \frac{\operatorname{\mathbb{E}}\left[X_t Y_t^{n-1} e^{-\lambda Y_{t+s} } \right]}
+      {\operatorname{\mathbb{E}}\left[ X_t Y_t^{n-1} e^{-\lambda Y_t} \right]}
+      \frac{\operatorname{\mathbb{E}}\left[ Y_t^n e^{-\lambda Y_t} \right]}
+      {1 - \operatorname{\mathbb{E}}\left[e^{-\lambda Y_t} \right]}
+      & \text{otherwise}
+    \end{cases}\\
+    \nonumber\\
+    \IEEEeqnarraymulticol{3}{l}{
+      \operatorname{\mathbb{E}}\left[ T_{1+G_t} - T_{G_t} \right\rVert\left. T_{G_t}=t \right]
+    } \nonumber\\
+    \qquad & = &
+    \begin{cases}
+      \operatorname{\mathbb{E}}\left[\int_0^\infty e^{-\lambda Y_u } du \right]
+      & t = 0,\\
+      \displaystyle\sum_{n=1}^\infty \frac{\lambda^n}{n!}
+      \frac{\operatorname{\mathbb{E}}\left[X_t Y_t^{n-1} \int_0^\infty e^{-\lambda Y_{t+u} } du \right]}
+      {\operatorname{\mathbb{E}}\left[ X_t Y_t^{n-1} e^{-\lambda Y_t} \right]}
+      \frac{\operatorname{\mathbb{E}}\left[ Y_t^n e^{-\lambda Y_t} \right]}
+      {1 - \operatorname{\mathbb{E}}\left[e^{-\lambda Y_t} \right]}
+      & \text{otherwise}
+    \end{cases}
   \end{IEEEeqnarray}
   Clearly if we have available to us the additional information of the full history of event
   counts $G_t$ this difficult expectation becomes much easier as we can elide the
@@ -598,29 +650,33 @@
 
   Remarkably the stopping times of the passages of the Gompertz process are Markov, even
   though the stochastically accelerated metabolic time of integrated geometric Brownian
-  motion is only Markov in its increments. Specifically knowledge of the age $t_n>0$ at a
-  sentinel event $G_{t_n}$ in the history of the Gompertz process is sufficient to determine
-  the distribution of the latency $t > 0$ to next event $T_{1+G_{t_n}}$. To see this
-  consider the subordinated stopping times $T_{n+G_{t_0}}=t_n, \dots , T_{G_{t_0}} = t_0$,
-  the cumulative probability of the latency conditioned of the previous events is:
+  motion is only Markov in its increments. Specifically knowledge of the stopping $T_n$ is
+  sufficient to determine the distribution of the latency $t > 0$ to next event $T_{n+1}$.
+  To see this consider the stopping times $T_n=t_n, \dots , T_0 = t_0$, the cumulative
+  probability of the latency conditioned of the previous events is:
   \begin{IEEEeqnarray}{rCl}
     \IEEEeqnarraymulticol{3}{l}{
-      \operatorname{\mathbb{P}}\left[ T_{1 + n + G_{t_0}} - T_{n + G_{t_0}} \ge t \right\rVert\left. T_{n+G_{t_0}}=t_n, \dots , T_{G_{t_0}} = t_0 \right]
+      \operatorname{\mathbb{P}}\left[ T_{n+1} - T_n \ge t \right\rVert\left. T_n=t_n, \dots , T_0 = t_0 \right]
     }\nonumber\\
     \qquad
     & = &
-    \frac{\operatorname{\mathbb{E}}\left[X_{t_n} Y_{t_n}^{G_{t_n}-1}\right] \operatorname{\mathbb{E}}\left[ e^{-\lambda Y_{t + t_n}} \right]}
-    {\operatorname{\mathbb{E}}\left[X_{t_n} Y_{t_n}^{G_{t_n}-1} e^{-\lambda Y_{t_n}} \right]}\\
+    \displaystyle\sum_{k=0}^\infty \frac{\left(-\lambda\right)^k}{k!}
+    \operatorname{\mathbb{E}}\left[Y_s^k\right]
+    \operatorname{\mathbb{E}}\left[X_{t_n}^k \right\rVert\left. T_n=t_n, \dots , T_0 = t_0 \right]\\
     \qquad
     & = &
-    \operatorname{\mathbb{P}}\left[ T_{1 + G_{t_n}} - T_{G_{t_n}} \ge t \right\rVert\left. T_{G_{t_n}}=t_n \right]
+    \frac{\operatorname{\mathbb{E}}\left[X_{t_n} Y_{t_n}^{n-1} e^{-\lambda Y_{t + t_n}} \right]}
+    {\operatorname{\mathbb{E}}\left[X_{t_n} Y_{t_n}^{n-1} e^{-\lambda Y_{t_n}} \right]}\\
+    \qquad
+    & = &
+    \operatorname{\mathbb{P}}\left[ T_{n+1} - T_n \ge t \right\rVert\left. T_n=t_n \right]
   \end{IEEEeqnarray}
 
   \section{L\'evy}
   Integrated geometric Brownian motion $Y_t$ and its carrier process of geometric Brownian
   motion $X_t$ can be embedded into the Lie group of $2 \times 2$ upper triangular
   matrices $H_2$ by means of the factorization observed earlier, so that the
-  increments are independent under matrix multiplication, for times $t > s$:
+  increments are independent under matrix multiplication, for times $t > s$ we have in law:
   \begin{IEEEeqnarray}{rCl}
     \begin{bmatrix}
       1 & Y_t\\
@@ -639,7 +695,8 @@
   where the increment processes of $Y_{t-s}$ and $X_{t-s}$ are independent of the processes
   $Y_s$ and $X_s$. It follows that the infinitesimal generator of the matrix exponential map
   into the group is the sub-algebra of the Lie algebra of upper triangular matrices
-  $\mathfrak{h}_2$ consisting of first column zero matrices:
+  $\mathfrak{h}_2$ consisting of first column zero matrices. For example, one branch of the
+  logarithm is given by:
   \begin{IEEEeqnarray}{rCl}
     \exp\left(
       \frac{\mu t + \sigma W_t}{X_t - 1}
@@ -654,6 +711,32 @@
       0 & X_t
     \end{bmatrix}
   \end{IEEEeqnarray}
+
+  In the next section we will find use for the drift free auxillary stochastic process
+  $U_t$; which we motivate by considering the expectation of $Y_t$:
+  \begin{IEEEeqnarray}{rCl}
+    U_t
+    & = &
+    Y_t - \frac{X_t - 1}{\mu + \sigma^2 / 2}
+  \end{IEEEeqnarray}
+  Conveniently the joint process of $X_t$ and $U_t$ enjoys the same embedding into the Lie
+  algebra $H_2$ as the original joint process, for times $t > s$ we have in law:
+  \begin{IEEEeqnarray}{rCl}
+    \begin{bmatrix}
+      1 & U_t\\
+      0 & X_t
+    \end{bmatrix}
+    & = &
+    \begin{bmatrix}
+      1 & U_{t-s}\\
+      0 & X_{t-s}
+    \end{bmatrix}
+    \begin{bmatrix}
+      1 & U_s\\
+      0 & X_s
+    \end{bmatrix}
+  \end{IEEEeqnarray}
+
   A word of caution about the generators in $\mathfrak{h}_2$, because the basis elements of
   the Lie sub-algebra do not commute:
   \begin{IEEEeqnarray}{rCl}
@@ -674,8 +757,9 @@
     \end{bmatrix}
   \end{IEEEeqnarray}
   the generator of the product of two increments in $H_2$ is not the sum of the generators
-  of each increment. As we will see this raises the prospect of a deep connection between
-  the adjoint derivative of the exponential map and stochastic differential equations.
+  of each increment. The representation of multiplicative L\'evy processes in Lie groups
+  raises the prospect of a deep connection between the adjoint derivative of the exponential
+  map and stochastic differential equations.
 
   \section{Fokker-Planck}
   The upper triangular L\'evy process of integrated geometric Brownian motion satisfies the
@@ -694,7 +778,8 @@
     \begin{bmatrix}
       0 & 0\\
       0 & \sigma X_t
-    \end{bmatrix}dW_t\\\nonumber\\
+    \end{bmatrix}dW_t\\
+    \nonumber\\
     & = &
     \left(
       \begin{bmatrix}
@@ -730,6 +815,51 @@
     - \frac{\sigma^2}{2}x^2 \frac{\partial^2 p}{\partial x^2}
     & = &
     \left(-\mu + \frac{\sigma^2}{2}\right) p
+  \end{IEEEeqnarray}
+  Rather than directly integrating this equation we instead consider the stochastic
+  differential equation of the auxillary process:
+  \begin{IEEEeqnarray}{rCl}
+    d \begin{bmatrix}
+      1 & U_t\\
+      0 & X_t
+    \end{bmatrix}
+    & = &
+    \begin{bmatrix}
+      0 & 0\\
+      0 & \left(\mu + \sigma^2 / 2\right) X_t
+    \end{bmatrix} dt
+    +
+    \begin{bmatrix}
+      0 & - \frac{\sigma }{\mu + \sigma^2 / 2}X_t\\
+      0 & \sigma X_t
+    \end{bmatrix}dW_t\\
+    \nonumber\\
+    & = &
+    \left(
+      \begin{bmatrix}
+        0 & 0\\
+        0 & \mu + \sigma^2 / 2
+      \end{bmatrix} dt
+      +
+      \begin{bmatrix}
+        0 & - \frac{\sigma}{\mu + \sigma^2 / 2}\\
+        0 & \sigma
+      \end{bmatrix}dW_t
+    \right)
+    \begin{bmatrix}
+      1 & U_t\\
+      0 & X_t
+    \end{bmatrix}
+  \end{IEEEeqnarray}
+  The distribution of the increments can be derived from the factorization of integrated
+  geometric Brownian motion $Y_t$ by geometric Brownian motion $X_t$:
+  \begin{IEEEeqnarray}{rCl}
+    \IEEEeqnarraymulticol{3}{l}{
+    \operatorname{\mathbb{P}}\left[ X_t= x, Y_t=y \right\rVert\left. X_{t_0}= x_0, Y_{t_0}=y_0 \right]
+    }\nonumber\\
+    \qquad
+    & = &
+    \operatorname{\mathbb{P}}\left[ X_{t-t_0}=\frac{x}{x_0}, Y_{t-t_0}=\frac{y-y_0}{x_0} \right]
   \end{IEEEeqnarray}
 
   \section{Hazard Rate}
